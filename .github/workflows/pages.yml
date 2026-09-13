@@ -41,9 +41,10 @@ jobs:
       - name: Отключить Jekyll
         run: touch out/.nojekyll
 
+      # Pages должны быть включены в настройках репозитория:
+      # Settings -> Pages -> Source: GitHub Actions.
+      # Токен workflow не имеет прав включить их сам.
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
