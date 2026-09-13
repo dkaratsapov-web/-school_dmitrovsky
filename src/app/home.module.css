@@ -1,0 +1,70 @@
+.statusHero {
+  background: linear-gradient(135deg, var(--c-navy-950), var(--c-navy-800) 65%, var(--c-wine-900));
+  color: #fff;
+}
+
+.statusHeroInner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-block: clamp(3rem, 2rem + 5vw, 6rem);
+  max-width: 46rem;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-2) var(--s-4);
+  margin-bottom: var(--s-5);
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-medium);
+}
+
+.statusTitle {
+  font-size: var(--fs-display);
+  font-weight: var(--fw-black);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-display);
+  color: #fff;
+  margin-bottom: var(--s-5);
+}
+
+.statusLead {
+  font-size: var(--fs-lead);
+  line-height: var(--lh-snug);
+  color: rgba(255, 255, 255, 0.84);
+  margin-bottom: var(--s-8);
+}
+
+.statusActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+}
+
+.stepDone,
+.stepPending {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  align-self: flex-start;
+  padding: var(--s-1) var(--s-3);
+  border-radius: var(--r-pill);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-medium);
+}
+
+.stepDone {
+  background: var(--c-success-bg);
+  color: #10452a;
+}
+
+.stepPending {
+  background: var(--c-bg);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}

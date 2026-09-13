@@ -1,0 +1,157 @@
+/* Контейнер: 1280 px, боковые поля не меньше 16 px на любой ширине */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.containerNarrow {
+  max-width: var(--container-narrow);
+}
+
+/* Секция: единый вертикальный ритм для всех страниц */
+.section {
+  padding-block: var(--section-y);
+}
+
+.sectionTight {
+  padding-block: var(--section-y-tight);
+}
+
+.toneSurface {
+  background: var(--color-surface);
+}
+.toneMuted {
+  background: var(--c-navy-50);
+}
+.toneWarm {
+  background: var(--c-bg-warm);
+}
+.toneDark {
+  background: var(--c-navy-900);
+  color: rgba(255, 255, 255, 0.88);
+}
+.toneDark :global(h2),
+.toneDark :global(h3) {
+  color: #fff;
+}
+
+/* Заголовок секции */
+.sectionHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--s-4);
+  margin-bottom: var(--s-8);
+}
+
+.sectionHeadText {
+  max-width: var(--measure);
+}
+
+.eyebrow {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: var(--s-3);
+}
+
+.toneDark .eyebrow {
+  color: var(--c-wine-300);
+}
+
+.sectionHead :global(h2) {
+  margin-bottom: 0;
+}
+
+.sectionLead {
+  margin: var(--s-3) 0 0;
+  font-size: var(--fs-lead);
+  color: var(--color-text-muted);
+  max-width: var(--measure);
+}
+
+.toneDark .sectionLead {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* Сетка: 12 колонок desktop, 8 tablet, 4 mobile */
+.grid {
+  display: grid;
+  gap: var(--grid-gap);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
+/* Раскладки-помощники поверх базовой сетки */
+.cols2 > * {
+  grid-column: span 4;
+}
+.cols3 > * {
+  grid-column: span 4;
+}
+.cols4 > * {
+  grid-column: span 4;
+}
+
+@media (min-width: 768px) {
+  .cols2 > * {
+    grid-column: span 4;
+  }
+  .cols3 > * {
+    grid-column: span 4;
+  }
+  .cols4 > * {
+    grid-column: span 4;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cols2 > * {
+    grid-column: span 6;
+  }
+  .cols3 > * {
+    grid-column: span 4;
+  }
+  .cols4 > * {
+    grid-column: span 3;
+  }
+}
+
+/* Текстовая колонка ограниченной меры */
+.prose {
+  max-width: var(--measure);
+}
+
+.prose :global(h2) {
+  margin-top: var(--s-10);
+}
+.prose :global(h3) {
+  margin-top: var(--s-8);
+}
+.prose > :global(*:first-child) {
+  margin-top: 0;
+}
+
+.prose :global(table) {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}

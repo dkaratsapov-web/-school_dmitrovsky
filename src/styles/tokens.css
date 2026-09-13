@@ -1,0 +1,154 @@
+/* =========================================================================
+   Дизайн-токены — ГБОУ Школа «Дмитровский»
+   Единственный источник истины для цвета, типографики, spacing, radius,
+   shadow, breakpoints, focus и transitions (ТЗ §6).
+   Создавать отдельные стили «под страницу» запрещено.
+
+   ВНИМАНИЕ: точные значения фирменных синего и бордового зафиксированы
+   как провизорные и подлежат сверке с логотипом школы после
+   инвентаризации (см. docs/INVENTORY.md, пункт BRAND-01).
+   ========================================================================= */
+
+:root {
+  /* ---------- Цвет: фирменный синий ---------- */
+  --c-navy-950: #06122a;
+  --c-navy-900: #0a1b3d;
+  --c-navy-800: #102a5c; /* основной фирменный */
+  --c-navy-700: #17397a;
+  --c-navy-600: #22509e;
+  --c-navy-300: #a8bde0;
+  --c-navy-100: #e7edf9;
+  --c-navy-50: #f2f6fc;
+
+  /* ---------- Цвет: фирменный бордовый (акцент, дозированно) ---------- */
+  --c-wine-900: #56101d;
+  --c-wine-800: #6e1626;
+  --c-wine-700: #8a1b2f; /* действия, акценты */
+  --c-wine-600: #a3243c;
+  --c-wine-300: #e2a9b4;
+  --c-wine-100: #f7e7ea;
+
+  /* ---------- Нейтральные ---------- */
+  --c-ink-900: #16181d;
+  --c-ink-800: #24272f;
+  --c-ink-700: #3a3f4a;
+  --c-ink-500: #646c7a; /* вторичный текст, контраст 5.0:1 на белом */
+  --c-ink-300: #a6acb8;
+  --c-line: #e2e6ee;
+  --c-line-strong: #ccd3e0;
+  --c-surface: #ffffff;
+  --c-bg: #f7f8fb;
+  --c-bg-warm: #faf8f5;
+
+  --c-success: #1c7a4a;
+  --c-success-bg: #e8f5ee;
+  --c-error: #b3261e;
+  --c-error-bg: #fdecea;
+  --c-warning: #8a5a00;
+  --c-warning-bg: #fdf3e3;
+
+  /* ---------- Семантические роли ---------- */
+  --color-text: var(--c-ink-900);
+  --color-text-muted: var(--c-ink-500);
+  --color-text-invert: #ffffff;
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-border: var(--c-line);
+  --color-primary: var(--c-navy-800);
+  --color-primary-hover: var(--c-navy-700);
+  --color-accent: var(--c-wine-700);
+  --color-accent-hover: var(--c-wine-600);
+  --color-focus: var(--c-navy-600);
+
+  /* ---------- Типографика ---------- */
+  --font-display: 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-text: 'Golos Text', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --fs-display: clamp(2.25rem, 1.35rem + 3.9vw, 4rem);
+  --fs-h1: clamp(1.875rem, 1.3rem + 2.5vw, 3.125rem);
+  --fs-h2: clamp(1.5rem, 1.18rem + 1.4vw, 2.25rem);
+  --fs-h3: clamp(1.25rem, 1.12rem + 0.55vw, 1.5rem);
+  --fs-h4: clamp(1.0625rem, 1.01rem + 0.28vw, 1.25rem);
+  --fs-lead: clamp(1.0625rem, 1.0rem + 0.3vw, 1.25rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-caption: 0.8125rem;
+
+  --lh-tight: 1.1;
+  --lh-heading: 1.2;
+  --lh-snug: 1.4;
+  --lh-body: 1.65;
+
+  --ls-display: -0.025em;
+  --ls-heading: -0.015em;
+  --ls-caps: 0.06em;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-black: 800;
+
+  /* Комфортная длина строки (ТЗ §4 — короткие строки) */
+  --measure: 68ch;
+  --measure-narrow: 56ch;
+
+  /* ---------- Spacing (шаг 4px) ---------- */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.25rem;
+  --s-6: 1.5rem;
+  --s-8: 2rem;
+  --s-10: 2.5rem;
+  --s-12: 3rem;
+  --s-16: 4rem;
+  --s-20: 5rem;
+  --s-24: 6rem;
+
+  /* Вертикальный ритм секций — единый для всех страниц */
+  --section-y: clamp(2.5rem, 1.6rem + 3.8vw, 5.5rem);
+  --section-y-tight: clamp(2rem, 1.4rem + 2.4vw, 3.5rem);
+
+  /* ---------- Сетка и контейнер ---------- */
+  --container: 1280px;
+  --container-narrow: 860px;
+  --gutter: clamp(1rem, 0.55rem + 1.9vw, 2rem);
+  --grid-gap: clamp(1rem, 0.7rem + 1.2vw, 1.75rem);
+
+  /* ---------- Радиусы ---------- */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 24px;
+  --r-pill: 999px;
+
+  /* ---------- Тени ---------- */
+  --sh-1: 0 1px 2px rgba(16, 42, 92, 0.06), 0 1px 3px rgba(16, 42, 92, 0.05);
+  --sh-2: 0 2px 4px rgba(16, 42, 92, 0.06), 0 6px 16px rgba(16, 42, 92, 0.08);
+  --sh-3: 0 8px 24px rgba(16, 42, 92, 0.1), 0 18px 48px rgba(16, 42, 92, 0.1);
+
+  /* ---------- Движение (ТЗ §4: 150–250 ms) ---------- */
+  --t-fast: 150ms;
+  --t-base: 200ms;
+  --t-slow: 250ms;
+  --ease: cubic-bezier(0.2, 0.6, 0.25, 1);
+
+  /* ---------- Focus ---------- */
+  --focus-width: 3px;
+  --focus-offset: 2px;
+
+  /* ---------- Минимальная кликабельная область (ТЗ §9) ---------- */
+  --tap: 44px;
+
+  /* ---------- Слои ---------- */
+  --z-header: 100;
+  --z-dropdown: 200;
+  --z-overlay: 300;
+  --z-modal: 310;
+  --z-toast: 400;
+}
+
+/* Контрольные ширины проекта (ТЗ §9): 360, 390, 768, 1024, 1280, 1440.
+   В CSS используются как min-width медиазапросы: 768 / 1024 / 1280. */
