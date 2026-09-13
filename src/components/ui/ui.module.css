@@ -97,12 +97,6 @@
   font-size: var(--fs-body);
 }
 
-.sizeSm {
-  min-height: 36px;
-  padding: var(--s-2) var(--s-4);
-  font-size: var(--fs-caption);
-}
-
 .iconBtn {
   min-width: var(--tap);
   padding-inline: var(--s-3);
@@ -377,7 +371,7 @@
 
 /* ============================== Хлебные крошки ============================== */
 .crumbs {
-  padding-block: var(--s-4);
+  padding-block: var(--s-2);
   font-size: var(--fs-caption);
   color: var(--color-text-muted);
 }
@@ -400,10 +394,14 @@
 }
 
 .crumbSep {
-  color: var(--c-ink-300);
+  color: var(--c-ink-500);
 }
 
 .crumbs a {
+  display: inline-flex;
+  align-items: center;
+  /* Область нажатия 44px (ТЗ §9) без разрежения самой строки крошек. */
+  min-height: var(--tap);
   color: var(--color-text-muted);
   text-decoration: none;
 }
@@ -483,7 +481,7 @@
 }
 
 .emptyIcon {
-  color: var(--c-ink-300);
+  color: var(--c-ink-500);
 }
 
 .emptyTitle {

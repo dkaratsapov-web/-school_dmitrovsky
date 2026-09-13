@@ -21,6 +21,14 @@ const isPagesExport = pagesBasePath !== '';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  /**
+   * Превью-сборки (GitHub Pages и локальный экспорт) — копия боевого сайта
+   * на другом адресе. Её нельзя отдавать поисковикам, иначе в выдаче
+   * появится дубль. Флаг читается в src/app/layout.tsx.
+   */
+  env: {
+    NEXT_PUBLIC_IS_PREVIEW: isPreviewExport || isPagesExport ? '1' : '',
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [360, 390, 640, 768, 1024, 1280, 1440, 1920],

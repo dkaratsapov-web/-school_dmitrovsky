@@ -45,8 +45,10 @@
     background-color var(--t-fast) var(--ease);
 }
 
+/* Подсказка в поле — полноценный текст: контраст не ниже 4.5:1 (WCAG 1.4.3).
+   #aaaeb5 давал 2.23:1 на белом, #6b6f77 даёт 5.04:1. */
 .control::placeholder {
-  color: var(--c-ink-300);
+  color: var(--c-ink-500);
 }
 
 .control:hover:not(:disabled) {

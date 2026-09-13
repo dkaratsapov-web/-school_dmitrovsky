@@ -1,14 +1,18 @@
 import Image from 'next/image';
 import { Blocks } from '@/components/content/Blocks';
+import { NewsGrid } from '@/components/content/NewsGrid';
+import { JsonLd } from '@/components/site/JsonLd';
 import { Container } from '@/components/layout/Container';
 import { Section, SectionHead } from '@/components/layout/Section';
 import { Accordion } from '@/components/ui/Accordion';
 import { ButtonLink } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { Stats } from '@/components/ui/Stat';
-import { dropRepeats, getPage } from '@/content/pages-data';
+import { composeNewsFeed } from '@/content/compositions';
+import { dropRepeats, getPage, groupFlatLists, promoteHeadings, recordBlocks } from '@/content/pages-data';
 import type { PageBlock } from '@/content/pages-data';
 import { asset } from '@/lib/asset';
+import { faqSchema, graph } from '@/lib/schema';
 import s from './home.module.css';
 
 /**
@@ -23,17 +27,17 @@ const page = getPage('index');
 const records = page?.records ?? [];
 
 function record(id: string) {
-  return records.find((r) => r.id === id);
+  return recordBlocks(page, id);
 }
 
 function texts(id: string): string[] {
-  return dropRepeats(record(id)?.blocks ?? [])
+  return dropRepeats(record(id))
     .filter((b): b is Extract<PageBlock, { type: 'paragraph' }> => b.type === 'paragraph')
     .map((b) => b.text);
 }
 
 function images(id: string) {
-  return (record(id)?.blocks ?? []).filter(
+  return record(id).filter(
     (b): b is Extract<PageBlock, { type: 'image' }> => b.type === 'image',
   );
 }
@@ -54,6 +58,33 @@ const visitGuest = texts('rec741199937');
 // rec735798413 — вопросы родителей
 const faqRaw = texts('rec735798413');
 
+/**
+ * Лента новостей. Собирается из всех полос-публикаций главной, а не только
+ * из первой: сокращать материалы нельзя (ТЗ §7). Карточки позволяют
+ * показать все публикации без бесконечной прокрутки.
+ */
+const feed = page ? composeNewsFeed(page) : { items: [], usedIds: new Set<string>() };
+const news = feed.items;
+
+/**
+ * Полосы, которые уже разложены по разделам выше. Всё остальное выводится
+ * в конце страницы общим потоком, чтобы ни один материал не пропал.
+ */
+const PLACED = new Set([
+  'rec735787688',
+  'rec1376258911',
+  'rec1025633206',
+  'rec911582704',
+  'rec741149702',
+  'rec741199937',
+  'rec735798413',
+  ...feed.usedIds,
+]);
+
+const tailBlocks = records
+  .filter((r) => !PLACED.has(r.id))
+  .flatMap((r) => recordBlocks(page, r.id));
+
 const faqItems = faqRaw.reduce<{ question: string; answer: string }[]>((acc, t, i) => {
   if (i % 2 === 0) acc.push({ question: t, answer: faqRaw[i + 1] ?? '' });
   return acc;
@@ -65,7 +96,7 @@ const faqItems = faqRaw.reduce<{ question: string; answer: string }[]>((acc, t, 
  * вправо и не попадают под текст (ТЗ §4, §5).
  */
 const HERO_SRC = '/images/IMG_5183_7f54a7bc0a.webp';
-const allImages = records.flatMap((r) => r.blocks).filter(
+const allImages = records.flatMap((r) => recordBlocks(page, r.id)).filter(
   (b): b is Extract<PageBlock, { type: 'image' }> => b.type === 'image',
 );
 const heroImage = allImages.find((b) => b.src === HERO_SRC) ?? allImages[0];
@@ -86,13 +117,15 @@ export default function HomePage() {
 
   return (
     <>
+      {faqItems.length > 0 ? <JsonLd json={graph(faqSchema(faqItems))} /> : null}
+
       {/* --------------------------------------------------------- первый экран */}
       <section className={s.hero}>
         {heroImage ? (
           <div className={s.heroMedia}>
             <Image
               src={asset(heroImage.src)}
-              alt=""
+              alt={heroImage.alt}
               width={heroImage.width}
               height={heroImage.height}
               priority
@@ -182,7 +215,7 @@ export default function HomePage() {
                     <div className={s.visitMedia}>
                       <Image
                         src={asset(v.imgs[0].src)}
-                        alt=""
+                        alt={v.imgs[0].alt}
                         width={v.imgs[0].width}
                         height={v.imgs[0].height}
                         sizes="(min-width: 768px) 50vw, 100vw"
@@ -205,10 +238,19 @@ export default function HomePage() {
       ) : null}
 
       {/* ---------------------------------------------------------------- новости */}
-      <Section>
-        <SectionHead eyebrow="Новости школы" title="Новости школы" />
-        <Blocks blocks={dropRepeats(record('rec741130535')?.blocks ?? []).slice(0, 24)} />
-      </Section>
+      {news.length > 0 ? (
+        <Section tone="surface">
+          <SectionHead eyebrow="Жизнь школы" title="Новости школы" />
+          <NewsGrid items={news} />
+        </Section>
+      ) : null}
+
+      {/* ------------------------------------------------- остальные материалы */}
+      {tailBlocks.length > 0 ? (
+        <Section>
+          <Blocks blocks={promoteHeadings(groupFlatLists(dropRepeats(tailBlocks)))} />
+        </Section>
+      ) : null}
     </>
   );
 }

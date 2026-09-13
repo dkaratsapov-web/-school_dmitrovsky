@@ -261,9 +261,6 @@ export default function UiKitPage() {
             <Button variant="secondary">Вторичное</Button>
             <Button variant="outline">Контурная</Button>
             <Button variant="ghost">Текстовая</Button>
-            <Button variant="primary" size="sm">
-              Малая
-            </Button>
             <Button variant="secondary" disabled>
               Недоступна
             </Button>

@@ -9,7 +9,8 @@ export type ButtonVariant =
   | 'ghost'
   | 'onDark'
   | 'onDarkOutline';
-export type ButtonSize = 'sm' | 'md' | 'lg';
+/** Размеров два: обычный 44px и крупный 52px — оба не ниже ТЗ §9. */
+export type ButtonSize = 'md' | 'lg';
 
 const variantClass: Record<ButtonVariant, string> = {
   primary: s.primary ?? '',
@@ -21,7 +22,6 @@ const variantClass: Record<ButtonVariant, string> = {
 };
 
 const sizeClass: Record<ButtonSize, string> = {
-  sm: s.sizeSm ?? '',
   md: '',
   lg: s.sizeLg ?? '',
 };

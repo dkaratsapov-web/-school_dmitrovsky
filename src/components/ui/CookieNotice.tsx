@@ -64,7 +64,7 @@ export function CookieNotice({ text, policyHref, policyLabel, acceptLabel }: Pro
         {text} <a href={policyHref}>{policyLabel}</a>
       </p>
       <div className={s.cookieActions}>
-        <Button variant="primary" size="sm" onClick={accept}>
+        <Button variant="primary" onClick={accept}>
           {acceptLabel}
         </Button>
       </div>

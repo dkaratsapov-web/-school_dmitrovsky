@@ -22,6 +22,11 @@ body {
   font-family: var(--font-text);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
+  /* В перенесённых текстах встречаются длинные ссылки (Яндекс Формы,
+     mos.ru). На 390 px они не помещаются в строку и растягивают страницу
+     по горизонтали. break-word переносит только то, что иначе не влезает,
+     обычный русский текст не трогает. */
+  overflow-wrap: break-word;
   font-weight: var(--fw-regular);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;

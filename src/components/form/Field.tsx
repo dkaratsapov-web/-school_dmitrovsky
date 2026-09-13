@@ -226,6 +226,8 @@ export function FormStatus({
     <div
       className={[s.status, toneClass].filter(Boolean).join(' ')}
       role={tone === 'error' ? 'alert' : 'status'}
+      aria-live={tone === 'error' ? 'assertive' : 'polite'}
+      aria-atomic="true"
     >
       <Icon name={icon} size={20} />
       <div>

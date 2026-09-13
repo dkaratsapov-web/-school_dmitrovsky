@@ -177,7 +177,8 @@
 .tocLink {
   display: inline-flex;
   align-items: center;
-  min-height: 36px;
+  /* Область нажатия 44px (ТЗ §9). */
+  min-height: var(--tap);
   padding: var(--s-2) var(--s-4);
   border-radius: var(--r-pill);
   background: var(--color-surface);
