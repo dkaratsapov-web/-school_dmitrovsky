@@ -6,7 +6,7 @@ import { Accordion } from '@/components/ui/Accordion';
 import { ButtonLink } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { Stats } from '@/components/ui/Stat';
-import { getPage } from '@/content/pages-data';
+import { dropRepeats, getPage } from '@/content/pages-data';
 import type { PageBlock } from '@/content/pages-data';
 import { asset } from '@/lib/asset';
 import s from './home.module.css';
@@ -27,7 +27,7 @@ function record(id: string) {
 }
 
 function texts(id: string): string[] {
-  return (record(id)?.blocks ?? [])
+  return dropRepeats(record(id)?.blocks ?? [])
     .filter((b): b is Extract<PageBlock, { type: 'paragraph' }> => b.type === 'paragraph')
     .map((b) => b.text);
 }
@@ -70,9 +70,12 @@ const allImages = records.flatMap((r) => r.blocks).filter(
 );
 const heroImage = allImages.find((b) => b.src === HERO_SRC) ?? allImages[0];
 
-/** Цифры из текста блока «О школе» — значения не вычисляются, а взяты как есть. */
+/**
+ * Цифры из текста блока «О школе». Значения не вычисляются и не округляются,
+ * взяты из формулировки сайта. «ТОП-170» вынесен в заголовок раздела и
+ * плиткой не дублируется.
+ */
 const stats = [
-  { value: 'ТОП-170', label: 'лучших образовательных организаций' },
   { value: '10', label: 'уникальных учебных корпусов' },
   { value: '5', label: 'школьных корпусов' },
   { value: '5', label: 'дошкольных корпусов' },
@@ -204,7 +207,7 @@ export default function HomePage() {
       {/* ---------------------------------------------------------------- новости */}
       <Section>
         <SectionHead eyebrow="Новости школы" title="Новости школы" />
-        <Blocks blocks={(record('rec741130535')?.blocks ?? []).slice(0, 24)} />
+        <Blocks blocks={dropRepeats(record('rec741130535')?.blocks ?? []).slice(0, 24)} />
       </Section>
     </>
   );

@@ -4,7 +4,7 @@ import { Blocks } from '@/components/content/Blocks';
 import { Container } from '@/components/layout/Container';
 import { Section } from '@/components/layout/Section';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { flatten, getPage, innerPages, promoteHeadings } from '@/content/pages-data';
+import { dropRepeats, flatten, getPage, innerPages, promoteHeadings } from '@/content/pages-data';
 import { mainNav } from '@/content/navigation';
 import s from './page.module.css';
 
@@ -55,7 +55,7 @@ export default async function InnerPage({ params }: Props) {
       </div>
 
       <Section tone="surface">
-        <Blocks blocks={promoteHeadings(flatten(page))} />
+        <Blocks blocks={promoteHeadings(dropRepeats(flatten(page)))} />
       </Section>
     </>
   );

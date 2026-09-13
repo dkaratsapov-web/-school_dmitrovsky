@@ -252,16 +252,12 @@
 .statList {
   display: grid;
   gap: var(--grid-gap);
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-@media (min-width: 768px) {
-  .statList {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
+  /* колонки подстраиваются под число плиток и не режут длинные значения */
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
 }
 
 .stat {
+  min-width: 0;
   padding: var(--s-5) 0;
   border-top: 3px solid var(--color-accent);
 }
@@ -271,9 +267,12 @@
   font-family: var(--font-display);
   font-size: clamp(2rem, 1.4rem + 2.4vw, 3rem);
   font-weight: var(--fw-black);
-  line-height: 1;
+  line-height: 1.05;
   letter-spacing: var(--ls-display);
   color: var(--c-navy-900);
+  /* длинное значение переносится, а не наезжает на соседнюю колонку */
+  overflow-wrap: anywhere;
+  hyphens: none;
 }
 
 .statLabel {

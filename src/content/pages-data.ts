@@ -52,6 +52,36 @@ export function flatten(page: SourcePage): PageBlock[] {
 const SENTENCE_END = /[.!?:;]$/;
 
 /**
+ * Повторяющиеся служебные подписи.
+ *
+ * Шаблон Tilda ставит название школы подписью-водяным знаком на каждую
+ * полосу, из-за чего на главной оно встречается пять раз подряд. Текст
+ * не удаляется из материалов: он остаётся в шапке, подвале и заголовке
+ * страницы, а повторы внутри тела не выводятся. Вынесено в QUESTIONS.md.
+ */
+const REPEATED_LABELS = new Set([
+  'ГБОУ Школа «Дмитровский» г. Москва',
+]);
+
+/** Убирает служебные повторы и подряд идущие одинаковые абзацы. */
+export function dropRepeats(blocks: readonly PageBlock[]): PageBlock[] {
+  const seen = new Set<string>();
+  const out: PageBlock[] = [];
+  for (const b of blocks) {
+    if (b.type === 'paragraph') {
+      const t = b.text.trim();
+      if (REPEATED_LABELS.has(t)) continue;
+      if (t.length < 90) {
+        if (seen.has(t)) continue;
+        seen.add(t);
+      }
+    }
+    out.push(b);
+  }
+  return out;
+}
+
+/**
  * Восстанавливает уровни заголовков.
  *
  * В Zero-блоках Tilda заголовки свёрстаны обычными элементами, поэтому при
