@@ -60,6 +60,9 @@ const ALLOWED = new Set([
   'Учитель информатики',
 ]);
 const MENU_RECORD_TYPE = '976';
+// Служебная полоса T123: видимого текста нет, в выгрузку попала строка
+// из настроек формы — «Сообщение об успешной отправке!».
+const SERVICE_RECORD_TYPE = '131';
 
 /** Текст страницы без разметки, скриптов и стилей. */
 function pageText(slug) {
@@ -107,6 +110,7 @@ for (const page of pages) {
   const lost = [];
   for (const record of page.records) {
     if (record.recordType === MENU_RECORD_TYPE) continue;
+    if (record.recordType === SERVICE_RECORD_TYPE) continue;
     for (const block of record.blocks) {
       const pieces =
         block.type === 'paragraph' || block.type === 'heading' || block.type === 'button'

@@ -37,7 +37,7 @@ export function TeacherGrid({ items }: { items: readonly Teacher[] }) {
             </div>
 
             <div className={s.personBody}>
-              <h3 className={s.personName}>{t.name}</h3>
+              <h2 className={s.personName}>{t.name}</h2>
               {t.role ? <p className={s.personRole}>{t.role}</p> : null}
               {t.notes.map((n) => (
                 <p key={n} className={s.personNote}>
@@ -46,7 +46,7 @@ export function TeacherGrid({ items }: { items: readonly Teacher[] }) {
               ))}
               {t.achievements.length > 0 ? (
                 <div className={s.personAchievements}>
-                  <h4 className={s.personAchTitle}>Достижения</h4>
+                  <h3 className={s.personAchTitle}>Достижения</h3>
                   <ul className={s.personAchList}>
                     {t.achievements.map((a) => (
                       <li key={a}>{a}</li>

@@ -89,6 +89,15 @@ export function recordBlocks(page: SourcePage | undefined, id: string): PageBloc
 const MENU_RECORD_TYPE = '976';
 
 /**
+ * Служебная полоса Tilda (T123, «свой код»).
+ *
+ * Видимого содержимого у неё нет: в выгрузку попала строка из настроек
+ * формы — «Сообщение об успешной отправке!». На действующем сайте её
+ * не показывают, это подпись поля в админке.
+ */
+const SERVICE_RECORD_TYPE = '131';
+
+/**
  * Пункты дополнительного меню, разбросанные Tilda по полосам страницы.
  *
  * Сравнение строгое и с учётом регистра: настоящие заголовки разделов
@@ -126,7 +135,9 @@ export function isNoise(b: PageBlock): boolean {
 
 /** Записи страницы без служебных полос. */
 export function contentRecords(page: SourcePage): PageRecord[] {
-  return page.records.filter((r) => r.recordType !== MENU_RECORD_TYPE);
+  return page.records.filter(
+    (r) => r.recordType !== MENU_RECORD_TYPE && r.recordType !== SERVICE_RECORD_TYPE,
+  );
 }
 
 export function flatten(page: SourcePage): PageBlock[] {
@@ -190,7 +201,7 @@ export function promoteHeadings(blocks: readonly PageBlock[]): PageBlock[] {
     if (b.type !== 'paragraph') return b;
     const text = b.text.trim();
     if (text.length === 0 || text.length > 70) return b;
-    if (NUMBERED_STEP.test(text)) return { type: 'heading' as const, level: 3, text };
+    if (NUMBERED_STEP.test(text)) return { type: 'heading' as const, level: 2, text };
     if (SENTENCE_END.test(text)) return b;
     const next = blocks[i + 1];
     const hasBody =

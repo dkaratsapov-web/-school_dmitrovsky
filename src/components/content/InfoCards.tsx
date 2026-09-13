@@ -21,7 +21,7 @@ export function InfoCards({ items }: { items: readonly InfoCard[] }) {
       {items.map((card) => (
         <li key={card.title} className={s.infoCard}>
           <article className={s.infoCardInner}>
-            <h3 className={s.infoTitle}>{card.title}</h3>
+            <h2 className={s.infoTitle}>{card.title}</h2>
             {card.label ? (
               <p className={PRICE.test(card.label) ? s.infoPrice : s.infoLabel}>{card.label}</p>
             ) : null}

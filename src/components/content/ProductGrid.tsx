@@ -36,7 +36,7 @@ export function ProductGrid({ items }: { items: readonly Product[] }) {
               ) : null}
 
               <div className={s.productBody}>
-                <h3 className={s.productTitle}>{p.title}</h3>
+                <h2 className={s.productTitle}>{p.title}</h2>
                 {p.description ? <p className={s.productText}>{p.description}</p> : null}
 
                 {rest.length > 0 ? (

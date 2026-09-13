@@ -27,6 +27,9 @@ const urlRe = () => /https?:\/\/[^\s,;)»"']+/g;
  */
 const phoneRe = () => /(?:\+7|8)[\s\-]?\(?\d{3}\)?[\s\-]?\d{3}[\s\-]?\d{2}[\s\-]?\d{2}/g;
 
+/** Адрес почты: школьный ящик тоже набран в текстах обычной строкой. */
+const mailRe = () => /[\w.+-]+@[\w-]+\.[\w.-]+[\w]/g;
+
 /** Без разделителей это не номер, а кусок цифрового кода. */
 function looksLikePhone(value: string): boolean {
   return /[\s\-()]/.test(value);
@@ -46,6 +49,25 @@ function trimTrailing(url: string): { href: string; tail: string } {
   return { href: url.slice(0, match.index), tail: match[0] };
 }
 
+function linkMails(text: string, keyPrefix: string): ReactNode[] {
+  const out: ReactNode[] = [];
+  let last = 0;
+  const re = mailRe();
+
+  for (let m = re.exec(text); m !== null; m = re.exec(text)) {
+    if (m.index > last) out.push(text.slice(last, m.index));
+    out.push(
+      <a key={`${keyPrefix}-mail-${m.index}`} href={`mailto:${m[0]}`}>
+        {m[0]}
+      </a>,
+    );
+    last = m.index + m[0].length;
+  }
+
+  if (last < text.length) out.push(text.slice(last));
+  return out;
+}
+
 function linkPhones(text: string, keyPrefix: string): ReactNode[] {
   const out: ReactNode[] = [];
   let last = 0;
@@ -53,7 +75,7 @@ function linkPhones(text: string, keyPrefix: string): ReactNode[] {
 
   for (let m = re.exec(text); m !== null; m = re.exec(text)) {
     if (!looksLikePhone(m[0])) continue;
-    if (m.index > last) out.push(text.slice(last, m.index));
+    if (m.index > last) out.push(...linkMails(text.slice(last, m.index), `${keyPrefix}-${m.index}`));
     out.push(
       <a key={`${keyPrefix}-tel-${m.index}`} href={`tel:${telHref(m[0])}`}>
         {m[0]}
@@ -62,7 +84,7 @@ function linkPhones(text: string, keyPrefix: string): ReactNode[] {
     last = m.index + m[0].length;
   }
 
-  if (last < text.length) out.push(text.slice(last));
+  if (last < text.length) out.push(...linkMails(text.slice(last), `${keyPrefix}-tail`));
   return out;
 }
 

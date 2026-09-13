@@ -47,7 +47,7 @@ export function NewsGrid({ items }: { items: readonly NewsItem[] }) {
               <div className={s.newsBody}>
                 {item.title ? (
                   item.title.length <= HEADING_LIMIT ? (
-                    <h3 className={s.newsTitle}>{item.title}</h3>
+                    <h2 className={s.newsTitle}>{item.title}</h2>
                   ) : (
                     <p className={s.newsText}><RichText text={item.title} /></p>
                   )

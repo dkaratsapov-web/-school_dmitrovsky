@@ -24,6 +24,8 @@ const T_CARD = '390';
 const T_FAQ = '585';
 /** Форма записи: заголовок, подводка, текст согласия. */
 const T_FORM = '702';
+/** Полоса с полями формы обратной связи: Email, Name, Phone, Comments. */
+const T_FIELDS = '678';
 
 /* -------------------------------------------------------------------- разделы */
 
@@ -550,6 +552,32 @@ export function composePage(page: SourcePage): Section[] {
         sections.push({ kind: 'form', form, id: `zapis-${sections.length}` });
         continue;
       }
+    }
+
+    /*
+     * Полоса с полями формы обратной связи идёт отдельной записью, а её
+     * заголовок, подводка, подпись кнопки и текст согласия — в предыдущей.
+     * Собираем их в одну форму, иначе поля остаются списком английских
+     * слов без заголовка, а подводка — абзацем в никуда.
+     */
+    if (r.recordType === T_FIELDS) {
+      const fields = paragraphs(blocks);
+      const prev = sections[sections.length - 1];
+      const header = prev?.kind === 'blocks' ? paragraphs(prev.blocks) : [];
+      const consent = header.find((t) => t.toLowerCase().includes('политикой конфиденциальности'));
+      if (header.length > 0 && consent) sections.pop();
+      const [title, lead] = header;
+      sections.push({
+        kind: 'form',
+        id: `zapis-${sections.length}`,
+        form: {
+          title: title ?? 'Форма обратной связи',
+          ...(lead ? { lead } : {}),
+          fields,
+          ...(consent ? { consent } : {}),
+        },
+      });
+      continue;
     }
 
     const offer = parseOffer(blocks);

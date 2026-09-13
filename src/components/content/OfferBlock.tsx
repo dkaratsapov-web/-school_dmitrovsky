@@ -66,7 +66,7 @@ export function OfferBlock({ offer }: { offer: Offer }) {
 
         {offer.program.length > 0 ? (
           <div className={s.offerProgram}>
-            {offer.programTitle ? <h3 className={s.offerProgramTitle}>{offer.programTitle}</h3> : null}
+            {offer.programTitle ? <h2 className={s.offerProgramTitle}>{offer.programTitle}</h2> : null}
             <ul className={s.offerProgramList}>
               {offer.program.map((item) => (
                 <li key={item}>
