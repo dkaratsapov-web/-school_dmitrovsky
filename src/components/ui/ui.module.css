@@ -528,7 +528,7 @@
   align-items: flex-end;
   justify-content: center;
   padding: 0;
-  background: rgba(6, 18, 42, 0.55);
+  background: rgba(0, 13, 27, 0.55);
   backdrop-filter: blur(2px);
   animation: fade var(--t-base) var(--ease);
 }

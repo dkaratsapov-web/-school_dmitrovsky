@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { siteName } from '@/content/site';
 import s from './site.module.css';
@@ -5,18 +6,23 @@ import s from './site.module.css';
 /**
  * Логотип школы.
  *
- * ТЗ §5: логотип не перерисовывается, не деформируется, пропорции не меняются.
- * До получения оригинального файла логотипа (SVG или PNG высокого качества)
- * выводится нейтральная текстовая плашка — см. docs/INVENTORY.md, BRAND-01.
- * Когда файл будет добавлен в /public/brand/logo.svg, компонент подставит его
- * без изменения пропорций.
+ * Файл взят из материалов действующего сайта без перерисовки и изменения
+ * пропорций (ТЗ §5). Доступные исходники растровые и небольшие:
+ * синий вариант 120×120, белый 248×202. Векторный оригинал запрошен
+ * отдельно — см. docs/INVENTORY_CHECK.md, пункт BRAND-01.
  */
-export function Logo({ href = '/' }: { href?: string }) {
+export function Logo({ href = '/', variant = 'light' }: { href?: string; variant?: 'light' | 'dark' }) {
+  const src = variant === 'dark' ? '/brand/logo-white.png' : '/brand/logo.png';
   return (
     <Link className={s.brand} href={href} aria-label={`${siteName} — на главную`}>
-      <span className={s.brandMark} aria-hidden="true">
-        Д
-      </span>
+      <Image
+        className={s.brandLogo}
+        src={src}
+        alt=""
+        width={120}
+        height={120}
+        priority
+      />
       <span className={s.brandText}>
         <span className={s.brandName}>{siteName}</span>
         <span className={s.brandNote}>Москва</span>

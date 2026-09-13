@@ -3,7 +3,7 @@ import '@/styles/globals.css';
 import { Header } from '@/components/site/Header';
 import { Footer } from '@/components/site/Footer';
 import { CookieNotice } from '@/components/ui/CookieNotice';
-import { footerNav, mainNav } from '@/content/navigation';
+import { footerNav, legalNav, mainNav } from '@/content/navigation';
 import { contacts, cookieNotice, siteName, siteUrl } from '@/content/site';
 
 /**
@@ -15,10 +15,14 @@ import { contacts, cookieNotice, siteName, siteUrl } from '@/content/site';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: siteName,
-    template: `%s — ${siteName}`,
+    default:
+      'ГБОУ г. Москвы Школа «Дмитровский» имени Героя Советского Союза В.П. Кислякова',
+    template: `%s`,
   },
-  description: '',
+  description:
+    'Школа «Дмитровский» предлагает разнообразные образовательные программы, ' +
+    'включая углубленное изучение предметов, кружки и секции по интересам, ' +
+    'а также мероприятия и конкурсы, способствующие развитию творческого потенциала учащихся',
   openGraph: {
     type: 'website',
     locale: 'ru_RU',
@@ -29,7 +33,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#102a5c',
+  themeColor: '#013366',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -44,16 +48,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <main id="main">{children}</main>
 
-        <Footer nav={mainNav} serviceNav={footerNav} contacts={contacts} />
+        <Footer nav={footerNav} serviceNav={legalNav} contacts={contacts} />
 
-        {cookieNotice ? (
-          <CookieNotice
-            text={cookieNotice.text}
-            policyHref={cookieNotice.policyHref}
-            policyLabel={cookieNotice.policyLabel}
-            acceptLabel={cookieNotice.acceptLabel}
-          />
-        ) : null}
+        <CookieNotice
+          text={cookieNotice.text}
+          policyHref={cookieNotice.policyHref}
+          policyLabel={cookieNotice.policyLabel}
+          acceptLabel={cookieNotice.acceptLabel}
+        />
       </body>
     </html>
   );

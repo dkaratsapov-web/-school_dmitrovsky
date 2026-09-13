@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { Container } from '../layout/Container';
 import { Icon } from '../ui/Icon';
@@ -24,9 +25,7 @@ export function Footer({ nav, serviceNav, contacts, legalLines }: Props) {
         <div className={s.footerTop}>
           <div className={s.footerBrand}>
             <Link className={s.footerBrandRow} href="/">
-              <span className={s.brandMark} aria-hidden="true">
-                Д
-              </span>
+              <Image src="/brand/logo-white.png" alt="" width={248} height={202} className={s.footerLogo} />
               <span className={s.brandName}>{siteName}</span>
             </Link>
 
