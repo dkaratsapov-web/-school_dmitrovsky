@@ -78,16 +78,45 @@ function Text({ blocks }: { blocks: readonly PageBlock[] }) {
   );
 }
 
-export function Blocks({ blocks }: { blocks: readonly PageBlock[] }) {
+export function Blocks({
+  blocks,
+  media,
+}: {
+  blocks: readonly PageBlock[];
+  /** `logo` ограничивает размер изображений: это знаки, а не снимки. */
+  media?: 'logo';
+}) {
   const groups = group(blocks);
+  const figureClass = media === 'logo' ? s.logo : s.single;
   return (
     <>
       {groups.map((g, i) => {
         if (g.kind === 'text') return <Text key={i} blocks={g.blocks} />;
         const first = g.images[0];
+
+        // Логотипы не увеличивают по клику: лупа для знака бессмысленна,
+        // а галерея растягивает его на всю ширину.
+        if (media === 'logo') {
+          return (
+            <div key={i} className={s.logoRow}>
+              {g.images.map((im) => (
+                <figure key={im.src} className={s.logo}>
+                  <Image
+                    src={asset(im.src)}
+                    alt={im.alt}
+                    width={im.width}
+                    height={im.height}
+                    sizes="280px"
+                  />
+                </figure>
+              ))}
+            </div>
+          );
+        }
+
         if (g.images.length === 1 && first) {
           return (
-            <figure key={i} className={s.single}>
+            <figure key={i} className={figureClass}>
               <Image
                 src={asset(first.src)}
                 alt={first.alt}

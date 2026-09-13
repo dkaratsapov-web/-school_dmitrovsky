@@ -68,3 +68,31 @@
   background: var(--color-accent-hover);
   color: #fff;
 }
+
+/* Логотип партнёра: знак, а не снимок. Во всю ширину колонки квадрат
+   900×900 занимает экран целиком, поэтому размер ограничен, а поле
+   вокруг знака оставлено светлым. */
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: var(--s-6) 0;
+}
+
+.logo :global(img) {
+  width: auto;
+  max-width: min(100%, 280px);
+  max-height: 120px;
+  object-fit: contain;
+}
+
+.logoRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-8);
+}
+
+.logoRow .logo {
+  margin: var(--s-4) 0;
+}

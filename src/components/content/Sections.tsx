@@ -68,7 +68,10 @@ export function Sections({ sections }: { sections: readonly PageSection[] }) {
           case 'blocks':
             return (
               <Section key={key} tone="default">
-                <Blocks blocks={promoteHeadings(groupFlatLists(dropRepeats(section.blocks)))} />
+                <Blocks
+                  blocks={promoteHeadings(groupFlatLists(dropRepeats(section.blocks)))}
+                  {...(section.media ? { media: section.media } : {})}
+                />
               </Section>
             );
 

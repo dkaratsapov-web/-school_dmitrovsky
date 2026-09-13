@@ -90,7 +90,7 @@ export type FormBlock = {
 };
 
 export type Section =
-  | { kind: 'blocks'; blocks: PageBlock[] }
+  | { kind: 'blocks'; blocks: PageBlock[]; media?: 'logo' }
   | { kind: 'offer'; offer: Offer }
   | { kind: 'cards'; items: InfoCard[] }
   | { kind: 'faq'; title?: string; items: QA[] }
@@ -532,6 +532,17 @@ function parseForm(blocks: readonly PageBlock[]): FormBlock | null {
   };
 }
 
+/**
+ * Страницы, где изображения — логотипы, а не снимки.
+ *
+ * На странице партнёров пять логотипов: эмблема МЧС, знаки ЦПСО, «Отечества»
+ * и «ОПОРЫ РОССИИ». В потоке блоков они выводились во всю ширину колонки —
+ * квадрат 900×900 занимал экран целиком. Подписи и логотипы в выгрузке
+ * перемешаны, однозначно связать их нельзя (QUESTIONS.md, D-18), поэтому
+ * порядок сохраняется, а размер ограничивается.
+ */
+const LOGO_PAGES = new Set(['partnery']);
+
 /** Разбирает страницу по типам полос Tilda. */
 export function composePage(page: SourcePage): Section[] {
   if (page.slug === 'teachers') return composeTeachers(page);
@@ -613,7 +624,9 @@ export function composePage(page: SourcePage): Section[] {
       }
     }
 
-    sections.push({ kind: 'blocks', blocks });
+    sections.push(
+      LOGO_PAGES.has(page.slug) ? { kind: 'blocks', blocks, media: 'logo' } : { kind: 'blocks', blocks },
+    );
   }
 
   return linkOffersToForms(mergeTextSections(sections));
@@ -645,11 +658,15 @@ function mergeTextSections(sections: readonly Section[]): Section[] {
   const out: Section[] = [];
   for (const section of sections) {
     const last = out[out.length - 1];
-    if (section.kind === 'blocks' && last?.kind === 'blocks') {
+    if (section.kind === 'blocks' && last?.kind === 'blocks' && last.media === section.media) {
       last.blocks = [...last.blocks, ...section.blocks];
       continue;
     }
-    out.push(section.kind === 'blocks' ? { kind: 'blocks', blocks: [...section.blocks] } : section);
+    out.push(
+      section.kind === 'blocks'
+        ? { kind: 'blocks', blocks: [...section.blocks], ...(section.media ? { media: section.media } : {}) }
+        : section,
+    );
   }
   return out;
 }
