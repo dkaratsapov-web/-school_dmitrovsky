@@ -2,6 +2,9 @@ import type { MetadataRoute } from 'next';
 import { pages } from '@/content/collections';
 import { siteUrl } from '@/content/site';
 
+/** Файл статический: собирается на этапе сборки. */
+export const dynamic = 'force-static';
+
 /**
  * sitemap.xml (ТЗ §12).
  * Состав формируется из карты страниц, собранной при инвентаризации,
