@@ -78,7 +78,7 @@ export function MobileMenu({ open, onClose, items, contacts, cta }: Props) {
       >
         <div className={s.sheetHead}>
           <span className={s.sheetTitle}>Меню</span>
-          <button type="button" className={s.burger} onClick={onClose} aria-label="Закрыть меню">
+          <button type="button" className={s.sheetClose} onClick={onClose} aria-label="Закрыть меню">
             <Icon name="close" size={22} />
           </button>
         </div>

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Icon } from '../ui/Icon';
-import { Button, ButtonLink } from '../ui/Button';
+import { ButtonLink } from '../ui/Button';
 import { Container } from '../layout/Container';
 import { Logo } from './Logo';
 import { MobileMenu } from './MobileMenu';
@@ -76,14 +76,15 @@ export function Header({ nav, contacts, cta, accessibilityHref }: Props) {
                 {cta.label}
               </ButtonLink>
             ) : null}
-            <Button
+            <button
+              type="button"
               className={s.burger}
               onClick={() => setMenuOpen(true)}
               aria-label="Открыть меню"
               aria-expanded={menuOpen}
             >
               <Icon name="menu" size={24} />
-            </Button>
+            </button>
           </div>
         </div>
       </Container>

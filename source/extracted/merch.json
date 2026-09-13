@@ -1,0 +1,841 @@
+{
+ "slug": "merch",
+ "title": "Брендированный школьный мерч",
+ "description": "Брендированный школьный мерч",
+ "records": [
+  {
+   "id": "rec1323725451",
+   "recordType": "1035",
+   "blocks": [
+    {
+     "type": "button",
+     "text": "Выбирай свой образ",
+     "href": "https://t.me/sch_dmitrovsky/9259"
+    }
+   ]
+  },
+  {
+   "id": "rec811366168",
+   "recordType": "776",
+   "blocks": [
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6634-3232-4639-b030-383532316638/1.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3064-6661-4263-a338-353932616430/11.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Значок металлический с логотипом"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "button",
+     "text": "Подробнее",
+     "href": "#prodpopup"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6636-6463-4137-b038-376531303463/2.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3635-3436-4531-a239-633233363133/22.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Текстильная нашивка"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "button",
+     "text": "Подробнее",
+     "href": "#prodpopup"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3830-3438-4238-a639-653933333866/32.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3032-3762-4336-a337-636339376630/3.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Рубашка темно-синяя"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "button",
+     "text": "Подробнее",
+     "href": "#prodpopup"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3839-6430-4235-b264-383963383431/4.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6665-3735-4130-b137-666565663464/42.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Свитшот серый с логотипом"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "button",
+     "text": "Подробнее",
+     "href": "#prodpopup"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6630-3235-4663-b130-613138313231/5.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6135-3237-4862-a163-396266336232/53.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Свитшот синий с логотипом"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "button",
+     "text": "Подробнее",
+     "href": "#prodpopup"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6638-3666-4638-a566-626661313437/6.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3134-3039-4630-b632-333034313438/66.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Бомбер"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "button",
+     "text": "Подробнее",
+     "href": "#prodpopup"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3634-6464-4466-b466-626333626565/7.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3931-3763-4536-a637-386666353133/71.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Пиджак укороченный"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "button",
+     "text": "Подробнее",
+     "href": "#prodpopup"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3934-3130-4436-a431-303235353264/8.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3765-3539-4138-b837-393366376138/82.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Жилет прямой"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "button",
+     "text": "Подробнее",
+     "href": "#prodpopup"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6261-3539-4365-b364-343635303534/9.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3138-6631-4363-a366-303931316264/91.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Жилет укороченный"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "button",
+     "text": "Подробнее",
+     "href": "#prodpopup"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3132-3362-4563-a337-323133386662/10.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6531-3462-4039-a562-316333373963/101.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Рубашка светло-голубая с вышивкой и маскотом"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "button",
+     "text": "Подробнее",
+     "href": "#prodpopup"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3434-3435-4237-b463-616137386162/11.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3264-3737-4263-b630-666137343931/111.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Пиджак мужской"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "button",
+     "text": "Подробнее",
+     "href": "#prodpopup"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6563-6166-4636-b634-643533373931/12.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6638-6631-4337-a132-376435363161/121.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Бомбер синий"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "button",
+     "text": "Подробнее",
+     "href": "#prodpopup"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6634-3232-4639-b030-383532316638/1.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3064-6661-4263-a338-353932616430/11.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6634-3232-4639-b030-383532316638/1.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3064-6661-4263-a338-353932616430/11.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Значок металлический с логотипом"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "paragraph",
+     "text": "Значок металлический с логотипом Знак - латунь ювелирная Ручная обработка Эмаль - белая и голубая Крепление - игла цанга Размер 22,0х2,0 мм. Сделано в России"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6636-6463-4137-b038-376531303463/2.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3635-3436-4531-a239-633233363133/22.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6636-6463-4137-b038-376531303463/2.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3635-3436-4531-a239-633233363133/22.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Текстильная нашивка"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "paragraph",
+     "text": "Текстильная нашивка с логотипом Размер 8см"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3830-3438-4238-a639-653933333866/32.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3032-3762-4336-a337-636339376630/3.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3764-3032-4635-a130-383732633635/33.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3830-3438-4238-a639-653933333866/32.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3032-3762-4336-a337-636339376630/3.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3764-3032-4635-a130-383732633635/33.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Рубашка темно-синяя"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "paragraph",
+     "text": "Универсальная рубашка для мальчиков и девочек Карман слева на груди Состав: хлопок Размеры XS, S, M, L"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3839-6430-4235-b264-383963383431/4.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6665-3735-4130-b137-666565663464/42.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3439-3535-4438-a439-333238306462/43.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6461-3063-4164-a566-336535636661/44.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3839-6430-4235-b264-383963383431/4.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6665-3735-4130-b137-666565663464/42.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3439-3535-4438-a439-333238306462/43.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6461-3063-4164-a566-336535636661/44.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Свитшот серый с логотипом"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "paragraph",
+     "text": "Серый свитшот универсальный Состав: хлопок, полиэстер, футер трехнитка Посадка оверсайз"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6630-3235-4663-b130-613138313231/5.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6135-3237-4862-a163-396266336232/53.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3363-3534-4332-a632-313862636334/54.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6563-3032-4339-b037-316161373166/55.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6630-3235-4663-b130-613138313231/5.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6135-3237-4862-a163-396266336232/53.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3363-3534-4332-a632-313862636334/54.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6563-3032-4339-b037-316161373166/55.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Свитшот синий с логотипом"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "paragraph",
+     "text": "Синий свитшот универсальный Состав: хлопок, полиэстер, футер трехнитка Посадка оверсайз"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6638-3666-4638-a566-626661313437/6.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3134-3039-4630-b632-333034313438/66.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6638-3666-4638-a566-626661313437/6.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3134-3039-4630-b632-333034313438/66.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Бомбер"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "paragraph",
+     "text": "Бомбер универсальный на кнопках Вышивка на груди Состав: хлопок"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3634-6464-4466-b466-626333626565/7.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3931-3763-4536-a637-386666353133/71.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3966-3739-4632-b438-383962303635/72.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3634-6464-4466-b466-626333626565/7.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3931-3763-4536-a637-386666353133/71.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3966-3739-4632-b438-383962303635/72.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Пиджак укороченный"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "paragraph",
+     "text": "Пиджак укороченный с вышивкой логотипа Имеется подклад"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3934-3130-4436-a431-303235353264/8.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3765-3539-4138-b837-393366376138/82.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6665-3730-4536-a462-336336656632/83.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3934-3130-4436-a431-303235353264/8.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3765-3539-4138-b837-393366376138/82.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6665-3730-4536-a462-336336656632/83.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Жилет прямой"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "paragraph",
+     "text": "Жилет прямой с вышивкой логотипа Размеры XS, S, M, L Состав: полиэстер, вискоза"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6261-3539-4365-b364-343635303534/9.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3138-6631-4363-a366-303931316264/91.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3930-3339-4234-a434-393964633535/93.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6261-3539-4365-b364-343635303534/9.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3138-6631-4363-a366-303931316264/91.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3930-3339-4234-a434-393964633535/93.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Жилет укороченный"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "paragraph",
+     "text": "Жилет укороченный Вышивка в цвет изделия Состав: полиэстер, вискоза"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3132-3362-4563-a337-323133386662/10.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6531-3462-4039-a562-316333373963/101.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3631-3564-4235-b366-303065383238/102.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3132-3362-4563-a337-323133386662/10.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6531-3462-4039-a562-316333373963/101.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3631-3564-4235-b366-303065383238/102.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Рубашка светло-голубая с вышивкой и маскотом"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "paragraph",
+     "text": "Рубашка в светло-голубом цвете Универсальная На манжете рукава бирка со школьным маскотом Вышивка на груди Состав: хлопок"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3434-3435-4237-b463-616137386162/11.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3264-3737-4263-b630-666137343931/111.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3434-3435-4237-b463-616137386162/11.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3264-3737-4263-b630-666137343931/111.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Пиджак мужской"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "paragraph",
+     "text": "Пиджак мужской с вышивкой Фасон: Однобортный, Приталенный Имеется подклад"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6563-6166-4636-b634-643533373931/12.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6638-6631-4337-a132-376435363161/121.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3964-3530-4139-a263-616163333335/123.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6261-3636-4031-b366-656364393962/124.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3934-6139-4963-b238-396264613731/125.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6333-3764-4237-b665-663661623464/126.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6563-6166-4636-b634-643533373931/12.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6638-6631-4337-a132-376435363161/121.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3964-3530-4139-a263-616163333335/123.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6261-3636-4031-b366-656364393962/124.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3934-6139-4963-b238-396264613731/125.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6333-3764-4237-b665-663661623464/126.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Бомбер синий"
+    },
+    {
+     "type": "paragraph",
+     "text": "р."
+    },
+    {
+     "type": "paragraph",
+     "text": "Бомбер универсальный на кнопках Вышивка на груди Состав: хлопок"
+    }
+   ]
+  },
+  {
+   "id": "rec811518128",
+   "recordType": "825",
+   "blocks": [
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6362-3836-4661-b039-373166666338/_25-05_1.png",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Добро пожаловать!"
+    },
+    {
+     "type": "paragraph",
+     "text": "Если вам нужна более подробная информация о нашей продукции или желаете оформить заказ, напишите нам:"
+    },
+    {
+     "type": "paragraph",
+     "text": "WhatsApp"
+    },
+    {
+     "type": "paragraph",
+     "text": "+7 925 597-22-01"
+    }
+   ]
+  }
+ ]
+}

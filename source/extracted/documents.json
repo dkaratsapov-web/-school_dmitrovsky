@@ -1,0 +1,173 @@
+{
+ "slug": "documents",
+ "title": "Документы школы, ГБОУ «Школа «Дмитровский», Москва",
+ "description": "Устав, аккредитации ГБОУ «Школа «Дмитровский», Москва",
+ "records": [
+  {
+   "id": "rec742590415",
+   "recordType": "976",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "О нас"
+    },
+    {
+     "type": "paragraph",
+     "text": "Педагоги"
+    },
+    {
+     "type": "paragraph",
+     "text": "Вакансии"
+    },
+    {
+     "type": "paragraph",
+     "text": "Документы"
+    },
+    {
+     "type": "paragraph",
+     "text": "Для родителей"
+    },
+    {
+     "type": "paragraph",
+     "text": "Образование"
+    },
+    {
+     "type": "paragraph",
+     "text": "Питание"
+    },
+    {
+     "type": "paragraph",
+     "text": "Безопасность в школе"
+    },
+    {
+     "type": "paragraph",
+     "text": "Партнеры"
+    }
+   ]
+  },
+  {
+   "id": "rec738946792",
+   "recordType": "396",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Партнеры"
+    },
+    {
+     "type": "paragraph",
+     "text": "Безопасность в школе"
+    },
+    {
+     "type": "paragraph",
+     "text": "Документы"
+    },
+    {
+     "type": "paragraph",
+     "text": "Для родителей"
+    },
+    {
+     "type": "paragraph",
+     "text": "Образование"
+    },
+    {
+     "type": "paragraph",
+     "text": "Питание"
+    },
+    {
+     "type": "paragraph",
+     "text": "Документы школы"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3964-3665-4965-b061-643034343463/__2024-04-07__2038_1.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Устав ГБОУ Школа «Дмитровский»"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6536-3837-4130-b166-613635613963/__2024-04-07__2038_2.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Приложение № 1 к аккредитации"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3565-6639-4762-b634-633162636138/__2024-04-07__2038_3.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Лицензия на образовательную деятельность"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3038-3131-4939-b336-303134306463/___page-0001_1.jpg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Свидетельство государственной аккредитации"
+    },
+    {
+     "type": "paragraph",
+     "text": "Педагоги"
+    },
+    {
+     "type": "paragraph",
+     "text": "Документы"
+    },
+    {
+     "type": "paragraph",
+     "text": "О нас"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3764-3835-4331-a363-313637316434/-_.png",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Санитарно-эпидемиологическое заключение"
+    }
+   ]
+  },
+  {
+   "id": "rec739159711",
+   "recordType": "396",
+   "blocks": [
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3764-3239-4564-b734-613463333832/__1___1.jpg",
+     "alt": ""
+    }
+   ]
+  },
+  {
+   "id": "rec739163947",
+   "recordType": "396",
+   "blocks": [
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3964-3736-4537-b037-663836306662/___1.jpg",
+     "alt": ""
+    }
+   ]
+  },
+  {
+   "id": "rec832123856",
+   "recordType": "396",
+   "blocks": [
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3434-3763-4936-b065-653532623036/-_.png",
+     "alt": ""
+    }
+   ]
+  }
+ ]
+}

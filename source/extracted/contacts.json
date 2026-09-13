@@ -1,0 +1,120 @@
+{
+ "slug": "contacts",
+ "title": "Контакты ГБОУ «Школа «Дмитровский», Москва",
+ "description": "Контакты ГБОУ «Школа «Дмитровский», Москва",
+ "records": [
+  {
+   "id": "rec741225978",
+   "recordType": "396",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "КОНТАКТЫ"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild6564-3437-4562-b033-653963643838/Vector.png",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Адрес"
+    },
+    {
+     "type": "paragraph",
+     "text": "г. Москва, Карельский бульвар, д. 20"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3432-6165-4739-b335-376364633539/Vector-2.png",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Телефон"
+    },
+    {
+     "type": "paragraph",
+     "text": "+7 (495) 143-21-21"
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3339-6161-4564-b430-626366386664/Vector-1.png",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Электронная почта"
+    },
+    {
+     "type": "paragraph",
+     "text": "emelyanenko.vr@sch1631.ru"
+    }
+   ]
+  },
+  {
+   "id": "rec742774209",
+   "recordType": "396",
+   "blocks": [
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3663-3231-4931-a666-306239396636/WY_viE1ksRhO3.jpg",
+     "alt": ""
+    },
+    {
+     "type": "image",
+     "url": "https://static.tildacdn.com/tild3038-6161-4962-b533-396466363035/Vector_6.svg",
+     "alt": ""
+    },
+    {
+     "type": "paragraph",
+     "text": "Получите консультацию"
+    },
+    {
+     "type": "paragraph",
+     "text": "Подробно проконсультируем по поступлению и обучению, ответим на все интересующие вас вопросы"
+    },
+    {
+     "type": "paragraph",
+     "text": "Получить консультацию"
+    },
+    {
+     "type": "paragraph",
+     "text": "Нажимая кнопку «Получить консультацию», вы соглашаетесь с политикой конфиденциальности сайта"
+    }
+   ]
+  },
+  {
+   "id": "rec742534554",
+   "recordType": "678",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Email"
+    },
+    {
+     "type": "paragraph",
+     "text": "Name"
+    },
+    {
+     "type": "paragraph",
+     "text": "Phone"
+    },
+    {
+     "type": "paragraph",
+     "text": "Comments"
+    }
+   ]
+  },
+  {
+   "id": "rec742534604",
+   "recordType": "131",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "Сообщение об успешной отправке!"
+    }
+   ]
+  }
+ ]
+}

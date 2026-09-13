@@ -1,0 +1,43 @@
+{
+ "slug": "kruzhki",
+ "title": "Кружки ГБОУ «Школа «Дмитровский», Москва",
+ "description": "Кружки ГБОУ «Школа «Дмитровский», Москва",
+ "records": [
+  {
+   "id": "rec2260069071",
+   "recordType": "396",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "кружки"
+    }
+   ]
+  },
+  {
+   "id": "rec2260267231",
+   "recordType": "1281",
+   "blocks": [
+    {
+     "type": "paragraph",
+     "text": "1-4 класс"
+    },
+    {
+     "type": "paragraph",
+     "text": "5-8 класс"
+    },
+    {
+     "type": "paragraph",
+     "text": "9 класс"
+    },
+    {
+     "type": "paragraph",
+     "text": "10-11 класс"
+    },
+    {
+     "type": "paragraph",
+     "text": "1-4 класс 5-8 класс 9 класс 10-11 класс"
+    }
+   ]
+  }
+ ]
+}

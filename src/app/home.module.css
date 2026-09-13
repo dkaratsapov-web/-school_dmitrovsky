@@ -1,30 +1,48 @@
-.statusHero {
-  background: linear-gradient(135deg, var(--c-navy-950), var(--c-navy-800) 65%, var(--c-wine-900));
+/* ------------------------------------------------------------- первый экран */
+.hero {
+  position: relative;
+  background: var(--c-navy-900);
   color: #fff;
+  overflow: hidden;
 }
 
-.statusHeroInner {
+.heroMedia {
+  position: absolute;
+  inset: 0;
+}
+
+.heroMedia :global(img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Затемнение слева направо: текст читается, лица справа не перекрыты */
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to right,
+      rgba(0, 13, 27, 0.94) 0%,
+      rgba(0, 13, 27, 0.8) 42%,
+      rgba(0, 13, 27, 0.3) 75%,
+      rgba(0, 13, 27, 0.12) 100%
+    ),
+    linear-gradient(to top, rgba(0, 13, 27, 0.65) 0%, rgba(0, 13, 27, 0) 50%);
+}
+
+.heroInner {
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  justify-content: flex-end;
+  min-height: clamp(440px, 66vh, 640px);
   padding-block: clamp(3rem, 2rem + 5vw, 6rem);
   max-width: 46rem;
 }
 
-.statusBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--s-2);
-  padding: var(--s-2) var(--s-4);
-  margin-bottom: var(--s-5);
-  border-radius: var(--r-pill);
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  font-size: var(--fs-caption);
-  font-weight: var(--fw-medium);
-}
-
-.statusTitle {
+.heroTitle {
   font-size: var(--fs-display);
   font-weight: var(--fw-black);
   line-height: var(--lh-tight);
@@ -33,38 +51,120 @@
   margin-bottom: var(--s-5);
 }
 
-.statusLead {
+.heroLead {
   font-size: var(--fs-lead);
   line-height: var(--lh-snug);
-  color: rgba(255, 255, 255, 0.84);
+  color: rgba(255, 255, 255, 0.86);
   margin-bottom: var(--s-8);
+  max-width: 34rem;
 }
 
-.statusActions {
+.heroActions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--s-3);
 }
 
-.stepDone,
-.stepPending {
-  display: inline-flex;
+/* ----------------------------------------------------------------- о школе */
+.aboutGrid {
+  display: grid;
+  gap: var(--s-10);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) {
+  .aboutGrid {
+    grid-template-columns: 1.1fr 1fr;
+    gap: var(--s-16);
+    align-items: start;
+  }
+}
+
+.aboutText {
+  max-width: var(--measure);
+  color: var(--c-ink-700);
+  font-size: var(--fs-lead);
+}
+
+/* -------------------------------------------------------------- приглашение */
+.ctaGrid {
+  display: grid;
+  gap: var(--s-8);
+  grid-template-columns: 1fr;
   align-items: center;
-  gap: var(--s-2);
-  align-self: flex-start;
-  padding: var(--s-1) var(--s-3);
-  border-radius: var(--r-pill);
-  font-size: var(--fs-caption);
-  font-weight: var(--fw-medium);
 }
 
-.stepDone {
-  background: var(--c-success-bg);
-  color: #10452a;
+@media (min-width: 1024px) {
+  .ctaGrid {
+    grid-template-columns: 1.6fr 1fr;
+    gap: var(--s-16);
+  }
 }
 
-.stepPending {
-  background: var(--c-bg);
-  color: var(--color-text-muted);
+.ctaTitle {
+  color: #fff;
+  margin-bottom: var(--s-4);
+}
+
+.ctaText {
+  color: rgba(255, 255, 255, 0.78);
+  max-width: var(--measure);
+  font-size: var(--fs-lead);
+  margin: 0 0 var(--s-3);
+}
+
+.ctaActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+}
+
+/* ------------------------------------------------------------------ текст */
+.textCols {
+  max-width: var(--measure);
+  color: var(--c-ink-700);
+}
+
+.textCols p {
+  font-size: var(--fs-lead);
+}
+
+/* ----------------------------------------------------------------- визиты */
+.visitGrid {
+  display: grid;
+  gap: var(--grid-gap);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .visitGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.visitCard {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+
+.visitMedia {
+  aspect-ratio: 3 / 2;
+  background: var(--c-navy-50);
+  overflow: hidden;
+}
+
+.visitMedia :global(img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.visitText {
+  margin: 0;
+  padding: var(--s-6);
+  color: var(--c-ink-700);
 }

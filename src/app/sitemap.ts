@@ -1,20 +1,17 @@
 import type { MetadataRoute } from 'next';
-import { pages } from '@/content/collections';
+import { sourcePages } from '@/content/pages-data';
 import { siteUrl } from '@/content/site';
 
 /** Файл статический: собирается на этапе сборки. */
 export const dynamic = 'force-static';
 
 /**
- * sitemap.xml (ТЗ §12).
- * Состав формируется из карты страниц, собранной при инвентаризации,
- * поэтому до её заполнения содержит только главную.
+ * sitemap.xml (ТЗ §12). Состав повторяет действующий сайт: адреса те же,
+ * главная отдаётся корнем.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const fromContent = pages.map((p) => ({
-    url: `${siteUrl}${p.path}`,
+  return sourcePages.map((p) => ({
+    url: p.slug === 'index' ? siteUrl : `${siteUrl}/${p.slug}`,
     lastModified: new Date(),
   }));
-
-  return fromContent.length > 0 ? fromContent : [{ url: siteUrl, lastModified: new Date() }];
 }

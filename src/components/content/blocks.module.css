@@ -1,0 +1,70 @@
+.prose {
+  max-width: var(--measure);
+}
+
+.prose > :global(h2) {
+  margin-top: var(--s-10);
+}
+
+.prose > :global(h3) {
+  margin-top: var(--s-8);
+}
+
+.prose > :global(*:first-child) {
+  margin-top: 0;
+}
+
+.prose :global(p),
+.prose :global(li) {
+  color: var(--c-ink-700);
+}
+
+.single {
+  margin: var(--s-8) 0;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--c-navy-50);
+}
+
+.single :global(img) {
+  width: 100%;
+  height: auto;
+}
+
+.galleryWrap {
+  margin: var(--s-8) 0;
+}
+
+.video {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  margin: var(--s-8) 0;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--c-navy-900);
+}
+
+.video iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.inlineAction {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: var(--s-3) var(--s-6);
+  border-radius: var(--r-md);
+  background: var(--color-accent);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-small);
+  text-decoration: none;
+}
+
+.inlineAction:hover {
+  background: var(--color-accent-hover);
+  color: #fff;
+}
