@@ -8,10 +8,15 @@ import type { NextConfig } from 'next';
 import { redirects as contentRedirects } from './src/content/redirects';
 
 /**
- * EXPORT_PREVIEW=1 собирает статическую копию для превью-ссылки.
- * На боевой сборке этот режим не используется.
+ * Режимы статического экспорта. На боевой сборке не используются.
+ *
+ * EXPORT_PREVIEW=1  — копия для превью-ссылки, пути относительные.
+ * PAGES_BASE_PATH   — сборка под GitHub Pages, где сайт лежит в подпапке
+ *                     с именем репозитория.
  */
 const isPreviewExport = process.env['EXPORT_PREVIEW'] === '1';
+const pagesBasePath = process.env['PAGES_BASE_PATH'] ?? '';
+const isPagesExport = pagesBasePath !== '';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -19,9 +24,16 @@ const nextConfig: NextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [360, 390, 640, 768, 1024, 1280, 1440, 1920],
-    ...(isPreviewExport ? { unoptimized: true } : {}),
+    ...(isPreviewExport || isPagesExport ? { unoptimized: true } : {}),
   },
-  ...(isPreviewExport
+  ...(isPagesExport
+    ? {
+        output: 'export' as const,
+        basePath: pagesBasePath,
+        assetPrefix: pagesBasePath,
+        trailingSlash: true,
+      }
+    : isPreviewExport
     ? { output: 'export' as const, assetPrefix: '.' }
     : {
         async redirects() {

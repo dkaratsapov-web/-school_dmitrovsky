@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint src --max-warnings=0",
     "typecheck": "tsc --noEmit",
-    "check:content": "node scripts/check-content.mjs"
+    "check:content": "node scripts/check-content.mjs",
+    "build:pages": "PAGES_BASE_PATH=/-school_dmitrovsky next build",
+    "build:preview": "EXPORT_PREVIEW=1 next build"
   },
   "dependencies": {
     "next": "^16.3.5",
