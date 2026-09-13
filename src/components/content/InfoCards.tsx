@@ -1,3 +1,4 @@
+import { RichText } from './RichText';
 import type { InfoCard } from '@/content/compositions';
 import s from './compositions.module.css';
 
@@ -26,7 +27,9 @@ export function InfoCards({ items }: { items: readonly InfoCard[] }) {
             ) : null}
             <ul className={s.infoList}>
               {card.items.map((it) => (
-                <li key={it}>{it}</li>
+                <li key={it}>
+                  <RichText text={it} />
+                </li>
               ))}
             </ul>
           </article>

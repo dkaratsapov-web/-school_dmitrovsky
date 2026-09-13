@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { Gallery } from '../media/Gallery';
+import { RichText } from './RichText';
 import { asset } from '@/lib/asset';
 import type { PageBlock } from '@/content/pages-data';
 import s from './blocks.module.css';
@@ -40,12 +41,18 @@ function Text({ blocks }: { blocks: readonly PageBlock[] }) {
             return <Tag key={i}>{b.text}</Tag>;
           }
           case 'paragraph':
-            return <p key={i}>{b.text}</p>;
+            return (
+              <p key={i}>
+                <RichText text={b.text} />
+              </p>
+            );
           case 'list':
             return (
               <ul key={i}>
                 {b.items.map((it, j) => (
-                  <li key={j}>{it}</li>
+                  <li key={j}>
+                    <RichText text={it} />
+                  </li>
                 ))}
               </ul>
             );

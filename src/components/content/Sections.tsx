@@ -1,6 +1,7 @@
 import { Blocks } from './Blocks';
 import { FormSection } from './FormSection';
 import { InfoCards } from './InfoCards';
+import { OfferBlock } from './OfferBlock';
 import { ProductGrid } from './ProductGrid';
 import { TeacherGrid } from './TeacherGrid';
 import { Section } from '@/components/layout/Section';
@@ -50,19 +51,29 @@ export function Sections({ sections }: { sections: readonly PageSection[] }) {
               </Section>
             );
 
+          case 'offer':
+            return (
+              <Section key={key} tone="surface">
+                <OfferBlock offer={section.offer} />
+              </Section>
+            );
+
           case 'form':
             return (
-              <Section key={key} tone="default">
+              <Section key={key} id={section.id} tone="default">
                 <FormSection form={section.form} />
               </Section>
             );
 
-          default:
+          case 'blocks':
             return (
               <Section key={key} tone="default">
                 <Blocks blocks={promoteHeadings(groupFlatLists(dropRepeats(section.blocks)))} />
               </Section>
             );
+
+          default:
+            return null;
         }
       })}
     </>

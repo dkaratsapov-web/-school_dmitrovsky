@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { RichText } from './RichText';
 import { asset } from '@/lib/asset';
 import type { NewsItem } from '@/content/compositions';
 import s from './compositions.module.css';
@@ -48,14 +49,16 @@ export function NewsGrid({ items }: { items: readonly NewsItem[] }) {
                   item.title.length <= HEADING_LIMIT ? (
                     <h3 className={s.newsTitle}>{item.title}</h3>
                   ) : (
-                    <p className={s.newsText}>{item.title}</p>
+                    <p className={s.newsText}><RichText text={item.title} /></p>
                   )
                 ) : null}
-                {item.excerpt ? <p className={s.newsText}>{item.excerpt}</p> : null}
+                {item.excerpt ? <p className={s.newsText}><RichText text={item.excerpt} /></p> : null}
                 {item.points.length > 0 ? (
                   <ul className={s.newsPoints}>
                     {item.points.map((pt) => (
-                      <li key={pt}>{pt}</li>
+                      <li key={pt}>
+                        <RichText text={pt} />
+                      </li>
                     ))}
                   </ul>
                 ) : null}

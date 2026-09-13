@@ -52,6 +52,25 @@ export type InfoCard = {
 
 export type QA = { question: string; answer: string };
 
+/**
+ * Предложение по набору: стоимость, состав программы и запись.
+ *
+ * На действующем сайте это одна полоса, где цена, призыв записаться и девять
+ * пунктов программы идут подряд обычными абзацами. Родителю приходится
+ * вычитывать цену из середины текста.
+ */
+export type Offer = {
+  lead: string[];
+  priceLabel?: string;
+  price?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  programTitle?: string;
+  program: string[];
+  image?: ImageBlock;
+  note?: string;
+};
+
 export type NewsItem = {
   title: string;
   excerpt?: string;
@@ -70,9 +89,10 @@ export type FormBlock = {
 
 export type Section =
   | { kind: 'blocks'; blocks: PageBlock[] }
+  | { kind: 'offer'; offer: Offer }
   | { kind: 'cards'; items: InfoCard[] }
   | { kind: 'faq'; title?: string; items: QA[] }
-  | { kind: 'form'; form: FormBlock }
+  | { kind: 'form'; form: FormBlock; id: string }
   | { kind: 'people'; items: Teacher[] }
   | { kind: 'products'; items: Product[] };
 
@@ -396,6 +416,64 @@ export function composeNewsFeed(page: SourcePage): { items: NewsItem[]; usedIds:
   return { items, usedIds };
 }
 
+/* ------------------------------------------------------------- набор */
+
+/** Подпись строки со стоимостью на действующем сайте. */
+const PRICE_LABEL = 'Стоимость обучения';
+/** Призыв записаться, стоящий в тексте полосы отдельной строкой. */
+const CTA_LABEL = 'Записаться на обучение';
+
+/** Полоса набора: цена, призыв и состав программы. */
+function parseOffer(blocks: readonly PageBlock[]): Offer | null {
+  const texts = paragraphs(blocks);
+  if (!texts.includes(PRICE_LABEL)) return null;
+
+  const offer: Offer = { lead: [], program: [] };
+  let stage: 'lead' | 'price' | 'body' | 'program' = 'lead';
+
+  for (const b of blocks) {
+    if (b.type === 'image') {
+      if (!offer.image) offer.image = b;
+      continue;
+    }
+    if (b.type !== 'paragraph') continue;
+    const text = b.text.trim();
+    if (!text) continue;
+
+    if (text === PRICE_LABEL) {
+      offer.priceLabel = text;
+      stage = 'price';
+      continue;
+    }
+    if (stage === 'price') {
+      offer.price = text;
+      stage = 'body';
+      continue;
+    }
+    if (text === CTA_LABEL) {
+      offer.ctaLabel = text;
+      continue;
+    }
+    // Вопрос-подводка к перечню: «Что входит в программу?»
+    if (stage === 'body' && text.endsWith('?') && text.length <= 60) {
+      offer.programTitle = text;
+      stage = 'program';
+      continue;
+    }
+    // Строка с телефоном в конце полосы — это контакт, а не пункт программы.
+    if (/(?:\+7|8)[\s\-]?\(?\d{3}/.test(text)) {
+      offer.note = text;
+      continue;
+    }
+
+    if (stage === 'lead') offer.lead.push(text);
+    else if (stage === 'program') offer.program.push(text);
+    else offer.lead.push(text);
+  }
+
+  return offer;
+}
+
 /* --------------------------------------------------------- общий разбор */
 
 /** Вопросы и ответы: абзацы идут парами «вопрос — ответ». */
@@ -469,9 +547,15 @@ export function composePage(page: SourcePage): Section[] {
     if (r.recordType === T_FORM) {
       const form = parseForm(blocks);
       if (form) {
-        sections.push({ kind: 'form', form });
+        sections.push({ kind: 'form', form, id: `zapis-${sections.length}` });
         continue;
       }
+    }
+
+    const offer = parseOffer(blocks);
+    if (offer) {
+      sections.push({ kind: 'offer', offer });
+      continue;
     }
 
     if (r.recordType === T_FAQ) {
@@ -504,7 +588,42 @@ export function composePage(page: SourcePage): Section[] {
     sections.push({ kind: 'blocks', blocks });
   }
 
-  return sections;
+  return linkOffersToForms(mergeTextSections(sections));
+}
+
+/**
+ * Связывает призыв «Записаться на обучение» с ближайшей формой ниже.
+ *
+ * Текст призыва на действующем сайте — просто строка. Чтобы он работал,
+ * ему нужен адрес: ближайшая форма записи на той же странице.
+ */
+function linkOffersToForms(sections: readonly Section[]): Section[] {
+  return sections.map((section, i) => {
+    if (section.kind !== 'offer' || !section.offer.ctaLabel) return section;
+    const form = sections.slice(i + 1).find((x) => x.kind === 'form');
+    if (!form || form.kind !== 'form') return section;
+    return { ...section, offer: { ...section.offer, ctaHref: `#${form.id}` } };
+  });
+}
+
+/**
+ * Склеивает соседние текстовые полосы в одну секцию.
+ *
+ * Иначе каждая однострочная запись Tilda получает собственную секцию с полным
+ * вертикальным отступом, и страница набора начинается с четырёх строк,
+ * разделённых пустотой в пол-экрана.
+ */
+function mergeTextSections(sections: readonly Section[]): Section[] {
+  const out: Section[] = [];
+  for (const section of sections) {
+    const last = out[out.length - 1];
+    if (section.kind === 'blocks' && last?.kind === 'blocks') {
+      last.blocks = [...last.blocks, ...section.blocks];
+      continue;
+    }
+    out.push(section.kind === 'blocks' ? { kind: 'blocks', blocks: [...section.blocks] } : section);
+  }
+  return out;
 }
 
 export { brokenImages };

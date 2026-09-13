@@ -478,3 +478,103 @@
 .newsPoints li + li {
   margin-top: var(--s-1);
 }
+
+/* =============================== Набор: предложение =============================== */
+
+.offer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-8);
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .offer {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: var(--s-12);
+  }
+}
+
+.offerMain {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-4);
+}
+
+.offerLead {
+  margin: 0;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-snug);
+  color: var(--c-ink-800);
+}
+
+/* Цена — то, ради чего родитель открыл страницу: её видно сразу. */
+.offerPrice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  margin: var(--s-2) 0;
+  padding: var(--s-5) var(--s-6);
+  background: var(--c-wine-100);
+  border-radius: var(--r-lg);
+}
+
+.offerPriceLabel {
+  font-size: var(--fs-small);
+  color: var(--c-ink-700);
+}
+
+.offerPriceValue {
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-black);
+  line-height: var(--lh-tight);
+  color: var(--color-accent);
+}
+
+.offerNote {
+  margin: 0;
+  font-size: var(--fs-small);
+  color: var(--c-ink-700);
+}
+
+.offerAside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+}
+
+.offerMedia {
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--c-navy-50);
+}
+
+.offerMedia :global(img) {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Кадры в выгрузке вертикальные: без ограничения фотография занимает
+     два экрана и отрывает состав программы от цены. */
+  max-height: 420px;
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+.offerProgramTitle {
+  margin: 0 0 var(--s-3);
+  font-size: var(--fs-h3);
+  color: var(--c-navy-800);
+}
+
+.offerProgramList {
+  margin: 0;
+  padding-left: var(--s-5);
+  color: var(--c-ink-700);
+  line-height: var(--lh-snug);
+}
+
+.offerProgramList li + li {
+  margin-top: var(--s-2);
+}
