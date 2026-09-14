@@ -226,6 +226,9 @@ export function FormStatus({
     <div
       className={[s.status, toneClass].filter(Boolean).join(' ')}
       role={tone === 'error' ? 'alert' : 'status'}
+      /* без явного aria-live часть скринридеров не объявит смену состояния (WCAG 4.1.3) */
+      aria-live={tone === 'error' ? 'assertive' : 'polite'}
+      aria-atomic="true"
     >
       <Icon name={icon} size={20} />
       <div>

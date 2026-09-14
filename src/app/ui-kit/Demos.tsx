@@ -66,10 +66,14 @@ export function FormDemo() {
 
         <FileInput label="Приложение" buttonLabel="Выбрать файл" hint="PDF или JPG, до 10 МБ" />
 
-        <Checkbox>
-          Текст согласия на обработку персональных данных переносится с действующего сайта
-          дословно и не редактируется.
-        </Checkbox>
+        {/* группа переключателей требует fieldset с legend (WCAG 1.3.1) */}
+        <fieldset className={formStyles.fieldset}>
+          <legend className={formStyles.legend}>Согласие</legend>
+          <Checkbox>
+            Текст согласия на обработку персональных данных переносится с действующего сайта
+            дословно и не редактируется.
+          </Checkbox>
+        </fieldset>
 
         <div className={formStyles.actions}>
           <Button type="submit" variant="primary" size="lg">

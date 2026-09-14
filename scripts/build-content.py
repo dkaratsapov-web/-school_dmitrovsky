@@ -42,6 +42,67 @@ def convert(src, dst):
         return im.size
 
 
+SENTENCE_SPLIT = re.compile(r'(?<=[.!?])\s+')
+
+
+def short(text, limit=90):
+    """Первое предложение, обрезанное до разумной длины."""
+    first = SENTENCE_SPLIT.split(text.strip())[0].strip()
+    if len(first) <= limit:
+        return first
+    cut = first[:limit].rsplit(' ', 1)[0]
+    return cut.rstrip(',;:—-') + '…'
+
+
+def page_heading(page):
+    return (page['title'].split(',')[0] or page['slug']).strip()
+
+
+def assign_alt(pages):
+    """
+    Проставляет alt по видимому контексту страницы.
+
+    ТЗ §23: alt формируется по контексту, имя файла смысловым alt не является,
+    выдуманные факты недопустимы. Поэтому описание берётся из ближайшего
+    заголовка или текста рядом с изображением — того, что читатель видит
+    вокруг снимка, — а не из догадок о его содержимом.
+
+    Итоговые формулировки подлежат вычитке школой: кто и что именно
+    изображён, знает только она. См. QUESTIONS.md.
+    """
+    filled = 0
+    for page in pages:
+        head = page_heading(page)
+        for record in page['records']:
+            blocks = record['blocks']
+            for i, b in enumerate(blocks):
+                if b['type'] != 'image' or b.get('alt'):
+                    continue
+                context = None
+                # ближайший предшествующий заголовок или текст в том же блоке
+                for j in range(i - 1, -1, -1):
+                    prev = blocks[j]
+                    if prev['type'] == 'heading':
+                        context = prev['text']
+                        break
+                    if prev['type'] == 'paragraph' and len(prev['text']) > 25:
+                        context = prev['text']
+                        break
+                # иначе — ближайший следующий текст
+                if context is None:
+                    for j in range(i + 1, len(blocks)):
+                        nxt = blocks[j]
+                        if nxt['type'] == 'heading':
+                            context = nxt['text']
+                            break
+                        if nxt['type'] == 'paragraph' and len(nxt['text']) > 25:
+                            context = nxt['text']
+                            break
+                b['alt'] = f'Фотография к материалу «{short(context)}»' if context else f'Фотография: {head}'
+                filled += 1
+    print(f'проставлено alt по контексту: {filled}')
+
+
 def main():
     assets = json.load(open('source/data/assets.json'))
     amap = {}
@@ -106,6 +167,7 @@ def main():
         n_txt = sum(1 for r in records for b in r['blocks'] if b['type'] in ('paragraph', 'heading', 'list'))
         print(f'  {d["slug"]:18} текст: {n_txt:4}  фото: {n_img:4}')
 
+    assign_alt(pages)
     json.dump(pages, open(OUT, 'w'), ensure_ascii=False, indent=1)
     print(f'\nскопировано изображений: {len(copied)}')
     print(f'не нашлось соответствий: {len(missing)} адресов')
