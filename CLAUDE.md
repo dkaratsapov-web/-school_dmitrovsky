@@ -11,7 +11,10 @@
 - `INVENTORY_CHECK.md` — отчёт по материалам выгрузки;
 - `QUESTIONS.md` — спорные элементы и блокирующие вопросы;
 - `FUTURE_IMPROVEMENTS.md` — всё, что выходит за рамки этапа 1;
-- `docs/ASSETS_AUDIT.md` — разбор изображений.
+- `docs/ASSETS_AUDIT.md` — разбор изображений;
+- `docs/A11Y_AUDIT.md` — доступность и замеры контраста;
+- `docs/SEO_AUDIT.md` — SEO и микроразметка;
+- `docs/SKILLS_SETUP.md` — какие плагины и skills поставить в новом чате.
 
 Стек: Next.js 16 (App Router), React 19, TypeScript strict, CSS Modules
 на единых токенах (`src/styles/tokens.css`).
