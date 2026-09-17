@@ -29,12 +29,17 @@ function Placeholder() {
  * полоса проходит поперёк кадра, и за ней открывается новый снимок,
  * а строки заголовка поднимаются из-под маски.
  *
+ * Все присланные снимки материала доступны: первый показан крупно,
+ * остальные переключаются рядом под кадром — тем же затвором.
+ *
  * Список работает как набор вкладок: доступен с клавиатуры, активный
  * пункт помечен для чтения с экрана. Материалы никуда не спрятаны —
  * на странице «Мероприятия» тот же список целиком.
  */
 export function NewsDeck() {
   const [active, setActive] = useState(0);
+  /* Какой снимок материала показан крупно. */
+  const [shot, setShot] = useState(0);
   const uid = useId();
   const item = news[active] ?? news[0];
   if (!item) return null;
@@ -42,6 +47,12 @@ export function NewsDeck() {
   /* Пока материал один, список выбора не нужен: крупный кадр встаёт
      рядом с текстом, а не оставляет пустую колонку. */
   const single = news.length < 2;
+  const shots = item.images ?? [];
+
+  const pick = (i: number) => {
+    setActive(i);
+    setShot(0);
+  };
 
   return (
     <section className={s.section} aria-labelledby="news-title">
@@ -65,30 +76,56 @@ export function NewsDeck() {
             aria-labelledby={single ? undefined : `${uid}-tab-${active}`}
           >
             <div className={s.frame}>
-              {news.map((n, i) => (
-                <span
-                  className={[s.plate, i === active ? s.plateOn : ''].filter(Boolean).join(' ')}
-                  key={n.title}
-                  aria-hidden={i === active ? undefined : 'true'}
-                >
-                  {n.image ? (
+              {shots.length > 0 ? (
+                shots.map((im, i) => (
+                  <span
+                    className={[s.plate, i === shot ? s.plateOn : ''].filter(Boolean).join(' ')}
+                    key={im.src}
+                    aria-hidden={i === shot ? undefined : 'true'}
+                  >
                     <Image
                       className={s.photo}
-                      src={asset(n.image.src)}
-                      alt={i === active ? n.image.alt : ''}
-                      width={n.image.width}
-                      height={n.image.height}
+                      src={asset(im.src)}
+                      alt={i === shot ? im.alt : ''}
+                      width={im.width}
+                      height={im.height}
                       sizes="(min-width: 1024px) 58vw, 92vw"
                     />
-                  ) : (
-                    <Placeholder />
-                  )}
+                  </span>
+                ))
+              ) : (
+                <span className={[s.plate, s.plateOn].join(' ')}>
+                  <Placeholder />
                 </span>
-              ))}
+              )}
 
-              {/* затвор: полоса проходит поперёк кадра при смене материала */}
-              <span className={s.shutter} key={active} aria-hidden="true" />
+              {/* затвор: полоса проходит поперёк кадра при смене снимка */}
+              <span className={s.shutter} key={`${active}-${shot}`} aria-hidden="true" />
             </div>
+
+            {shots.length > 1 ? (
+              <div className={s.thumbs}>
+                {shots.map((im, i) => (
+                  <button
+                    key={im.src}
+                    className={[s.thumb, i === shot ? s.thumbOn : ''].filter(Boolean).join(' ')}
+                    type="button"
+                    onClick={() => setShot(i)}
+                    aria-label={`Снимок ${i + 1} из ${shots.length}`}
+                    aria-current={i === shot ? 'true' : undefined}
+                  >
+                    <Image
+                      className={s.thumbImage}
+                      src={asset(im.src)}
+                      alt=""
+                      width={im.width}
+                      height={im.height}
+                      sizes="140px"
+                    />
+                  </button>
+                ))}
+              </div>
+            ) : null}
 
             <div className={s.words} key={`w-${active}`}>
               <h3 className={s.featureTitle}>{item.title}</h3>
@@ -114,17 +151,17 @@ export function NewsDeck() {
                 aria-selected={i === active}
                 aria-controls={`${uid}-panel`}
                 tabIndex={i === active ? 0 : -1}
-                onClick={() => setActive(i)}
-                onMouseEnter={() => setActive(i)}
-                onFocus={() => setActive(i)}
+                onClick={() => pick(i)}
+                onMouseEnter={() => pick(i)}
+                onFocus={() => pick(i)}
                 onKeyDown={(e) => {
                   if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
                     e.preventDefault();
-                    setActive((i + 1) % news.length);
+                    pick((i + 1) % news.length);
                   }
                   if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
                     e.preventDefault();
-                    setActive((i - 1 + news.length) % news.length);
+                    pick((i - 1 + news.length) % news.length);
                   }
                 }}
               >
