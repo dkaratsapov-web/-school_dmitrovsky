@@ -47,6 +47,24 @@
 }
 
 /* затемнение: снизу плотное под текстом, сверху лёгкое под шапкой */
+/* низ кадра растворяется в следующем блоке: размытие и цвет нарастают
+   к самому краю, поэтому стыка не видно */
+.hero::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(72px, 9vw, 130px);
+  z-index: 0;
+  background: linear-gradient(to bottom, rgba(0, 13, 27, 0) 0%, rgba(0, 13, 27, 0.72) 62%, var(--c-navy-950) 100%);
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 58%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 58%);
+  pointer-events: none;
+}
+
 .scrim {
   position: absolute;
   inset: 0;
@@ -59,6 +77,7 @@
 
 .inner {
   position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
