@@ -1,6 +1,8 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import logoWhite from '@/assets/brand/logo-white.png';
 import { prefersReducedMotion } from '@/lib/motion';
 import s from './quote-line.module.css';
 
@@ -39,7 +41,8 @@ function canType(): boolean {
  * Строка набирается рукописным начертанием, буква за буквой, как пером.
  * По дороге рука ошибается — пишет «тяжело в бою», — слово стирается
  * и дописывается верное. Курсор мигает и после того, как строка
- * дописана. Ниже — подпись автора.
+ * дописана. На широком экране вместо черты мигает знак школы.
+ * Ниже — подпись автора.
  *
  * Без скрипта строка видна целиком: печать включается только тогда,
  * когда скрипт есть и движение не выключено в системе.
@@ -121,7 +124,10 @@ export function QuoteLine() {
               </span>
               <span className={s.typed}>
                 {shown}
-                <span className={s.pen} />
+                <span className={s.pen}>
+                  {/* на широком экране место курсора занимает знак школы */}
+                  <Image className={s.penMark} src={logoWhite} alt="" />
+                </span>
               </span>
             </span>
           </blockquote>

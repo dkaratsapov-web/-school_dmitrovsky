@@ -72,6 +72,34 @@
   animation: blink 820ms steps(1, end) infinite;
 }
 
+.penMark {
+  display: none;
+}
+
+/* На широком экране вместо черты — знак школы: мелкий значок на телефоне
+   превратился бы в кашу, поэтому там остаётся черта. */
+@media (min-width: 768px) {
+  .pen {
+    width: 0.88em;
+    height: 0.88em;
+    margin-left: 0.22em;
+    vertical-align: -0.12em;
+    background: none;
+    box-shadow: none;
+  }
+
+  .penMark {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .penSlot {
+    width: 1.1em;
+  }
+}
+
 @keyframes blink {
   0%,
   49% {
