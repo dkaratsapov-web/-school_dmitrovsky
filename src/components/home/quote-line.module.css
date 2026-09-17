@@ -43,6 +43,15 @@
   visibility: hidden;
 }
 
+/* невидимая копия пера: держит для него место в конце строки */
+.penSlot {
+  display: inline-block;
+  width: 4px;
+  height: 0.94em;
+  margin-left: 0.09em;
+  vertical-align: -0.12em;
+}
+
 .typed {
   position: absolute;
   left: 0;

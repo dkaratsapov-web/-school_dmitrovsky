@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { prefersReducedMotion } from '@/lib/motion';
 import s from './quote-line.module.css';
 
-const QUOTE = 'Тяжело в учении — легко в бою';
+const QUOTE = 'Тяжело в учении — легко в бою!';
 const AUTHOR = 'Александр Васильевич Суворов';
 
 /** Общее начало правильной строки и оговорки. */
@@ -113,7 +113,12 @@ export function QuoteLine() {
                 стоят на месте, а печать идёт вправо, а не растягивает
                 строку от середины. */}
             <span className={s.holder} aria-hidden="true">
-              <span className={s.ghost}>{QUOTE}</span>
+              <span className={s.ghost}>
+                {QUOTE}
+                {/* место под перо: иначе оно не влезает в строку
+                    и переносится под текст */}
+                <span className={s.penSlot} />
+              </span>
               <span className={s.typed}>
                 {shown}
                 <span className={s.pen} />
