@@ -1,3 +1,4 @@
+import { ProfileLane } from '@/components/home/ProfileLane';
 import { StageGrid } from '@/components/home/StageGrid';
 import { FactStrip } from '@/components/site/FactStrip';
 import { HeroVideo, heroPoster, heroVideo } from '@/components/site/HeroVideo';
@@ -20,6 +21,7 @@ export default function HomePage() {
       />
       <FactStrip />
       <StageGrid />
+      <ProfileLane />
     </>
   );
 }

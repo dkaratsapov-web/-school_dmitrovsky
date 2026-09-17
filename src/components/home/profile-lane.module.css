@@ -1,0 +1,283 @@
+/* =========================================================================
+   Профили 10 - 11 классов — лента с перетаскиванием
+   ========================================================================= */
+
+.section {
+  position: relative;
+  padding-block: clamp(3rem, 6vw, 5.5rem);
+  /* светлая полоса после двух тёмных: ритм страницы, а не ровный сумрак */
+  background: var(--c-navy-50);
+  color: var(--c-ink-900);
+  overflow: clip;
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--s-5);
+  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.05rem + 1.9vw, 2.5rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.03em;
+  color: var(--c-navy-900);
+}
+
+.lead {
+  margin: 10px 0 0;
+  font-size: var(--fs-lead);
+  color: var(--c-ink-500);
+  max-width: 44ch;
+}
+
+/* ------------------------------------------------------------- шаг ленты */
+.steps {
+  display: none;
+  gap: 8px;
+}
+
+@media (min-width: 768px) {
+  .steps {
+    display: flex;
+  }
+}
+
+.step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--r-pill);
+  background: #fff;
+  color: var(--c-navy-800);
+  cursor: pointer;
+  transition: transform var(--t-fast) var(--ease), background var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+}
+
+.step:hover {
+  background: var(--c-navy-800);
+  border-color: var(--c-navy-800);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.step:active {
+  transform: translateY(0);
+}
+
+/* один и тот же значок разворачивается в две стороны */
+.stepBack {
+  transform: rotate(90deg);
+}
+
+.stepNext {
+  transform: rotate(-90deg);
+}
+
+/* --------------------------------------------------------------- лента */
+.lane {
+  display: flex;
+  gap: 18px;
+  margin: 0;
+  /* Первая карточка встаёт вровень с заголовком, а лента при этом
+     остаётся во всю ширину окна. Считаем от ширины секции, а не от 100vw:
+     полоса прокрутки не сдвигает выравнивание. */
+  padding-block: 4px;
+  padding-inline: max(var(--gutter), calc((100% - var(--container)) / 2 + var(--gutter)));
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  cursor: grab;
+  /* иначе браузер начинает своё перетаскивание снимка и обрывает наше */
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.lane::-webkit-scrollbar {
+  display: none;
+}
+
+.lane[data-drag='active'] {
+  cursor: grabbing;
+  scroll-snap-type: none;
+}
+
+/* при перетаскивании ничто внутри не перехватывает указатель */
+.lane[data-drag='active'] .link {
+  pointer-events: none;
+}
+
+.card {
+  flex: 0 0 auto;
+  width: min(82vw, 400px);
+  scroll-snap-align: center;
+}
+
+/* На широких экранах карточки крупнее: лента должна выходить за край,
+   иначе перетаскивать нечего и полоса заполнения бессмысленна. */
+@media (min-width: 1024px) {
+  .card {
+    width: 480px;
+  }
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: var(--r-xl);
+  background: #fff;
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 21, 45, 0.06);
+  /* ближняя к середине карточка чуть выше остальных */
+  transform: translateY(calc(var(--near, 0) * -6px));
+  transition: box-shadow var(--t-base) var(--ease), transform var(--t-base) var(--ease);
+}
+
+.link:hover,
+.link:focus-visible {
+  box-shadow: 0 18px 40px rgba(0, 21, 45, 0.18);
+}
+
+/* ------------------------------------------------------------- снимок */
+.media {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--c-navy-100);
+}
+
+.photo {
+  position: absolute;
+  -webkit-user-drag: none;
+  pointer-events: none;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* снимок едет в обратную сторону от карточки: слой фоновый, текст стоит */
+  transform: translate3d(var(--pan, 0px), 0, 0) scale(1.12);
+  transition: transform var(--t-slow) var(--ease);
+}
+
+.link:hover .photo,
+.link:focus-visible .photo {
+  transform: translate3d(var(--pan, 0px), 0, 0) scale(1.18);
+}
+
+.veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 17, 38, 0.88) 0%,
+    rgba(0, 17, 38, 0.42) 42%,
+    rgba(0, 17, 38, 0.08) 100%
+  );
+}
+
+.name {
+  position: absolute;
+  left: clamp(1rem, 2vw, 1.4rem);
+  right: clamp(1rem, 2vw, 1.4rem);
+  bottom: clamp(0.85rem, 1.6vw, 1.15rem);
+  font-family: var(--font-display);
+  font-size: clamp(1.1875rem, 1rem + 0.7vw, 1.5rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(0, 12, 28, 0.5);
+  transition: transform var(--t-base) var(--ease);
+}
+
+.link:hover .name,
+.link:focus-visible .name {
+  transform: translateY(-3px);
+}
+
+/* ------------------------------------------------------------ содержание */
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  padding: clamp(1rem, 2vw, 1.4rem);
+}
+
+.row {
+  display: block;
+}
+
+.rowLabel {
+  display: block;
+  margin-bottom: 4px;
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  color: var(--c-wine-700);
+}
+
+.rowText {
+  display: block;
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: var(--c-ink-500);
+}
+
+/* ------------------------------------------------------ полоса заполнения */
+.track {
+  display: block;
+  height: 3px;
+  margin-top: clamp(1.25rem, 2.4vw, 1.75rem);
+  border-radius: 2px;
+  background: rgba(1, 51, 102, 0.14);
+  overflow: hidden;
+}
+
+.bar {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--c-wine-700);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link,
+  .photo,
+  .name,
+  .step {
+    transition: none;
+    transform: none;
+  }
+  .link:hover .photo,
+  .link:focus-visible .photo {
+    transform: scale(1.12);
+  }
+  .stepBack {
+    transform: rotate(90deg);
+  }
+  .stepNext {
+    transform: rotate(-90deg);
+  }
+}
