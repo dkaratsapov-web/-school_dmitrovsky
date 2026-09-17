@@ -1,3 +1,4 @@
+import { CadetCorps } from '@/components/home/CadetCorps';
 import { ProfileCards } from '@/components/home/ProfileCards';
 import { SectionSeam } from '@/components/home/SectionSeam';
 import { StageGrid } from '@/components/home/StageGrid';
@@ -24,6 +25,8 @@ export default function HomePage() {
       <StageGrid />
       <SectionSeam />
       <ProfileCards />
+      <SectionSeam flip />
+      <CadetCorps />
     </>
   );
 }

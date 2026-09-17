@@ -93,8 +93,6 @@ export function ProfileCards() {
                       height={p.image.height}
                       sizes="(min-width: 1200px) 400px, (min-width: 640px) 44vw, 88vw"
                     />
-                    {/* приглушение снимка фирменным синим; уходит под курсором */}
-                    <span className={s.tint} aria-hidden="true" />
                     <span className={s.shade} aria-hidden="true" />
                     <span className={s.name}>
                       {p.name}

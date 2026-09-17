@@ -123,25 +123,10 @@
   transform: scale(1.1);
 }
 
-/* приглушение фирменным синим — снимок оживает под курсором */
-.tint {
-  position: absolute;
-  inset: 0;
-  background: var(--c-navy-800);
-  mix-blend-mode: color;
-  opacity: 0.46;
-  transition: opacity 420ms var(--ease);
-}
-
 .shade {
   position: absolute;
   inset: 0;
   background: linear-gradient(to top, rgba(0, 17, 38, 0.9) 0%, rgba(0, 17, 38, 0.3) 46%, transparent 78%);
-}
-
-.link:hover .tint,
-.link:focus-visible .tint {
-  opacity: 0;
 }
 
 .name {
@@ -206,8 +191,7 @@
   .card,
   .link,
   .photo,
-  .rule,
-  .tint {
+  .rule {
     transform: none;
     transition: none;
   }

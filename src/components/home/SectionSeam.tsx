@@ -5,7 +5,8 @@ import { prefersReducedMotion } from '@/lib/motion';
 import s from './section-seam.module.css';
 
 /**
- * Стык двух блоков: тёмный переходит в светлый не срезом, а куполом.
+ * Стык двух блоков: один цвет переходит в другой не срезом, а куполом.
+ * По умолчанию тёмное сверху, светлое снизу; с flip — наоборот.
  *
  * Купол поднимается по мере прокрутки, а сквозь стык проходит орбита
  * атома — тот же мотив, что в знаке школы и в ленте с цифрами. Слои
@@ -13,7 +14,7 @@ import s from './section-seam.module.css';
  *
  * Без скрипта купол стоит в конечном положении: стык выглядит целым.
  */
-export function SectionSeam() {
+export function SectionSeam({ flip = false }: { flip?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export function SectionSeam() {
   }, []);
 
   return (
-    <div className={s.seam} ref={ref} aria-hidden="true">
+    <div className={[s.seam, flip ? s.flip : ''].filter(Boolean).join(' ')} ref={ref} aria-hidden="true">
       <span className={s.dome} />
       <svg className={s.orbit} viewBox="0 0 600 240" preserveAspectRatio="none">
         <ellipse cx="300" cy="120" rx="292" ry="104" />

@@ -1,0 +1,286 @@
+/* =========================================================================
+   Кадетский корпус
+   ========================================================================= */
+
+.section {
+  --sp: 0.5;
+  position: relative;
+  /* сверху нужен запас: верхний снимок стопки уезжает вверх при прокрутке */
+  padding-block: clamp(2.5rem, 5vw, 4.5rem) clamp(3.5rem, 7vw, 6rem);
+  background: var(--c-navy-950);
+  color: #fff;
+  overflow: clip;
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ------------------------------------------------------ рассказ и снимки */
+.top {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .top {
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: clamp(2.5rem, 5vw, 5rem);
+  }
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.05rem + 1.9vw, 2.5rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+
+.lead {
+  margin: 14px 0 0;
+  font-size: var(--fs-lead);
+  font-weight: var(--fw-semibold);
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.text {
+  margin: 14px 0 0;
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.66);
+  max-width: 52ch;
+}
+
+/* стоимость — отдельной строкой, как на странице проекта */
+.price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  margin: clamp(1.25rem, 2.4vw, 1.75rem) 0 0;
+  padding-top: clamp(1rem, 2vw, 1.4rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.priceLabel {
+  font-size: var(--fs-caption);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.priceValue {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1.05rem + 0.8vw, 1.625rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.priceNote {
+  font-size: var(--fs-caption);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.more {
+  display: inline-block;
+  margin-top: clamp(1.25rem, 2.4vw, 1.75rem);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-bold);
+  text-decoration: none;
+}
+
+.moreRule {
+  display: block;
+  height: 2px;
+  margin-top: 7px;
+  background: var(--c-wine-600);
+  transform: scaleX(0.34);
+  transform-origin: 0 50%;
+  transition: transform 460ms cubic-bezier(0.16, 0.9, 0.24, 1);
+}
+
+.more:hover .moreRule,
+.more:focus-visible .moreRule {
+  transform: scaleX(1);
+}
+
+/* ------------------------------------------------------------- стопка фото */
+.stack {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  align-items: start;
+}
+
+.shot {
+  display: block;
+  overflow: hidden;
+  border-radius: 2px;
+  box-shadow: 0 18px 44px rgba(0, 9, 22, 0.55);
+  /* каждый снимок идёт со своей скоростью — отсюда объём */
+  transform: translate3d(0, calc((var(--sp) - 0.5) * var(--d) * 110px), 0);
+}
+
+/* строй — крупный, слева и выше остальных */
+.shot:nth-child(1) {
+  grid-column: 1 / 5;
+  grid-row: 1;
+  z-index: 1;
+}
+
+/* занятие — узкий, справа, заходит на первый */
+.shot:nth-child(2) {
+  grid-column: 4 / 7;
+  grid-row: 1;
+  margin-top: clamp(3rem, 7vw, 6.5rem);
+  z-index: 2;
+}
+
+/* поход — небольшой, снизу слева */
+.shot:nth-child(3) {
+  grid-column: 2 / 5;
+  grid-row: 2;
+  margin-top: clamp(-4rem, -6vw, -2.5rem);
+  z-index: 3;
+}
+
+.photo {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---------------------------------------------------------- преимущества */
+.points {
+  position: relative;
+  margin-top: clamp(3rem, 6vw, 5rem);
+  padding-left: 26px;
+}
+
+@media (min-width: 768px) {
+  .points {
+    padding-left: 34px;
+  }
+}
+
+/* строевая линия слева: чертится по мере прокрутки, по ней идёт метка */
+.line {
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: visible;
+}
+
+.lineFill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, var(--c-wine-600), rgba(255, 255, 255, 0.4));
+  transform: scaleY(var(--sp));
+  transform-origin: 50% 0;
+}
+
+.lineMark {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 9px;
+  height: 9px;
+  margin: -4px 0 0 -4.5px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(126, 31, 46, 0.45);
+  /* метка едет по линии вместе с её заполнением */
+  top: calc(var(--sp) * 100%);
+}
+
+.list {
+  display: grid;
+  gap: clamp(1.25rem, 2.6vw, 2rem) clamp(1.5rem, 3vw, 2.5rem);
+  grid-template-columns: 1fr;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 640px) {
+  .list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1100px) {
+  .list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  transition: transform var(--t-base) var(--ease);
+}
+
+.item:hover {
+  transform: translateX(6px);
+}
+
+.rank {
+  flex: none;
+  font-family: var(--font-display);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-black);
+  letter-spacing: 0.04em;
+  color: var(--c-wine-300);
+  padding-top: 3px;
+}
+
+.itemBody {
+  display: block;
+  min-width: 0;
+}
+
+.itemTitle {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.015em;
+  color: #fff;
+}
+
+.itemText {
+  display: block;
+  margin-top: 5px;
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.64);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shot,
+  .item,
+  .moreRule,
+  .lineFill {
+    transform: none;
+    transition: none;
+  }
+  .lineMark {
+    top: 0;
+  }
+  .moreRule {
+    transform: scaleX(1);
+  }
+}
