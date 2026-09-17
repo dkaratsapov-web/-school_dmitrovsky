@@ -26,6 +26,11 @@ const nextConfig: NextConfig = {
     deviceSizes: [360, 390, 640, 768, 1024, 1280, 1440, 1920],
     ...(isPreviewExport || isPagesExport ? { unoptimized: true } : {}),
   },
+  /* Один источник правды для префикса: сборка и код должны видеть
+     одно и то же значение. Раньше CI выставлял только PAGES_BASE_PATH,
+     а asset() читал NEXT_PUBLIC_BASE_PATH — и файлы из public/ уходили
+     без подпапки, то есть в 404. */
+  env: { NEXT_PUBLIC_BASE_PATH: isPagesExport ? pagesBasePath : '' },
   ...(isPagesExport
     ? {
         output: 'export' as const,
