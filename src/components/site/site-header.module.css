@@ -78,34 +78,43 @@
   }
 }
 
-/* соцсети — компактные монограммы, без кружков */
-.social {
+/* соцсети — фирменные знаки, ровный ряд */
+.socials {
   display: none;
   align-items: center;
-  height: 22px;
-  padding-inline: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  color: rgba(255, 255, 255, 0.7);
-  font-family: var(--font-display);
-  font-size: 10.5px;
-  font-weight: var(--fw-bold);
-  letter-spacing: 0.04em;
+  gap: 6px;
+}
+
+@media (min-width: 640px) {
+  .socials {
+    display: inline-flex;
+  }
+}
+
+.social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-sm);
+  color: rgba(255, 255, 255, 0.72);
   text-decoration: none;
-  transition: border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease),
-    background-color var(--t-fast) var(--ease);
+  transition: color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease),
+    transform var(--t-base) var(--ease);
 }
 
 .social:hover {
   background: var(--c-wine-700);
-  border-color: var(--c-wine-700);
   color: #fff;
+  transform: translateY(-2px);
 }
 
-@media (min-width: 640px) {
-  .social {
-    display: inline-flex;
-  }
+.socialText {
+  font-family: var(--font-display);
+  font-size: 10.5px;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.04em;
 }
 
 /* -------------------------------------------------------- нижний уровень */

@@ -6,6 +6,8 @@ import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import logoBlue from '@/assets/brand/logo.png';
 import { Icon } from '../ui/Icon';
+import { BrandIcon } from '../ui/BrandIcon';
+import type { BrandName } from '../ui/BrandIcon';
 import { MobileMenu } from './MobileMenu';
 import { contacts, siteName } from '@/content/site';
 import { headerNav, mainNav } from '@/content/navigation';
@@ -28,12 +30,12 @@ import s from './site-header.module.css';
 const COLLAPSE_AT = 48;
 const PENDING = '#';
 
-const MONOGRAM: Record<string, string> = {
-  Telegram: 'TG',
-  ВКонтакте: 'VK',
-  MAX: 'MAX',
-  Rutube: 'RT',
-};
+/** Сети, для которых есть фирменный знак. */
+const BRANDS: readonly BrandName[] = ['Telegram', 'ВКонтакте', 'MAX', 'Rutube'];
+
+function brandOf(network: string): BrandName | null {
+  return BRANDS.find((b) => b === network) ?? null;
+}
 
 type Marker = { left: number; width: number; visible: boolean };
 
@@ -141,18 +143,28 @@ export function SiteHeader() {
             </span>
           ) : null}
 
-          {contacts.socials.map((soc) => (
-            <a
-              key={soc.href}
-              className={s.social}
-              href={soc.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={soc.label}
-            >
-              {MONOGRAM[soc.network] ?? soc.label.slice(0, 2)}
-            </a>
-          ))}
+          <span className={s.socials}>
+            {contacts.socials.map((soc) => {
+              const brand = brandOf(soc.network);
+              return (
+                <a
+                  key={soc.href}
+                  className={s.social}
+                  href={soc.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={soc.label}
+                  title={soc.label}
+                >
+                  {brand ? (
+                    <BrandIcon name={brand} size={17} />
+                  ) : (
+                    <span className={s.socialText}>{soc.label.slice(0, 2)}</span>
+                  )}
+                </a>
+              );
+            })}
+          </span>
         </div>
       </div>
 
