@@ -1,5 +1,6 @@
 .head {
-  padding-block: var(--s-6) var(--s-10);
+  /* шапка лежит поверх страницы — отступаем на её высоту */
+  padding-block: calc(var(--header-h, 150px) + var(--s-6)) var(--s-10);
   background: var(--c-navy-50);
   border-bottom: 1px solid var(--color-border);
 }

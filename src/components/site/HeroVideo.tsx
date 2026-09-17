@@ -31,6 +31,14 @@ export function HeroVideo({ title, videoSrc, poster, posterWidth, posterHeight }
   const ref = useScrollProgressVar<HTMLElement>('--p');
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  /* Пока первый экран на странице, шапка знает, что под ней тёмный фон,
+     и остаётся прозрачной. На страницах без него капсулы становятся
+     плотными, иначе белый текст не читается на светлом. */
+  useEffect(() => {
+    document.body.classList.add('has-hero');
+    return () => document.body.classList.remove('has-hero');
+  }, []);
+
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;

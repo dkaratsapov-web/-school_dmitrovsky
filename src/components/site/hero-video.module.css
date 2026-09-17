@@ -5,8 +5,8 @@
 .hero {
   --p: 0;
   position: relative;
-  /* первый экран занимает окно ровно под шапкой — вместе с формой */
-  min-height: max(540px, calc(100svh - var(--header-h, 160px)));
+  /* шапка лежит поверх, поэтому видео занимает всё окно целиком */
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -48,7 +48,9 @@
   width: 100%;
   max-width: var(--container);
   margin-inline: auto;
-  padding: clamp(2.5rem, 5vw, 5rem) var(--gutter) clamp(1.5rem, 3vw, 2.75rem);
+  /* содержимое начинается ниже капсул шапки */
+  padding: calc(var(--header-h, 150px) + clamp(1.5rem, 3vw, 3rem)) var(--gutter)
+    clamp(1.5rem, 3vw, 2.75rem);
 }
 
 /* ------------------------------------------------------------------ заголовок */

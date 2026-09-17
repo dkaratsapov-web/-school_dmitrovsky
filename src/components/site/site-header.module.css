@@ -1,94 +1,167 @@
 /* =========================================================================
-   Шапка сайта — во всю ширину, два уровня.
+   Шапка — капсулы поверх первого экрана.
 
-   Фирменные цвета действующего сайта: синий #013366, бордовый #7e1f2e.
-   Вместо сетки одинаковых кнопок — набранная навигация с одной бегущей
-   подсветкой. По нижнему краю — полоса прочтения страницы.
+   Не сплошная полоса, а отдельные оболочки с промежутками: логотип,
+   навигация, действия. Над видео прозрачные с размытием, при прокрутке
+   набирают плотность и сжимаются.
+   Фирменные цвета: синий #013366, бордовый #7e1f2e.
    ========================================================================= */
 
 .header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: var(--z-header);
-  background: var(--c-navy-800);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px clamp(0.75rem, 2.2vw, 2rem) 12px;
+  transition: gap var(--t-slow) var(--ease), padding var(--t-slow) var(--ease);
+  pointer-events: none;
 }
 
-/* ------------------------------------------------------- верхний уровень */
-.utility {
-  display: none;
-  height: 38px;
-  overflow: hidden;
-  background: #001b3a;
-  color: rgba(255, 255, 255, 0.62);
-  font-size: 12.5px;
-  transition: height var(--t-slow) var(--ease), opacity var(--t-base) var(--ease);
+/* промежутки сокращаются при прокрутке — шапка «собирается» */
+.compact {
+  gap: 0;
+  padding-block: 8px;
 }
 
-@media (min-width: 768px) {
-  .utility {
-    display: block;
-  }
+.header > * {
+  pointer-events: auto;
 }
 
-.compact .utility {
-  height: 0;
+/* Затемнение под капсулами нужно только над светлым видеокадром. */
+:global(body.has-hero) .header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 17, 38, 0.6), rgba(0, 17, 38, 0));
+  opacity: 1;
+  transition: opacity var(--t-base) var(--ease);
+  pointer-events: none;
+}
+
+:global(body.has-hero) .compact::before {
   opacity: 0;
 }
 
-.utilityInner {
-  display: flex;
-  align-items: center;
-  gap: var(--s-5);
-  height: 38px;
-  /* во всю ширину: поля только по краям окна */
-  padding-inline: clamp(1rem, 3vw, 3rem);
+/* На страницах без первого экрана фон светлый: капсулы становятся
+   плотными, иначе белый текст на них не читается. */
+:global(body:not(.has-hero)) .capsule {
+  background: var(--c-navy-800);
+  border-color: rgba(255, 255, 255, 0.18);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
-.utilitySpacer {
+:global(body:not(.has-hero)) .chipMuted:hover {
+  background: var(--c-navy-800);
+}
+
+:global(body:not(.has-hero)) .cta,
+:global(body:not(.has-hero)) .compact .cta {
+  background: var(--c-wine-700);
+  border-color: var(--c-wine-700);
+}
+
+/* --------------------------------------------------------------- капсула */
+.capsule {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: var(--r-pill);
+  background: rgba(0, 21, 45, 0.34);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  color: #fff;
+  text-decoration: none;
+  transition: border-color var(--t-base) var(--ease), background-color var(--t-base) var(--ease),
+    transform var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease),
+    height var(--t-slow) var(--ease), padding var(--t-slow) var(--ease);
+  /* въезд капсул при загрузке */
+  animation: capsuleIn 720ms cubic-bezier(0.16, 0.9, 0.24, 1) backwards;
+  animation-delay: var(--d, 0ms);
+}
+
+.compact .capsule {
+  background: rgba(1, 51, 102, 0.94);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+@keyframes capsuleIn {
+  from {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.96);
+  }
+}
+
+/* ---------------------------------------------------------- верхний ряд */
+.rowTop {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  transition: opacity var(--t-base) var(--ease), transform var(--t-slow) var(--ease),
+    max-height var(--t-slow) var(--ease);
+  max-height: 44px;
+  overflow: visible;
+}
+
+@media (min-width: 1024px) {
+  .rowTop {
+    display: flex;
+  }
+}
+
+.compact .rowTop {
+  opacity: 0;
+  max-height: 0;
+  transform: translateY(-12px);
+  pointer-events: none;
+}
+
+.gap {
   flex: 1;
 }
 
-.utilityLink,
-.utilityText {
-  display: none;
-  align-items: center;
-  gap: var(--s-2);
-  color: inherit;
-  text-decoration: none;
+.chip {
+  height: 36px;
+  padding-inline: 16px;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: var(--fw-medium);
+  color: rgba(255, 255, 255, 0.86);
   white-space: nowrap;
 }
 
-.utilityLink {
-  transition: color var(--t-fast) var(--ease);
-}
-
-.utilityLink:hover {
+.chip:hover {
+  border-color: rgba(255, 255, 255, 0.55);
+  background: rgba(126, 31, 46, 0.55);
   color: #fff;
+  transform: translateY(-2px);
 }
 
-@media (min-width: 768px) {
-  .utilityLink {
-    display: inline-flex;
-  }
+.chipMuted {
+  color: rgba(255, 255, 255, 0.72);
+  cursor: default;
 }
 
-@media (min-width: 1100px) {
-  .utilityText {
-    display: inline-flex;
-  }
+.chipMuted:hover {
+  border-color: rgba(255, 255, 255, 0.24);
+  background: rgba(0, 21, 45, 0.34);
+  transform: none;
 }
 
-/* соцсети — фирменные знаки, ровный ряд */
+.chipText {
+  display: inline;
+}
+
+/* --------------------------------------------------------------- соцсети */
 .socials {
-  display: none;
-  align-items: center;
-  gap: 6px;
-}
-
-@media (min-width: 640px) {
-  .socials {
-    display: inline-flex;
-  }
+  height: 36px;
+  padding-inline: 6px;
+  gap: 2px;
 }
 
 .social {
@@ -97,9 +170,12 @@
   justify-content: center;
   width: 28px;
   height: 28px;
-  border-radius: var(--r-sm);
-  color: rgba(255, 255, 255, 0.72);
+  border-radius: var(--r-pill);
+  color: rgba(255, 255, 255, 0.78);
   text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 10.5px;
+  font-weight: var(--fw-bold);
   transition: color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease),
     transform var(--t-base) var(--ease);
 }
@@ -107,67 +183,83 @@
 .social:hover {
   background: var(--c-wine-700);
   color: #fff;
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.12);
 }
 
-.socialText {
-  font-family: var(--font-display);
-  font-size: 10.5px;
-  font-weight: var(--fw-bold);
-  letter-spacing: 0.04em;
-}
-
-/* -------------------------------------------------------- нижний уровень */
-.bar {
-  position: relative;
-  background: var(--c-navy-800);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-.barInner {
+/* ----------------------------------------------------------- нижний ряд */
+.rowMain {
   display: flex;
   align-items: center;
-  gap: clamp(0.75rem, 2.5vw, 2.5rem);
-  height: 82px;
-  padding-inline: clamp(1rem, 3vw, 3rem);
-  transition: height var(--t-slow) var(--ease);
+  gap: clamp(8px, 1.1vw, 16px);
+  transition: gap var(--t-slow) var(--ease);
 }
 
-.compact .barInner {
-  height: 64px;
+.compact .rowMain {
+  gap: clamp(6px, 0.8vw, 10px);
 }
 
 /* --------------------------------------------------------------- логотип */
 .brand {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--s-3);
+  height: 56px;
+  padding: 0 16px 0 6px;
+  gap: 10px;
   flex: none;
-  color: #fff;
-  text-decoration: none;
-}
-
-.mark {
-  width: 40px;
-  height: 40px;
-  flex: none;
-  object-fit: contain;
-  /* знак школы — атом; орбиты оживают при наведении */
-  filter: brightness(0) invert(1);
-  transition: width var(--t-slow) var(--ease), height var(--t-slow) var(--ease),
-    transform 1000ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  min-width: 0;
 }
 
 @media (min-width: 560px) {
-  .mark {
-    width: 46px;
-    height: 46px;
+  .brand {
+    height: 64px;
+    padding: 0 22px 0 8px;
+    gap: 12px;
   }
 }
 
-.compact .mark {
-  width: 38px;
-  height: 38px;
+.compact .brand {
+  height: 54px;
+}
+
+.brand:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+/* обводка вокруг знака — второй контур внутри капсулы */
+.markRing {
+  display: grid;
+  place-content: center;
+  width: 42px;
+  height: 42px;
+  flex: none;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: var(--r-pill);
+  transition: width var(--t-slow) var(--ease), height var(--t-slow) var(--ease),
+    border-color var(--t-base) var(--ease), background-color var(--t-base) var(--ease);
+}
+
+@media (min-width: 560px) {
+  .markRing {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+.compact .markRing {
+  width: 40px;
+  height: 40px;
+}
+
+.brand:hover .markRing {
+  border-color: var(--c-wine-600);
+  background: rgba(126, 31, 46, 0.35);
+}
+
+.mark {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  transition: transform 1100ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .brand:hover .mark {
@@ -177,61 +269,66 @@
 .brandText {
   display: block;
   font-family: var(--font-display);
-  line-height: 1.1;
+  line-height: 1.12;
+  white-space: nowrap;
   min-width: 0;
 }
 
 .brandLine {
   display: block;
-  font-size: 11px;
-  font-weight: var(--fw-semibold);
-  letter-spacing: 0.16em;
+  font-size: 10px;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .brandName {
   display: block;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-weight: var(--fw-black);
   letter-spacing: -0.015em;
-  color: #fff;
-  white-space: nowrap;
 }
 
 @media (min-width: 560px) {
   .brandName {
-    font-size: 1.0625rem;
+    font-size: 1rem;
   }
 }
 
-/* ------------------------------------------------------------ навигация */
+/* ------------------------------------------------------------- навигация */
 .nav {
-  position: relative;
   display: none;
-  align-items: center;
+  height: 64px;
+  padding-inline: 8px;
   flex: 1;
   min-width: 0;
+  justify-content: center;
+  transition: height var(--t-slow) var(--ease);
 }
 
-@media (min-width: 1140px) {
+@media (min-width: 1200px) {
   .nav {
-    display: flex;
+    display: inline-flex;
   }
 }
 
-/* одна бегущая подсветка вместо десяти отдельных кнопок */
+.compact .nav {
+  height: 54px;
+}
+
+/* бегущая обводка вместо заливки */
 .marker {
   position: absolute;
   left: 0;
-  bottom: 50%;
-  width: 1px;
-  height: 36px;
-  margin-bottom: -18px;
-  border-radius: var(--r-sm);
-  background: rgba(255, 255, 255, 0.12);
-  transform-origin: left center;
-  transition: transform 420ms cubic-bezier(0.22, 0.8, 0.2, 1), opacity var(--t-base) var(--ease);
+  top: 50%;
+  height: 40px;
+  margin-top: -20px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.07);
+  transition: transform 440ms cubic-bezier(0.22, 0.85, 0.2, 1),
+    width 440ms cubic-bezier(0.22, 0.85, 0.2, 1), opacity var(--t-base) var(--ease);
   pointer-events: none;
 }
 
@@ -244,15 +341,15 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  height: 36px;
-  padding-inline: clamp(0.6rem, 1vw, 1rem);
+  height: 40px;
+  padding-inline: clamp(10px, 0.9vw, 16px);
   border: 0;
+  border-radius: var(--r-pill);
   background: none;
-  color: rgba(255, 255, 255, 0.82);
+  color: rgba(255, 255, 255, 0.84);
   font-family: var(--font-display);
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: var(--fw-semibold);
-  letter-spacing: -0.005em;
   white-space: nowrap;
   text-decoration: none;
   cursor: pointer;
@@ -263,24 +360,14 @@
   color: #fff;
 }
 
-/* текущий раздел отмечен чертой в фирменном бордовом */
+/* текущий раздел — своя обводка в фирменном бордовом */
 .navLink[data-active='true'] {
   color: #fff;
-}
-
-.navLink[data-active='true']::after {
-  content: '';
-  position: absolute;
-  left: clamp(0.6rem, 1vw, 1rem);
-  right: clamp(0.6rem, 1vw, 1rem);
-  bottom: -6px;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--c-wine-600);
+  box-shadow: inset 0 0 0 1px var(--c-wine-600);
 }
 
 .chev {
-  opacity: 0.6;
+  opacity: 0.65;
   transition: transform var(--t-base) var(--ease);
 }
 
@@ -288,33 +375,36 @@
   transform: rotate(180deg);
 }
 
-/* -------------------------------------------------------- выпадающий список */
+/* ------------------------------------------------------ выпадающий список */
 .sub {
   position: absolute;
-  top: calc(100% + 14px);
-  left: 0;
+  top: calc(100% + 12px);
+  left: 50%;
+  margin-left: -132px;
   min-width: 264px;
-  padding: var(--s-2);
-  background: #fff;
-  border-radius: var(--r-md);
-  box-shadow: 0 20px 50px rgba(0, 21, 45, 0.3);
-  animation: subIn 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--r-xl);
+  background: rgba(0, 21, 45, 0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 24px 60px rgba(0, 12, 28, 0.5);
+  animation: subIn 280ms cubic-bezier(0.2, 0.85, 0.2, 1);
 }
 
 .sub::before {
-  /* мостик к пункту, чтобы список не закрывался на полпути курсора */
   content: '';
   position: absolute;
   left: 0;
   right: 0;
-  top: -14px;
-  height: 14px;
+  top: -12px;
+  height: 12px;
 }
 
 @keyframes subIn {
   from {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-10px) scale(0.97);
   }
 }
 
@@ -326,114 +416,116 @@
 
 .subList li {
   margin: 0;
-  animation: subItem 320ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
-  animation-delay: calc(var(--i) * 40ms + 60ms);
+  animation: subItem 360ms cubic-bezier(0.2, 0.85, 0.2, 1) backwards;
+  animation-delay: calc(var(--i) * 45ms + 70ms);
 }
 
 @keyframes subItem {
   from {
     opacity: 0;
-    transform: translateX(-10px);
+    transform: translateX(-12px);
   }
 }
 
 .subLink {
   display: block;
-  padding: var(--s-3) var(--s-4);
-  border-radius: var(--r-sm);
-  color: var(--c-navy-900);
+  padding: 11px 16px;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  color: rgba(255, 255, 255, 0.86);
   font-family: var(--font-display);
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: var(--fw-semibold);
   text-decoration: none;
-  transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease),
-    padding-left var(--t-base) var(--ease);
+  transition: border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease),
+    background-color var(--t-fast) var(--ease), padding-left var(--t-base) var(--ease);
 }
 
 .subLink:hover {
-  background: var(--c-navy-50);
-  color: var(--c-wine-700);
-  padding-left: calc(var(--s-4) + 6px);
+  border-color: var(--c-wine-600);
+  background: rgba(126, 31, 46, 0.3);
+  color: #fff;
+  padding-left: 22px;
 }
 
 /* --------------------------------------------------------------- действия */
 .actions {
   display: flex;
   align-items: center;
-  gap: var(--s-3);
+  gap: clamp(8px, 0.9vw, 12px);
   margin-left: auto;
   flex: none;
+  animation: capsuleIn 720ms cubic-bezier(0.16, 0.9, 0.24, 1) backwards;
+  animation-delay: var(--d, 0ms);
 }
 
 .phone {
   display: none;
-  align-items: center;
-  gap: var(--s-2);
-  color: #fff;
+  height: 64px;
+  padding: 0 20px 0 8px;
+  gap: 10px;
   font-family: var(--font-display);
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: var(--fw-bold);
-  letter-spacing: -0.01em;
-  text-decoration: none;
   white-space: nowrap;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1360px) {
   .phone {
     display: inline-flex;
   }
 }
 
-.phoneIcon {
-  display: grid;
-  place-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: var(--r-pill);
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  transition: background-color var(--t-base) var(--ease), transform var(--t-base) var(--ease);
+.compact .phone {
+  height: 54px;
 }
 
 .phone:hover {
-  color: #fff;
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.phoneIcon {
+  display: grid;
+  place-content: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: var(--r-pill);
+  transition: transform var(--t-base) var(--ease), background-color var(--t-base) var(--ease),
+    border-color var(--t-base) var(--ease), width var(--t-slow) var(--ease),
+    height var(--t-slow) var(--ease);
+}
+
+.compact .phoneIcon {
+  width: 38px;
+  height: 38px;
 }
 
 .phone:hover .phoneIcon {
   background: var(--c-wine-700);
-  transform: rotate(-12deg) scale(1.06);
+  border-color: var(--c-wine-700);
+  transform: rotate(-16deg);
 }
 
 .phoneNum {
-  display: none;
+  display: inline;
 }
 
-@media (min-width: 1280px) {
-  .phoneNum {
-    display: inline;
-  }
-}
-
-/* главное действие — единственный бордовый элемент в шапке */
+/* главное действие — единственная залитая капсула */
 .cta {
-  position: relative;
   display: none;
-  align-items: center;
-  height: 46px;
-  padding-inline: var(--s-6);
-  border-radius: var(--r-md);
+  height: 64px;
+  padding: 0 12px 0 26px;
+  gap: 14px;
   background: var(--c-wine-700);
-  color: #fff;
+  border-color: var(--c-wine-700);
   font-family: var(--font-display);
   font-size: 14.5px;
   font-weight: var(--fw-bold);
-  text-decoration: none;
+  white-space: nowrap;
   overflow: hidden;
-  transition: height var(--t-slow) var(--ease), box-shadow var(--t-base) var(--ease);
-}
-
-.compact .cta {
-  height: 40px;
 }
 
 @media (min-width: 768px) {
@@ -442,19 +534,25 @@
   }
 }
 
-/* заливка поднимается снизу, а не просто меняет цвет */
+.compact .cta {
+  height: 54px;
+  background: var(--c-wine-700);
+  border-color: var(--c-wine-700);
+}
+
 .cta::before {
   content: '';
   position: absolute;
   inset: 0;
   background: var(--c-wine-900);
   transform: translateY(101%);
-  transition: transform 380ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .cta:hover {
   color: #fff;
-  box-shadow: 0 8px 22px rgba(126, 31, 46, 0.42);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(126, 31, 46, 0.5);
 }
 
 .cta:hover::before {
@@ -466,51 +564,93 @@
   z-index: 1;
 }
 
-/* ----------------------------------------------------------------- бургер */
-.call {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
+/* точка пульсирует — знак, что связь живая */
+.ctaDot {
+  position: relative;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
   flex: none;
-  border-radius: var(--r-md);
-  background: var(--c-wine-700);
-  color: #fff;
-  transition: transform var(--t-base) var(--ease), background-color var(--t-fast) var(--ease);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--r-pill);
+  transition: width var(--t-slow) var(--ease), height var(--t-slow) var(--ease);
 }
 
-.call:hover {
-  background: var(--c-wine-800);
-  color: #fff;
-  transform: rotate(-12deg);
+.compact .ctaDot {
+  width: 34px;
+  height: 34px;
 }
 
-@media (min-width: 900px) {
+.ctaDot::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: var(--r-pill);
+  background: #fff;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.9); opacity: 0.35; }
+}
+
+/* ------------------------------------------------- кнопка вызова и бургер */
+.call,
+.burger {
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  flex: none;
+  cursor: pointer;
+}
+
+@media (min-width: 560px) {
+  .call,
+  .burger {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+.compact .call,
+.compact .burger {
+  width: 46px;
+  height: 46px;
+}
+
+@media (min-width: 1360px) {
   .call {
     display: none;
   }
 }
 
-.burger {
-  display: inline-flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 5px;
-  width: 44px;
-  height: 44px;
-  padding: 0 10px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: var(--r-md);
-  background: none;
-  cursor: pointer;
-  flex: none;
-}
-
-@media (min-width: 1140px) {
+@media (min-width: 1200px) {
   .burger {
     display: none;
   }
+}
+
+.call:hover {
+  background: var(--c-wine-700);
+  border-color: var(--c-wine-700);
+  color: #fff;
+  transform: rotate(-16deg);
+}
+
+.burger {
+  flex-direction: column;
+  gap: 5px;
+  padding: 0 13px;
+}
+
+.burger:hover {
+  border-color: rgba(255, 255, 255, 0.55);
 }
 
 .burgerBar {
@@ -522,13 +662,13 @@
 }
 
 .burgerBar:nth-child(1) { width: 100%; }
-.burgerBar:nth-child(2) { width: 62%; }
+.burgerBar:nth-child(2) { width: 60%; }
 .burgerBar:nth-child(3) { width: 82%; }
 
-.burger:hover .burgerBar:nth-child(2) { transform: translateX(38%); }
+.burger:hover .burgerBar:nth-child(2) { transform: translateX(40%); }
 .burger:hover .burgerBar:nth-child(3) { transform: translateX(18%); }
 
-/* ------------------------------------------------- полоса прочтения страницы */
+/* ---------------------------------------- полоса прочтения страницы */
 .progress {
   position: absolute;
   left: 0;
@@ -539,23 +679,38 @@
   transform-origin: left center;
   transform: scaleX(0);
   will-change: transform;
+  opacity: 0;
+  transition: opacity var(--t-base) var(--ease);
+}
+
+.compact .progress {
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .utility,
-  .barInner,
+  .header,
+  .capsule,
+  .rowTop,
+  .rowMain,
+  .markRing,
   .mark,
   .marker,
-  .cta,
+  .phoneIcon,
+  .ctaDot,
   .cta::before,
   .subLink,
   .chev,
-  .phoneIcon,
-  .burgerBar {
+  .burgerBar,
+  .nav {
     transition: none;
   }
+  .capsule,
+  .actions,
   .sub,
   .subList li {
+    animation: none;
+  }
+  .ctaDot::after {
     animation: none;
   }
 }

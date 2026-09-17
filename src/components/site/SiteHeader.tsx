@@ -15,22 +15,17 @@ import { useScrollY } from '@/lib/motion';
 import s from './site-header.module.css';
 
 /**
- * Шапка сайта — во всю ширину, два уровня.
+ * Шапка сайта — капсулы поверх первого экрана.
  *
- * Верхний уровень — реквизиты и связь, он уезжает при прокрутке.
- * Нижний — логотип, текстовая навигация и главное действие; он остаётся
- * у верха окна и сжимается.
- *
- * Вместо сетки одинаковых кнопок — набранная навигация с одной бегущей
- * подсветкой: она перетекает к тому пункту, на который наведён курсор,
- * и возвращается к текущему разделу. По нижнему краю идёт полоса
- * прочтения страницы, связанная с прокруткой.
+ * Собрана из отдельных капсул с промежутками между ними, а не одной
+ * сплошной полосой: логотип, навигация и действия живут в своих оболочках
+ * с обводкой. Над видео капсулы прозрачные с размытием, при прокрутке
+ * набирают плотность, сжимаются и промежутки между ними уменьшаются.
  */
 
-const COLLAPSE_AT = 48;
+const COLLAPSE_AT = 40;
 const PENDING = '#';
 
-/** Сети, для которых есть фирменный знак. */
 const BRANDS: readonly BrandName[] = ['Telegram', 'ВКонтакте', 'MAX', 'Rutube'];
 
 function brandOf(network: string): BrandName | null {
@@ -52,7 +47,6 @@ export function SiteHeader() {
   const navRef = useRef<HTMLElement>(null);
   const progressRef = useRef<HTMLSpanElement>(null);
 
-  /* Первому экрану нужна точная высота шапки: она меняется при сжатии. */
   useEffect(() => {
     const el = headerRef.current;
     if (!el || typeof ResizeObserver === 'undefined') return;
@@ -65,8 +59,7 @@ export function SiteHeader() {
     return () => ro.disconnect();
   }, []);
 
-  /* Доля прочитанной страницы — пишется прямо в стиль полосы,
-     без состояния React: перерисовка на каждый кадр не нужна. */
+  /* Доля прочитанной страницы — пишется прямо в стиль, без состояния React. */
   useEffect(() => {
     const el = progressRef.current;
     if (!el) return;
@@ -76,7 +69,6 @@ export function SiteHeader() {
     el.style.transform = `scaleX(${p.toFixed(4)})`;
   }, [y]);
 
-  /** Подсветка встаёт под указанный пункт. */
   const moveMarker = useCallback((el: HTMLElement | null) => {
     const nav = navRef.current;
     if (!nav || !el) {
@@ -88,10 +80,8 @@ export function SiteHeader() {
     setMarker({ left: eb.left - nb.left, width: eb.width, visible: true });
   }, []);
 
-  /** Возврат подсветки к текущему разделу. */
   const restMarker = useCallback(() => {
-    const nav = navRef.current;
-    const active = nav?.querySelector<HTMLElement>('[data-active="true"]');
+    const active = navRef.current?.querySelector<HTMLElement>('[data-active="true"]');
     moveMarker(active ?? null);
   }, [moveMarker]);
 
@@ -101,7 +91,6 @@ export function SiteHeader() {
     return () => window.removeEventListener('resize', restMarker);
   }, [restMarker, pathname, compact]);
 
-  /* Выпадающий список закрывается по Escape и клику вне шапки. */
   useEffect(() => {
     if (openSub === null) return;
     const onKey = (e: KeyboardEvent) => {
@@ -126,188 +115,180 @@ export function SiteHeader() {
 
   return (
     <header ref={headerRef} className={[s.header, compact ? s.compact : ''].filter(Boolean).join(' ')}>
-      {/* ------------------------------------------------- верхний уровень */}
-      <div className={s.utility}>
-        <div className={s.utilityInner}>
-          <a className={s.utilityLink} href={PENDING}>
-            <Icon name="eye" size={15} />
-            Версия для слабовидящих
-          </a>
+      {/* --------------------------------------------- верхний ряд капсул */}
+      <div className={s.rowTop}>
+        <a className={[s.capsule, s.chip].join(' ')} href={PENDING} style={{ '--d': '0ms' } as React.CSSProperties}>
+          <Icon name="eye" size={15} />
+          <span className={s.chipText}>Версия для слабовидящих</span>
+        </a>
 
-          <span className={s.utilitySpacer} />
+        <span className={s.gap} />
 
-          {address ? (
-            <span className={s.utilityText}>
-              <Icon name="pin" size={15} />
-              {address}
-            </span>
-          ) : null}
-
-          <span className={s.socials}>
-            {contacts.socials.map((soc) => {
-              const brand = brandOf(soc.network);
-              return (
-                <a
-                  key={soc.href}
-                  className={s.social}
-                  href={soc.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={soc.label}
-                  title={soc.label}
-                >
-                  {brand ? (
-                    <BrandIcon name={brand} size={17} />
-                  ) : (
-                    <span className={s.socialText}>{soc.label.slice(0, 2)}</span>
-                  )}
-                </a>
-              );
-            })}
+        {address ? (
+          <span className={[s.capsule, s.chip, s.chipMuted].join(' ')} style={{ '--d': '70ms' } as React.CSSProperties}>
+            <Icon name="pin" size={15} />
+            <span className={s.chipText}>{address}</span>
           </span>
-        </div>
+        ) : null}
+
+        <span className={[s.capsule, s.socials].join(' ')} style={{ '--d': '140ms' } as React.CSSProperties}>
+          {contacts.socials.map((soc) => {
+            const brand = brandOf(soc.network);
+            return (
+              <a
+                key={soc.href}
+                className={s.social}
+                href={soc.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={soc.label}
+                title={soc.label}
+              >
+                {brand ? <BrandIcon name={brand} size={16} /> : soc.label.slice(0, 2)}
+              </a>
+            );
+          })}
+        </span>
       </div>
 
-      {/* -------------------------------------------------- нижний уровень */}
-      <div className={s.bar}>
-        <div className={s.barInner}>
-          <Link className={s.brand} href="/" aria-label={`${siteName} — на главную`}>
+      {/* --------------------------------------------- нижний ряд капсул */}
+      <div className={s.rowMain}>
+        <Link
+          className={[s.capsule, s.brand].join(' ')}
+          href="/"
+          aria-label={`${siteName} — на главную`}
+          style={{ '--d': '0ms' } as React.CSSProperties}
+        >
+          <span className={s.markRing}>
             <Image className={s.mark} src={logoBlue} alt="" priority />
-            <span className={s.brandText}>
-              <span className={s.brandLine}>Школа</span>
-              <span className={s.brandName}>«Дмитровский»</span>
-            </span>
-          </Link>
+          </span>
+          <span className={s.brandText}>
+            <span className={s.brandLine}>Школа</span>
+            <span className={s.brandName}>«Дмитровский»</span>
+          </span>
+        </Link>
 
-          <nav
-            className={s.nav}
-            aria-label="Основное меню"
-            ref={navRef}
-            onMouseLeave={() => {
-              restMarker();
-              setOpenSub(null);
+        <nav
+          className={[s.capsule, s.nav].join(' ')}
+          aria-label="Основное меню"
+          ref={navRef}
+          style={{ '--d': '90ms' } as React.CSSProperties}
+          onMouseLeave={() => {
+            restMarker();
+            setOpenSub(null);
+          }}
+        >
+          <span
+            className={s.marker}
+            aria-hidden="true"
+            style={{
+              transform: `translateX(${marker.left}px)`,
+              width: marker.width || 1,
+              opacity: marker.visible ? 1 : 0,
             }}
-          >
-            <span
-              className={s.marker}
-              aria-hidden="true"
-              style={{
-                transform: `translateX(${marker.left}px) scaleX(${marker.width || 1})`,
-                opacity: marker.visible ? 1 : 0,
-              }}
-            />
+          />
 
-            {headerNav.map((item) => {
-              const active = isActive(item);
+          {headerNav.map((item) => {
+            const active = isActive(item);
 
-              if (item.children) {
-                const open = openSub === item.label;
-                return (
-                  <span
-                    key={item.label}
-                    className={s.navItem}
-                    onMouseEnter={(e) => {
-                      moveMarker(e.currentTarget.firstElementChild as HTMLElement);
-                      setOpenSub(item.label);
-                    }}
-                  >
-                    <button
-                      type="button"
-                      className={s.navLink}
-                      data-active={active}
-                      aria-expanded={open}
-                      aria-haspopup="true"
-                      onClick={() => setOpenSub(open ? null : item.label)}
-                    >
-                      {item.label}
-                      <Icon name="chevron-down" size={16} className={s.chev} />
-                    </button>
-
-                    <div className={s.sub} hidden={!open}>
-                      <ul className={s.subList}>
-                        {item.children.map((child, i) => (
-                          <li key={child.label} style={{ '--i': i } as React.CSSProperties}>
-                            <Link
-                              className={s.subLink}
-                              href={child.href ?? '/'}
-                              onClick={() => setOpenSub(null)}
-                            >
-                              {child.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </span>
-                );
-              }
-
+            if (item.children) {
+              const open = openSub === item.label;
               return (
                 <span
                   key={item.label}
                   className={s.navItem}
                   onMouseEnter={(e) => {
                     moveMarker(e.currentTarget.firstElementChild as HTMLElement);
-                    setOpenSub(null);
+                    setOpenSub(item.label);
                   }}
                 >
-                  <Link
+                  <button
+                    type="button"
                     className={s.navLink}
                     data-active={active}
-                    href={item.href ?? '/'}
-                    aria-current={active ? 'page' : undefined}
+                    aria-expanded={open}
+                    aria-haspopup="true"
+                    onClick={() => setOpenSub(open ? null : item.label)}
                   >
                     {item.label}
-                  </Link>
+                    <Icon name="chevron-down" size={15} className={s.chev} />
+                  </button>
+
+                  <div className={s.sub} hidden={!open}>
+                    <ul className={s.subList}>
+                      {item.children.map((child, i) => (
+                        <li key={child.label} style={{ '--i': i } as React.CSSProperties}>
+                          <Link className={s.subLink} href={child.href ?? '/'} onClick={() => setOpenSub(null)}>
+                            {child.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </span>
               );
-            })}
-          </nav>
+            }
 
-          <div className={s.actions}>
-            {phone ? (
-              <a className={s.phone} href={`tel:${phone.tel}`}>
-                <span className={s.phoneIcon}>
-                  <Icon name="phone" size={17} />
-                </span>
-                <span className={s.phoneNum}>{phone.display}</span>
-              </a>
-            ) : null}
+            return (
+              <span
+                key={item.label}
+                className={s.navItem}
+                onMouseEnter={(e) => {
+                  moveMarker(e.currentTarget.firstElementChild as HTMLElement);
+                  setOpenSub(null);
+                }}
+              >
+                <Link
+                  className={s.navLink}
+                  data-active={active}
+                  href={item.href ?? '/'}
+                  aria-current={active ? 'page' : undefined}
+                >
+                  {item.label}
+                </Link>
+              </span>
+            );
+          })}
+        </nav>
 
-            <a className={s.cta} href={PENDING}>
-              <span className={s.ctaLabel}>Заказать звонок</span>
+        <div className={s.actions} style={{ '--d': '180ms' } as React.CSSProperties}>
+          {phone ? (
+            <a className={[s.capsule, s.phone].join(' ')} href={`tel:${phone.tel}`}>
+              <span className={s.phoneIcon}>
+                <Icon name="phone" size={16} />
+              </span>
+              <span className={s.phoneNum}>{phone.display}</span>
             </a>
+          ) : null}
 
-            {phone ? (
-              <a className={s.call} href={`tel:${phone.tel}`} aria-label={`Позвонить ${phone.display}`}>
-                <Icon name="phone" size={19} />
-              </a>
-            ) : null}
+          <a className={[s.capsule, s.cta].join(' ')} href={PENDING}>
+            <span className={s.ctaLabel}>Заказать звонок</span>
+            <span className={s.ctaDot} aria-hidden="true" />
+          </a>
 
-            <button
-              type="button"
-              className={s.burger}
-              onClick={() => setMenuOpen(true)}
-              aria-label="Открыть меню"
-              aria-expanded={menuOpen}
-            >
-              <span className={s.burgerBar} />
-              <span className={s.burgerBar} />
-              <span className={s.burgerBar} />
-            </button>
-          </div>
+          {phone ? (
+            <a className={[s.capsule, s.call].join(' ')} href={`tel:${phone.tel}`} aria-label={`Позвонить ${phone.display}`}>
+              <Icon name="phone" size={18} />
+            </a>
+          ) : null}
+
+          <button
+            type="button"
+            className={[s.capsule, s.burger].join(' ')}
+            onClick={() => setMenuOpen(true)}
+            aria-label="Открыть меню"
+            aria-expanded={menuOpen}
+          >
+            <span className={s.burgerBar} />
+            <span className={s.burgerBar} />
+            <span className={s.burgerBar} />
+          </button>
         </div>
-
-        {/* полоса прочтения страницы */}
-        <span ref={progressRef} className={s.progress} aria-hidden="true" />
       </div>
 
-      <MobileMenu
-        open={menuOpen}
-        onClose={() => setMenuOpen(false)}
-        items={mainNav}
-        contacts={contacts}
-      />
+      <span ref={progressRef} className={s.progress} aria-hidden="true" />
+
+      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} items={mainNav} contacts={contacts} />
     </header>
   );
 }
