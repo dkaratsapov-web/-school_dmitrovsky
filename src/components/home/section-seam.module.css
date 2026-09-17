@@ -76,21 +76,19 @@
 }
 
 /* --------------------------------------------- обратный стык: светлое сверху */
+/* Меняются только цвета: подложка берёт верхний цвет, купол — нижний.
+   Форма и положение купола те же, иначе между ним и следующим блоком
+   остаётся полоса чужого цвета. */
 .flip {
   background: var(--c-navy-50);
 }
 
 .flip .dome {
-  top: 0;
-  bottom: auto;
   background: var(--c-navy-950);
-  border-radius: 0 0 50% 50% / 0 0 100% 100%;
-  transform: translate3d(0, calc((1 - var(--sp)) * -46%), 0) scaleY(calc(0.72 + var(--sp) * 0.28));
-  transform-origin: 50% 0;
 }
 
 .flip .orbit {
-  stroke: rgba(1, 51, 102, 0.3);
+  stroke: rgba(1, 51, 102, 0.28);
 }
 
 .flip .orbitTwo {
