@@ -8,10 +8,14 @@
  */
 export type NewsImage = { src: string; width: number; height: number; alt: string };
 
+export type NewsLink = { label: string; href: string };
+
 export type NewsItem = {
   title: string;
-  /** Описание материала, если его передали. */
-  text?: string;
+  /** Абзацы материала, если их передали. */
+  text?: readonly string[];
+  /** Ссылки из текста материала. */
+  links?: readonly NewsLink[];
   /** Телефон из текста новости, если он там есть. */
   phone?: { display: string; tel: string };
   /** Все снимки материала. Первый показывается сразу. */
@@ -61,6 +65,45 @@ export const news: readonly NewsItem[] = [
         width: 1000,
         height: 1334,
         alt: 'Анатолий Вассерман во время встречи с учениками',
+      },
+    ],
+  },
+  {
+    title:
+      'Школа «Дмитровский» стала победителем в видеоконкурсе (ТОП-3) и победителем ' +
+      'в фотоконкурсе (номинация «Журналистская кухня»)',
+    text: [
+      'Поздравляем обучающихся 11-го медиакласса Анну и Алину с победой в конкурсе ' +
+        'и популяризацией школы «Дмитровский» на федеральном телеканале ОТР.',
+      'На конкурс поступили 93 видеоролика и 811 фотографий из 60 образовательных ' +
+        'организаций 20 регионов России.',
+    ],
+    links: [
+      {
+        label: 'Смотрите полную версию акции #ШколаСентябрь',
+        href: 'https://vk.ru/wall-60427180_21034',
+      },
+      {
+        label: 'Итоги видеоконкурса',
+        href: 'https://lgo.ru/proect/marafon/event/lineika24_2026-v.htm',
+      },
+      {
+        label: 'Итоги фотоконкурса',
+        href: 'https://lgo.ru/proect/marafon/event/lineika24_2026_ph.htm',
+      },
+    ],
+    images: [
+      {
+        src: '/images/news-mediakonkurs-1.webp',
+        width: 1200,
+        height: 800,
+        alt: 'Ученица медиакласса снимает школьную линейку на камеру',
+      },
+      {
+        src: '/images/news-mediakonkurs-2.webp',
+        width: 1200,
+        height: 800,
+        alt: 'Ученица медиакласса берёт интервью у первоклассниц',
       },
     ],
   },

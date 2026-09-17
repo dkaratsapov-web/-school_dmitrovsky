@@ -288,6 +288,33 @@
   max-width: 62ch;
 }
 
+/* ссылки из текста материала */
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  display: inline-block;
+  font-size: var(--fs-small);
+  color: #fff;
+  text-decoration: none;
+  border-bottom: 1px solid var(--c-wine-600);
+  padding-bottom: 1px;
+  overflow-wrap: anywhere;
+  transition: border-color var(--t-fast) var(--ease);
+}
+
+.link:hover,
+.link:focus-visible {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
 .phone {
   display: inline-block;
   margin-top: 12px;

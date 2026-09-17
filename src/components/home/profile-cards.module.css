@@ -207,6 +207,11 @@
   background: var(--c-wine-600);
 }
 
+.prof {
+  color: var(--c-wine-700);
+  font-weight: var(--fw-semibold);
+}
+
 .text {
   display: block;
   font-size: var(--fs-small);

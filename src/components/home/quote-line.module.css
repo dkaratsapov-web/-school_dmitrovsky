@@ -1,0 +1,86 @@
+/* =========================================================================
+   Цитата, которая печатается по букве
+   ========================================================================= */
+
+.section {
+  /* невысокая полоса: строка, подпись и воздух вокруг */
+  padding-block: clamp(2.25rem, 4.4vw, 3.75rem);
+  background: var(--c-navy-950);
+  color: #fff;
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.figure {
+  margin: 0;
+  text-align: center;
+}
+
+.quote {
+  margin: 0;
+  font-family: var(--font-script);
+  font-weight: 600;
+  font-size: clamp(1.75rem, 1.1rem + 2.6vw, 3.25rem);
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  color: #fff;
+  /* строка не прыгает по высоте, пока набирается */
+  min-height: 1.2em;
+}
+
+/* перо на конце строки: мигает, пока строка набирается */
+.pen {
+  display: inline-block;
+  width: 2px;
+  height: 0.86em;
+  margin-left: 0.06em;
+  vertical-align: -0.1em;
+  background: var(--c-wine-600);
+  animation: blink 900ms steps(1, end) infinite;
+}
+
+.penOff {
+  display: none;
+}
+
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: clamp(0.9rem, 1.8vw, 1.4rem);
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-semibold);
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.rule {
+  display: block;
+  width: clamp(28px, 5vw, 58px);
+  height: 1px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pen {
+    animation: none;
+    display: none;
+  }
+}

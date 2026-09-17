@@ -129,7 +129,28 @@ export function NewsDeck() {
 
             <div className={s.words} key={`w-${active}`}>
               <h3 className={s.featureTitle}>{item.title}</h3>
-              {item.text ? <p className={s.featureText}>{item.text}</p> : null}
+              {item.text?.map((para) => (
+                <p className={s.featureText} key={para}>
+                  {para}
+                </p>
+              ))}
+
+              {item.links?.length ? (
+                <ul className={s.links}>
+                  {item.links.map((l) => (
+                    <li key={l.href}>
+                      <a
+                        className={s.link}
+                        href={l.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {l.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
               {item.phone ? (
                 <a className={s.phone} href={`tel:${item.phone.tel}`}>
                   {item.phone.display}

@@ -117,7 +117,14 @@ export function ProfileCards() {
                     </span>
                     <span className={s.block}>
                       <span className={s.label}>Профессия в колледже</span>
-                      <span className={s.text}>{p.college}</span>
+                      <span className={s.text}>
+                        {/* сами профессии выделены цветом: слова те же,
+                            меняется только начертание */}
+                        {p.college.slice(0, p.college.indexOf(':') + 1)}{' '}
+                        <span className={s.prof}>
+                          {p.college.slice(p.college.indexOf(':') + 1).trim()}
+                        </span>
+                      </span>
                     </span>
                   </span>
                 </Link>

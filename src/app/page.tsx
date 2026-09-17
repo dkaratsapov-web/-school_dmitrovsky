@@ -1,5 +1,6 @@
 import { CadetCorps } from '@/components/home/CadetCorps';
 import { NewsDeck } from '@/components/home/NewsDeck';
+import { QuoteLine } from '@/components/home/QuoteLine';
 import { ProfileCards } from '@/components/home/ProfileCards';
 import { SectionSeam } from '@/components/home/SectionSeam';
 import { StageGrid } from '@/components/home/StageGrid';
@@ -28,6 +29,7 @@ export default function HomePage() {
       <ProfileCards />
       <SectionSeam flip />
       <CadetCorps />
+      <QuoteLine />
       <NewsDeck />
     </>
   );
