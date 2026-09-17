@@ -1,0 +1,76 @@
+/* =========================================================================
+   Стык тёмного и светлого блоков
+   ========================================================================= */
+
+.seam {
+  --sp: 1;
+  position: relative;
+  height: clamp(96px, 10vw, 190px);
+  background: var(--c-navy-950);
+  overflow: clip;
+  isolation: isolate;
+}
+
+/* светлый купол поднимается снизу и распрямляется по мере прокрутки */
+.dome {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 160%;
+  height: 100%;
+  margin-left: -80%;
+  background: var(--c-navy-50);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  transform: translate3d(0, calc((1 - var(--sp)) * 46%), 0) scaleY(calc(0.72 + var(--sp) * 0.28));
+  transform-origin: 50% 100%;
+}
+
+/* орбиты проходят сквозь стык: часть в тёмном, часть в светлом */
+.orbit,
+.orbitTwo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(760px, 86vw);
+  height: clamp(150px, 16vw, 250px);
+  margin-left: calc(min(760px, 86vw) / -2);
+  margin-top: calc(clamp(150px, 16vw, 250px) / -2);
+  z-index: 1;
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.2);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+
+.orbit {
+  transform: translate3d(calc((var(--sp) - 0.5) * -70px), 0, 0) rotate(-9deg);
+}
+
+.orbitTwo {
+  stroke: rgba(152, 40, 58, 0.55);
+  transform: translate3d(calc((var(--sp) - 0.5) * 48px), 0, 0) rotate(11deg);
+}
+
+/* ядро на самой линии стыка */
+.nucleus {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  width: 11px;
+  height: 11px;
+  margin: -5.5px 0 0 -5.5px;
+  border-radius: 50%;
+  background: var(--c-wine-700);
+  box-shadow: 0 0 0 5px rgba(126, 31, 46, 0.16);
+  transform: scale(calc(0.7 + var(--sp) * 0.5));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dome,
+  .orbit,
+  .orbitTwo,
+  .nucleus {
+    transform: none;
+  }
+}

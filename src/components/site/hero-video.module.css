@@ -52,9 +52,9 @@
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(to top, rgba(0, 17, 38, 0.96) 0%, rgba(0, 17, 38, 0.86) 34%,
-      rgba(0, 17, 38, 0.66) 66%, rgba(0, 17, 38, 0.72) 100%),
-    linear-gradient(to right, rgba(1, 51, 102, 0.6) 0%, rgba(1, 51, 102, 0.12) 65%);
+    linear-gradient(to top, rgba(0, 17, 38, 0.88) 0%, rgba(0, 17, 38, 0.68) 34%,
+      rgba(0, 17, 38, 0.38) 66%, rgba(0, 17, 38, 0.48) 100%),
+    linear-gradient(to right, rgba(1, 51, 102, 0.34) 0%, rgba(1, 51, 102, 0.06) 65%);
 }
 
 .inner {

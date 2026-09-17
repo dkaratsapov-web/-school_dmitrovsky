@@ -1,4 +1,5 @@
-import { ProfileLane } from '@/components/home/ProfileLane';
+import { ProfileCards } from '@/components/home/ProfileCards';
+import { SectionSeam } from '@/components/home/SectionSeam';
 import { StageGrid } from '@/components/home/StageGrid';
 import { FactStrip } from '@/components/site/FactStrip';
 import { HeroVideo, heroPoster, heroVideo } from '@/components/site/HeroVideo';
@@ -6,8 +7,8 @@ import { HeroVideo, heroPoster, heroVideo } from '@/components/site/HeroVideo';
 /**
  * Главная страница.
  *
- * Пересобирается заново, блок за блоком. Сейчас на странице только
- * первый экран — остальные блоки добавляются по мере согласования.
+ * Пересобирается заново, блок за блоком. Готовы первый экран, лента
+ * с цифрами, ступени обучения и профильные 10 - 11 классы.
  */
 export default function HomePage() {
   return (
@@ -21,7 +22,8 @@ export default function HomePage() {
       />
       <FactStrip />
       <StageGrid />
-      <ProfileLane />
+      <SectionSeam />
+      <ProfileCards />
     </>
   );
 }
