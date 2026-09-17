@@ -103,7 +103,17 @@ export function ProfileCards() {
                   <span className={s.body}>
                     <span className={s.block}>
                       <span className={s.label}>Углублённое изучение</span>
-                      <span className={s.text}>{p.subjects}</span>
+                      <span className={s.marks}>
+                        {p.subjects
+                          .split(';')
+                          .map((part) => part.trim())
+                          .filter(Boolean)
+                          .map((part) => (
+                            <span className={s.mark} key={part}>
+                              {part}
+                            </span>
+                          ))}
+                      </span>
                     </span>
                     <span className={s.block}>
                       <span className={s.label}>Профессия в колледже</span>

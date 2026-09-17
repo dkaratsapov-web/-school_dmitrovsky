@@ -512,16 +512,16 @@
   font-family: var(--font-display);
   font-size: 14px;
   font-weight: var(--fw-semibold);
+  text-align: center;
   text-decoration: none;
   transition: border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease),
-    background-color var(--t-fast) var(--ease), padding-left var(--t-base) var(--ease);
+    background-color var(--t-fast) var(--ease);
 }
 
 .subLink:hover {
   border-color: var(--c-wine-600);
   background: rgba(126, 31, 46, 0.3);
   color: #fff;
-  padding-left: 22px;
 }
 
 /* --------------------------------------------------------------- действия */

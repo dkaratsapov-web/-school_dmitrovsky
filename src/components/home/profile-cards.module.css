@@ -180,6 +180,33 @@
   color: var(--c-navy-700);
 }
 
+/* перечень предметов — списком с точками, а не одной строкой через «;» */
+.marks {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mark {
+  position: relative;
+  display: block;
+  padding-left: 14px;
+  font-size: var(--fs-small);
+  line-height: 1.45;
+  color: var(--c-ink-500);
+}
+
+.mark::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--c-wine-600);
+}
+
 .text {
   display: block;
   font-size: var(--fs-small);
