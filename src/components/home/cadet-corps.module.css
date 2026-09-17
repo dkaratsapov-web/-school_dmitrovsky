@@ -6,7 +6,7 @@
   --sp: 0.5;
   position: relative;
   /* сверху нужен запас: верхний снимок стопки уезжает вверх при прокрутке */
-  padding-block: clamp(2.5rem, 5vw, 4.5rem) clamp(3.5rem, 7vw, 6rem);
+  padding-block: clamp(1.75rem, 3.4vw, 3rem) clamp(2.25rem, 4.2vw, 3.75rem);
   background: var(--c-navy-950);
   color: #fff;
   overflow: clip;
@@ -162,7 +162,7 @@
 /* ---------------------------------------------------------- преимущества */
 .points {
   position: relative;
-  margin-top: clamp(3rem, 6vw, 5rem);
+  margin-top: clamp(2.25rem, 4.2vw, 3.5rem);
   padding-left: 26px;
 }
 

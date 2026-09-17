@@ -6,7 +6,7 @@
   --sp: 0.5;
   position: relative;
   /* сверху почти без отступа: воздух даёт купол на стыке */
-  padding-block: clamp(0.5rem, 1.2vw, 1.25rem) clamp(3.5rem, 7vw, 6rem);
+  padding-block: clamp(0.5rem, 1.2vw, 1.25rem) clamp(2.25rem, 4.2vw, 3.75rem);
   background: var(--c-navy-50);
   color: var(--c-ink-900);
 }
@@ -28,7 +28,7 @@
 }
 
 .lead {
-  margin: 10px 0 clamp(2rem, 4vw, 3rem);
+  margin: 10px 0 clamp(1.5rem, 2.8vw, 2.25rem);
   font-size: var(--fs-lead);
   color: var(--c-ink-500);
   max-width: 46ch;

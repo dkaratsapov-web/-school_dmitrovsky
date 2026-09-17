@@ -4,7 +4,7 @@
 
 .section {
   position: relative;
-  padding-block: clamp(3rem, 6vw, 5.5rem);
+  padding-block: clamp(2.25rem, 4.2vw, 3.75rem) clamp(2rem, 3.6vw, 3.25rem);
   background: var(--c-navy-950);
   color: #fff;
 }
