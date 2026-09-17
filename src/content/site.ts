@@ -27,7 +27,7 @@ export const contacts: SiteContacts = {
   addresses: ['г. Москва, Карельский бульвар, д. 20'],
   socials: [
     { label: 'Telegram', network: 'Telegram', href: 'https://t.me/sch_dmitrovsky' },
-    { label: 'ВКонтакте', network: 'ВКонтакте', href: 'https://vk.com/sch_dmitrovsky' },
+    { label: 'ВКонтакте', network: 'ВКонтакте', href: 'https://vk.ru/sch_dmitrovsky' },
     { label: 'MAX', network: 'MAX', href: 'https://max.ru/id7713781783_gos' },
     { label: 'Rutube', network: 'Rutube', href: 'https://rutube.ru/channel/23524799/' },
   ],

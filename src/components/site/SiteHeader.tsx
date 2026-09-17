@@ -107,6 +107,9 @@ export function SiteHeader() {
     };
   }, [openSub]);
 
+  /* Пять ступеней обучения: тот же состав, что в списке «Обучение». */
+  const studyItems = headerNav.find((i) => i.children)?.children ?? [];
+
   const phone = contacts.phones[0];
   const address = contacts.addresses[0];
 
@@ -121,6 +124,34 @@ export function SiteHeader() {
           <Icon name="eye" size={15} />
           <span className={s.chipText}>Версия для слабовидящих</span>
         </a>
+
+        <span className={s.gap} />
+
+        {/* Ступени обучения вынесены в верхний ряд: на первом экране видно
+            всё меню целиком, при прокрутке ряд схлопывается и они
+            возвращаются в выпадающий список «Обучение». */}
+        {studyItems.length > 0 ? (
+          <nav
+            className={[s.capsule, s.studyNav].join(' ')}
+            aria-label="Ступени обучения"
+            style={{ '--d': '110ms' } as React.CSSProperties}
+          >
+            <span className={s.studyLabel}>Обучение</span>
+            {studyItems.map((item, i) => (
+              <Link
+                key={item.label}
+                className={s.studyLink}
+                href={item.href ?? '/'}
+                data-active={item.href === pathname}
+                aria-current={item.href === pathname ? 'page' : undefined}
+                style={{ '--i': i } as React.CSSProperties}
+                tabIndex={compact ? -1 : undefined}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        ) : null}
 
         <span className={s.gap} />
 
