@@ -1,300 +1,484 @@
 /* =========================================================================
-   Двухуровневая шапка
+   Шапка сайта — во всю ширину, два уровня.
 
-   Цвета взяты с действующего сайта: синий #013366, бордовый #7e1f2e.
-   При прокрутке нулевой и верхний уровни схлопываются, навигация
-   прилипает к верху окна.
+   Фирменные цвета действующего сайта: синий #013366, бордовый #7e1f2e.
+   Вместо сетки одинаковых кнопок — набранная навигация с одной бегущей
+   подсветкой. По нижнему краю — полоса прочтения страницы.
    ========================================================================= */
 
 .header {
   position: sticky;
   top: 0;
   z-index: var(--z-header);
-  background: #fff;
-  --upper-h: 84px;
-  --access-h: 40px;
+  background: var(--c-navy-800);
 }
 
-/* --------------------------------------------------- версия для слабовидящих */
-.access {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: var(--access-h);
-  background: var(--c-navy-800);
+/* ------------------------------------------------------- верхний уровень */
+.utility {
+  display: none;
+  height: 38px;
   overflow: hidden;
+  background: #001b3a;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 12.5px;
   transition: height var(--t-slow) var(--ease), opacity var(--t-base) var(--ease);
 }
 
-.compact .access {
+@media (min-width: 768px) {
+  .utility {
+    display: block;
+  }
+}
+
+.compact .utility {
   height: 0;
   opacity: 0;
 }
 
-.accessLink {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--s-2);
-  min-height: 30px;
-  padding: 0 var(--s-6);
-  border-radius: var(--r-pill);
-  background: #fff;
-  color: var(--c-navy-800);
-  font-size: var(--fs-caption);
-  font-weight: var(--fw-medium);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
-}
-
-.accessLink:hover {
-  color: var(--c-wine-700);
-  transform: translateY(-1px);
-}
-
-/* ------------------------------------------------------------ верхний уровень */
-.upper {
-  height: var(--upper-h);
-  overflow: hidden;
-  background: #fff;
-  transition: height var(--t-slow) var(--ease);
-}
-
-.compact .upper {
-  height: 58px;
-}
-
-.upperInner {
+.utilityInner {
   display: flex;
   align-items: center;
   gap: var(--s-5);
-  height: var(--upper-h);
-  max-width: var(--container);
-  margin-inline: auto;
-  padding-inline: var(--gutter);
+  height: 38px;
+  /* во всю ширину: поля только по краям окна */
+  padding-inline: clamp(1rem, 3vw, 3rem);
+}
+
+.utilitySpacer {
+  flex: 1;
+}
+
+.utilityLink,
+.utilityText {
+  display: none;
+  align-items: center;
+  gap: var(--s-2);
+  color: inherit;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.utilityLink {
+  transition: color var(--t-fast) var(--ease);
+}
+
+.utilityLink:hover {
+  color: #fff;
+}
+
+@media (min-width: 768px) {
+  .utilityLink {
+    display: inline-flex;
+  }
+}
+
+@media (min-width: 1100px) {
+  .utilityText {
+    display: inline-flex;
+  }
+}
+
+/* соцсети — компактные монограммы, без кружков */
+.social {
+  display: none;
+  align-items: center;
+  height: 22px;
+  padding-inline: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-display);
+  font-size: 10.5px;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease),
+    background-color var(--t-fast) var(--ease);
+}
+
+.social:hover {
+  background: var(--c-wine-700);
+  border-color: var(--c-wine-700);
+  color: #fff;
+}
+
+@media (min-width: 640px) {
+  .social {
+    display: inline-flex;
+  }
+}
+
+/* -------------------------------------------------------- нижний уровень */
+.bar {
+  position: relative;
+  background: var(--c-navy-800);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.barInner {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 2.5vw, 2.5rem);
+  height: 82px;
+  padding-inline: clamp(1rem, 3vw, 3rem);
   transition: height var(--t-slow) var(--ease);
 }
 
-.compact .upperInner {
-  height: 58px;
+.compact .barInner {
+  height: 64px;
 }
 
-/* ------------------------------------------------------------------ логотип */
+/* --------------------------------------------------------------- логотип */
 .brand {
   display: inline-flex;
   align-items: center;
   gap: var(--s-3);
   flex: none;
+  color: #fff;
   text-decoration: none;
-  color: var(--c-navy-800);
 }
 
 .mark {
-  display: block;
-  width: 56px;
-  height: 56px;
-  flex: none;
-  transition: width var(--t-slow) var(--ease), height var(--t-slow) var(--ease);
-}
-
-.compact .mark {
   width: 40px;
   height: 40px;
-}
-
-.markImg {
-  width: 100%;
-  height: 100%;
+  flex: none;
   object-fit: contain;
-  /* знак школы — атом; орбиты оживают при наведении на логотип */
-  transition: transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  /* знак школы — атом; орбиты оживают при наведении */
+  filter: brightness(0) invert(1);
+  transition: width var(--t-slow) var(--ease), height var(--t-slow) var(--ease),
+    transform 1000ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-.brand:hover .markImg {
-  transform: rotate(120deg);
-}
-
-.brandText {
-  display: none;
-  font-family: var(--font-display);
-  font-size: 1.0625rem;
-  font-weight: var(--fw-bold);
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
-}
-
-@media (min-width: 900px) {
-  .brandText {
-    display: block;
+@media (min-width: 560px) {
+  .mark {
+    width: 46px;
+    height: 46px;
   }
 }
 
-.brandStrong {
-  display: block;
-  color: var(--c-navy-800);
+.compact .mark {
+  width: 38px;
+  height: 38px;
 }
 
-/* ------------------------------------------------------------ адрес и телефон */
-.meta,
+.brand:hover .mark {
+  transform: rotate(180deg);
+}
+
+.brandText {
+  display: block;
+  font-family: var(--font-display);
+  line-height: 1.1;
+  min-width: 0;
+}
+
+.brandLine {
+  display: block;
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.brandName {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: var(--fw-black);
+  letter-spacing: -0.015em;
+  color: #fff;
+  white-space: nowrap;
+}
+
+@media (min-width: 560px) {
+  .brandName {
+    font-size: 1.0625rem;
+  }
+}
+
+/* ------------------------------------------------------------ навигация */
+.nav {
+  position: relative;
+  display: none;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+@media (min-width: 1140px) {
+  .nav {
+    display: flex;
+  }
+}
+
+/* одна бегущая подсветка вместо десяти отдельных кнопок */
+.marker {
+  position: absolute;
+  left: 0;
+  bottom: 50%;
+  width: 1px;
+  height: 36px;
+  margin-bottom: -18px;
+  border-radius: var(--r-sm);
+  background: rgba(255, 255, 255, 0.12);
+  transform-origin: left center;
+  transition: transform 420ms cubic-bezier(0.22, 0.8, 0.2, 1), opacity var(--t-base) var(--ease);
+  pointer-events: none;
+}
+
+.navItem {
+  position: relative;
+  display: inline-flex;
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 36px;
+  padding-inline: clamp(0.6rem, 1vw, 1rem);
+  border: 0;
+  background: none;
+  color: rgba(255, 255, 255, 0.82);
+  font-family: var(--font-display);
+  font-size: 14.5px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color var(--t-fast) var(--ease);
+}
+
+.navLink:hover {
+  color: #fff;
+}
+
+/* текущий раздел отмечен чертой в фирменном бордовом */
+.navLink[data-active='true'] {
+  color: #fff;
+}
+
+.navLink[data-active='true']::after {
+  content: '';
+  position: absolute;
+  left: clamp(0.6rem, 1vw, 1rem);
+  right: clamp(0.6rem, 1vw, 1rem);
+  bottom: -6px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--c-wine-600);
+}
+
+.chev {
+  opacity: 0.6;
+  transition: transform var(--t-base) var(--ease);
+}
+
+.navLink[aria-expanded='true'] .chev {
+  transform: rotate(180deg);
+}
+
+/* -------------------------------------------------------- выпадающий список */
+.sub {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 0;
+  min-width: 264px;
+  padding: var(--s-2);
+  background: #fff;
+  border-radius: var(--r-md);
+  box-shadow: 0 20px 50px rgba(0, 21, 45, 0.3);
+  animation: subIn 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.sub::before {
+  /* мостик к пункту, чтобы список не закрывался на полпути курсора */
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -14px;
+  height: 14px;
+}
+
+@keyframes subIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.subList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.subList li {
+  margin: 0;
+  animation: subItem 320ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  animation-delay: calc(var(--i) * 40ms + 60ms);
+}
+
+@keyframes subItem {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+}
+
+.subLink {
+  display: block;
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-sm);
+  color: var(--c-navy-900);
+  font-family: var(--font-display);
+  font-size: 14.5px;
+  font-weight: var(--fw-semibold);
+  text-decoration: none;
+  transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease),
+    padding-left var(--t-base) var(--ease);
+}
+
+.subLink:hover {
+  background: var(--c-navy-50);
+  color: var(--c-wine-700);
+  padding-left: calc(var(--s-4) + 6px);
+}
+
+/* --------------------------------------------------------------- действия */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-left: auto;
+  flex: none;
+}
+
 .phone {
   display: none;
   align-items: center;
   gap: var(--s-2);
-  font-size: var(--fs-small);
-  line-height: 1.25;
-  color: var(--c-ink-900);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.01em;
   text-decoration: none;
-  max-width: 15rem;
-}
-
-.phone {
-  font-weight: var(--fw-semibold);
   white-space: nowrap;
-  transition: color var(--t-fast) var(--ease);
 }
 
-.phone:hover {
-  color: var(--c-wine-700);
-}
-
-.metaIcon {
-  flex: none;
-  color: var(--c-wine-700);
-}
-
-@media (min-width: 1100px) {
-  .meta {
-    display: inline-flex;
-  }
-}
-
-@media (min-width: 1000px) {
+@media (min-width: 900px) {
   .phone {
     display: inline-flex;
   }
 }
 
-/* ------------------------------------------------------------------ соцсети */
-.socials {
+.phoneIcon {
+  display: grid;
+  place-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transition: background-color var(--t-base) var(--ease), transform var(--t-base) var(--ease);
+}
+
+.phone:hover {
+  color: #fff;
+}
+
+.phone:hover .phoneIcon {
+  background: var(--c-wine-700);
+  transform: rotate(-12deg) scale(1.06);
+}
+
+.phoneNum {
   display: none;
-  gap: var(--s-2);
-  margin-left: auto;
 }
 
 @media (min-width: 1280px) {
-  .socials {
-    display: flex;
+  .phoneNum {
+    display: inline;
   }
 }
 
-.social {
-  display: grid;
-  place-content: center;
-  min-width: 38px;
-  height: 38px;
-  padding-inline: 8px;
-  border-radius: var(--r-pill);
+/* главное действие — единственный бордовый элемент в шапке */
+.cta {
+  position: relative;
+  display: none;
+  align-items: center;
+  height: 46px;
+  padding-inline: var(--s-6);
+  border-radius: var(--r-md);
   background: var(--c-wine-700);
   color: #fff;
   font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: var(--fw-black);
-  letter-spacing: 0;
+  font-size: 14.5px;
+  font-weight: var(--fw-bold);
   text-decoration: none;
-  transition: transform var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
+  overflow: hidden;
+  transition: height var(--t-slow) var(--ease), box-shadow var(--t-base) var(--ease);
 }
 
-.social:hover {
-  background: var(--c-navy-800);
-  color: #fff;
-  transform: translateY(-2px) scale(1.06);
-}
-
-/* ------------------------------------------------------------------ действия */
-.upperActions {
-  display: none;
-  gap: var(--s-3);
-  flex: none;
+.compact .cta {
+  height: 40px;
 }
 
 @media (min-width: 768px) {
-  .upperActions {
-    display: flex;
-    margin-left: auto;
+  .cta {
+    display: inline-flex;
   }
 }
 
-@media (min-width: 1280px) {
-  .upperActions {
-    margin-left: 0;
-  }
+/* заливка поднимается снизу, а не просто меняет цвет */
+.cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--c-wine-900);
+  transform: translateY(101%);
+  transition: transform 380ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.btnOutline,
-.btnSolid {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 0 var(--s-6);
-  border-radius: var(--r-md);
-  font-family: var(--font-display);
-  font-size: var(--fs-small);
-  font-weight: var(--fw-bold);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background-color var(--t-base) var(--ease), color var(--t-base) var(--ease),
-    transform var(--t-fast) var(--ease), box-shadow var(--t-base) var(--ease);
-}
-
-.btnOutline {
-  background: var(--c-wine-700);
+.cta:hover {
   color: #fff;
+  box-shadow: 0 8px 22px rgba(126, 31, 46, 0.42);
 }
 
-.btnOutline:hover {
-  background: var(--c-wine-800);
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(126, 31, 46, 0.32);
+.cta:hover::before {
+  transform: translateY(0);
 }
 
-.btnSolid {
-  background: var(--c-navy-800);
-  color: #fff;
+.ctaLabel {
+  position: relative;
+  z-index: 1;
 }
 
-.btnSolid:hover {
-  background: var(--c-navy-900);
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(1, 51, 102, 0.32);
-}
-
-/* ------------------------------------------------------------------- бургер */
-.callBtn {
+/* ----------------------------------------------------------------- бургер */
+.call {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 44px;
   height: 44px;
   flex: none;
-  margin-left: auto;
   border-radius: var(--r-md);
   background: var(--c-wine-700);
   color: #fff;
-  transition: transform var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
+  transition: transform var(--t-base) var(--ease), background-color var(--t-fast) var(--ease);
 }
 
-.callBtn:hover {
+.call:hover {
   background: var(--c-wine-800);
   color: #fff;
-  transform: translateY(-2px);
+  transform: rotate(-12deg);
 }
 
-@media (min-width: 1024px) {
-  .callBtn {
+@media (min-width: 900px) {
+  .call {
     display: none;
   }
 }
@@ -306,16 +490,15 @@
   gap: 5px;
   width: 44px;
   height: 44px;
-  margin-left: var(--s-2);
   padding: 0 10px;
-  border: 0;
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: var(--r-md);
-  background: var(--c-navy-800);
+  background: none;
   cursor: pointer;
   flex: none;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1140px) {
   .burger {
     display: none;
   }
@@ -326,126 +509,44 @@
   height: 2px;
   border-radius: 2px;
   background: #fff;
-  transition: transform var(--t-base) var(--ease), opacity var(--t-base) var(--ease);
+  transition: transform var(--t-base) var(--ease);
 }
 
 .burgerBar:nth-child(1) { width: 100%; }
-.burgerBar:nth-child(2) { width: 70%; }
-.burgerBar:nth-child(3) { width: 85%; }
+.burgerBar:nth-child(2) { width: 62%; }
+.burgerBar:nth-child(3) { width: 82%; }
 
-.burger:hover .burgerBar:nth-child(2) { transform: translateX(30%); }
-.burger:hover .burgerBar:nth-child(3) { transform: translateX(15%); }
+.burger:hover .burgerBar:nth-child(2) { transform: translateX(38%); }
+.burger:hover .burgerBar:nth-child(3) { transform: translateX(18%); }
 
-/* ------------------------------------------------------------- нижний уровень */
-.lower {
-  display: none;
-  padding-inline: var(--gutter);
-  padding-bottom: 0;
-  background: #fff;
-  transition: padding var(--t-slow) var(--ease);
-}
-
-@media (min-width: 1024px) {
-  .lower {
-    display: block;
-  }
-}
-
-.compact .lower {
-  padding-inline: 0;
-}
-
-.nav {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--s-3);
-  max-width: var(--container);
-  margin-inline: auto;
-  padding: var(--s-5) var(--s-6);
-  background: var(--c-navy-800);
-  border-radius: var(--r-xl);
-  transition: padding var(--t-slow) var(--ease), gap var(--t-slow) var(--ease),
-    border-radius var(--t-slow) var(--ease), box-shadow var(--t-slow) var(--ease);
-}
-
-.compact .nav {
-  gap: var(--s-2);
-  padding-block: var(--s-3);
-  max-width: none;
-  border-radius: 0;
-  box-shadow: 0 10px 30px rgba(0, 27, 58, 0.26);
-}
-
-/* ------------------------------------------------------------------- пилюли */
-.pill {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0 var(--s-6);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: var(--r-md);
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: var(--fs-small);
-  font-weight: var(--fw-semibold);
-  text-decoration: none;
-  white-space: nowrap;
-  overflow: hidden;
-  transition: border-color var(--t-base) var(--ease), color var(--t-base) var(--ease),
-    transform var(--t-fast) var(--ease), min-height var(--t-slow) var(--ease);
-}
-
-.compact .pill {
-  min-height: 38px;
-  font-size: var(--fs-caption);
-}
-
-/* заливка приходит слева, а не просто меняет цвет фона */
-.pill::before {
-  content: '';
+/* ------------------------------------------------- полоса прочтения страницы */
+.progress {
   position: absolute;
-  inset: 0;
-  background: var(--c-wine-700);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--c-wine-600);
+  transform-origin: left center;
   transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--t-slow) cubic-bezier(0.2, 0.7, 0.2, 1);
-  z-index: -1;
-}
-
-.pill:hover {
-  color: #fff;
-  border-color: var(--c-wine-700);
-  transform: translateY(-2px);
-}
-
-.pill:hover::before {
-  transform: scaleX(1);
-}
-
-.pillActive {
-  border-color: #fff;
-}
-
-.pillAccent {
-  background: var(--c-wine-700);
-  border-color: var(--c-wine-700);
-}
-
-.pillAccent::before {
-  background: var(--c-navy-900);
+  will-change: transform;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .access,
-  .upper,
-  .upperInner,
+  .utility,
+  .barInner,
   .mark,
-  .lower,
-  .nav,
-  .pill,
-  .markImg {
+  .marker,
+  .cta,
+  .cta::before,
+  .subLink,
+  .chev,
+  .phoneIcon,
+  .burgerBar {
     transition: none;
+  }
+  .sub,
+  .subList li {
+    animation: none;
   }
 }
