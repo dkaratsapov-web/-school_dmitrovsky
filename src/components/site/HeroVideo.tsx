@@ -71,6 +71,8 @@ export function HeroVideo({ title, poster, posterWidth, posterHeight, video }: P
     v.muted = true;
     v.defaultMuted = true;
 
+    const cleanups: Array<() => void> = [];
+
     const start = () => {
       v.play().catch(() => {
         /* браузер отказал в автозапуске — ждём первого касания страницы */
@@ -80,6 +82,23 @@ export function HeroVideo({ title, poster, posterWidth, posterHeight, video }: P
     v.load();
     start();
     v.addEventListener('canplay', start);
+
+    /* Постер убираем не по событию playing, а после реально отрисованного
+       кадра: иначе при сбое декодера на месте видео остаётся пустота. */
+    type WithFrameCb = HTMLVideoElement & {
+      requestVideoFrameCallback?: (cb: () => void) => number;
+    };
+    const withFrame = v as WithFrameCb;
+    const onFrame = () => setReady(true);
+    if (typeof withFrame.requestVideoFrameCallback === 'function') {
+      withFrame.requestVideoFrameCallback(onFrame);
+    } else {
+      const poll = () => {
+        if (v.readyState >= 2 && v.currentTime > 0.05) onFrame();
+      };
+      v.addEventListener('timeupdate', poll);
+      cleanups.push(() => v.removeEventListener('timeupdate', poll));
+    }
 
     /* Запасной путь: если автозапуск всё же заблокирован, видео стартует
        от первого действия пользователя на странице. */
@@ -93,6 +112,7 @@ export function HeroVideo({ title, poster, posterWidth, posterHeight, video }: P
       v.removeEventListener('canplay', start);
       window.removeEventListener('pointerdown', onFirstTouch);
       window.removeEventListener('keydown', onFirstTouch);
+      cleanups.forEach((fn) => fn());
     };
   }, [allowVideo]);
 
@@ -100,7 +120,7 @@ export function HeroVideo({ title, poster, posterWidth, posterHeight, video }: P
 
   return (
     <section className={s.hero} ref={ref}>
-      <div className={s.media}>
+      <div className={s.media} style={{ '--poster': `url(${poster})` } as React.CSSProperties}>
         <Image
           className={[s.plate, ready ? s.plateHidden : ''].filter(Boolean).join(' ')}
           src={poster}
@@ -121,7 +141,6 @@ export function HeroVideo({ title, poster, posterWidth, posterHeight, video }: P
           playsInline
           preload="auto"
           aria-hidden="true"
-          onPlaying={() => setReady(true)}
         >
           {allowVideo && video ? (
             <>

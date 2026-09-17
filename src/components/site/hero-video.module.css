@@ -19,10 +19,16 @@
   position: absolute;
   inset: -4% 0 0;
   z-index: -2;
+  /* постер продублирован фоном: если картинка или видео не отрисуются
+     (блокировщик, сбой декодера, отключённое аппаратное ускорение),
+     первый экран всё равно не останется пустой заливкой */
+  background-image: var(--poster);
+  background-size: cover;
+  background-position: 50% 45%;
+  background-repeat: no-repeat;
   /* слой связан с прокруткой: медленно уходит вверх и приближается */
   transform: translate3d(0, calc(var(--p) * -9%), 0) scale(calc(1 + var(--p) * 0.09));
   transform-origin: 50% 35%;
-  will-change: transform;
 }
 
 .plate {
