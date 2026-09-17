@@ -1,11 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { ConsultBar } from '../forms/ConsultBar';
-import { prefersReducedMotion, useScrollProgressVar } from '@/lib/motion';
+import { useScrollProgressVar } from '@/lib/motion';
 import { asset } from '@/lib/asset';
 import s from './hero-video.module.css';
+
+type Sources = { large: string; small: string };
 
 type Props = {
   /** Заголовок первого экрана. */
@@ -15,21 +17,35 @@ type Props = {
   posterWidth?: number;
   posterHeight?: number;
   /** Видео школы: по две версии на каждый формат. */
-  video?: {
-    mp4: { large: string; small: string };
-    webm: { large: string; small: string };
-  };
+  video?: { mp4: Sources; webm: Sources };
 };
 
-/** Ниже этой ширины грузим облегчённую версию. */
-const SMALL_UP_TO = 1100;
+/** Ниже этой ширины хватает облегчённой версии. */
+const LARGE_FROM = '(min-width: 1400px)';
+
+/* ------------------------------------------------------------------ */
+/* Можно ли грузить видео: без экономии трафика и без reduce-motion.    */
+/* Значение читается подпиской, а не состоянием в эффекте, иначе        */
+/* react-hooks/set-state-in-effect справедливо ругается.                */
+
+function subscribeMedia(onChange: () => void) {
+  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  mq.addEventListener('change', onChange);
+  return () => mq.removeEventListener('change', onChange);
+}
+
+function readMedia(): boolean {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+  const conn = (navigator as { connection?: { saveData?: boolean } }).connection;
+  return conn?.saveData !== true;
+}
 
 /**
  * Первый экран: видео школы во всё окно под затемнением.
  *
- * Источник выбирается уже в браузере, поэтому лишний файл не скачивается.
- * При prefers-reduced-motion и при включённой экономии трафика видео не
- * грузится вовсе — остаётся постер.
+ * Формат и размер выбирает сам браузер по списку <source>: лишний файл
+ * не скачивается, а если webm не поддерживается (Safari), берётся mp4.
+ * До первого кадра и при выключенном движении на месте видео постер.
  *
  * Слой с видео связан с прокруткой: медленно отъезжает и приближается.
  * Параллакс только на фоне, текст и форма неподвижны.
@@ -38,6 +54,7 @@ export function HeroVideo({ title, poster, posterWidth, posterHeight, video }: P
   const ref = useScrollProgressVar<HTMLElement>('--p');
   const videoRef = useRef<HTMLVideoElement>(null);
   const [ready, setReady] = useState(false);
+  const allowVideo = useSyncExternalStore(subscribeMedia, readMedia, () => false);
 
   /* Пока первый экран на странице, шапка знает, что под ней тёмный фон. */
   useEffect(() => {
@@ -45,23 +62,39 @@ export function HeroVideo({ title, poster, posterWidth, posterHeight, video }: P
     return () => document.body.classList.remove('has-hero');
   }, []);
 
-  /* Источник ставится прямо на элемент: какой файл грузить, известно
-     только в браузере, а состояние React для этого не нужно. */
+  /* Автозапуск разрешён только беззвучному видео, а свойство muted React
+     в разметку не выносит — выставляем его сами до вызова play(). */
   useEffect(() => {
     const v = videoRef.current;
-    if (!v || !video) return;
-    if (prefersReducedMotion()) return;
+    if (!v || !allowVideo) return;
 
-    const conn = (navigator as { connection?: { saveData?: boolean } }).connection;
-    if (conn?.saveData === true) return;
+    v.muted = true;
+    v.defaultMuted = true;
 
-    /* WebM меньше при том же качестве; где его нет — берём mp4. */
-    const set = v.canPlayType('video/webm; codecs="vp9"') !== '' ? video.webm : video.mp4;
-    v.src = window.innerWidth <= SMALL_UP_TO ? set.small : set.large;
-    v.play().catch(() => {
-      /* браузер отказал в автозапуске — остаётся постер */
-    });
-  }, [video]);
+    const start = () => {
+      v.play().catch(() => {
+        /* браузер отказал в автозапуске — ждём первого касания страницы */
+      });
+    };
+
+    v.load();
+    start();
+    v.addEventListener('canplay', start);
+
+    /* Запасной путь: если автозапуск всё же заблокирован, видео стартует
+       от первого действия пользователя на странице. */
+    const onFirstTouch = () => {
+      if (v.paused) start();
+    };
+    window.addEventListener('pointerdown', onFirstTouch, { once: true });
+    window.addEventListener('keydown', onFirstTouch, { once: true });
+
+    return () => {
+      v.removeEventListener('canplay', start);
+      window.removeEventListener('pointerdown', onFirstTouch);
+      window.removeEventListener('keydown', onFirstTouch);
+    };
+  }, [allowVideo]);
 
   const words = title.split(' ');
 
@@ -81,13 +114,24 @@ export function HeroVideo({ title, poster, posterWidth, posterHeight, video }: P
         <video
           ref={videoRef}
           className={[s.plate, ready ? '' : s.plateHidden].filter(Boolean).join(' ')}
+          poster={poster}
           muted
           loop
+          autoPlay
           playsInline
-          preload="none"
+          preload="auto"
           aria-hidden="true"
           onPlaying={() => setReady(true)}
-        />
+        >
+          {allowVideo && video ? (
+            <>
+              <source src={video.webm.large} type="video/webm" media={LARGE_FROM} />
+              <source src={video.webm.small} type="video/webm" />
+              <source src={video.mp4.large} type="video/mp4" media={LARGE_FROM} />
+              <source src={video.mp4.small} type="video/mp4" />
+            </>
+          ) : null}
+        </video>
       </div>
 
       <div className={s.scrim} aria-hidden="true" />
