@@ -29,8 +29,25 @@
   line-height: 1.15;
   letter-spacing: 0.01em;
   color: #fff;
-  /* строка не прыгает по высоте, пока набирается */
-  min-height: 1.2em;
+}
+
+/* копия строки задаёт размер, поверх неё печатается видимый текст */
+.holder {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  text-align: left;
+}
+
+.ghost {
+  visibility: hidden;
+}
+
+.typed {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
 }
 
 /* перо на конце строки: мигает, пока строка набирается */

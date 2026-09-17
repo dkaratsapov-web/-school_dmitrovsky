@@ -71,9 +71,15 @@ export function QuoteLine() {
         <figure className={s.figure}>
           <blockquote className={s.quote}>
             <span className="visually-hidden">{QUOTE}</span>
-            <span aria-hidden="true">
-              {shown}
-              <span className={[s.pen, done ? s.penOff : ''].filter(Boolean).join(' ')} />
+            {/* Невидимая копия держит ширину строки: набранные буквы
+                стоят на месте, а печать идёт вправо, а не растягивает
+                строку от середины. */}
+            <span className={s.holder} aria-hidden="true">
+              <span className={s.ghost}>{QUOTE}</span>
+              <span className={s.typed}>
+                {shown}
+                <span className={[s.pen, done ? s.penOff : ''].filter(Boolean).join(' ')} />
+              </span>
             </span>
           </blockquote>
 
