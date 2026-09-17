@@ -39,6 +39,10 @@ export function NewsDeck() {
   const item = news[active] ?? news[0];
   if (!item) return null;
 
+  /* Пока материал один, список выбора не нужен: крупный кадр встаёт
+     рядом с текстом, а не оставляет пустую колонку. */
+  const single = news.length < 2;
+
   return (
     <section className={s.section} aria-labelledby="news-title">
       <div className={s.inner}>
@@ -52,13 +56,13 @@ export function NewsDeck() {
           </Link>
         </div>
 
-        <div className={s.deck}>
+        <div className={[s.deck, single ? s.deckSingle : ''].filter(Boolean).join(' ')}>
           {/* ---------------------------------------------- крупный материал */}
           <div
             className={s.feature}
-            id={`${uid}-panel`}
-            role="tabpanel"
-            aria-labelledby={`${uid}-tab-${active}`}
+            id={single ? undefined : `${uid}-panel`}
+            role={single ? undefined : 'tabpanel'}
+            aria-labelledby={single ? undefined : `${uid}-tab-${active}`}
           >
             <div className={s.frame}>
               {news.map((n, i) => (
@@ -98,6 +102,7 @@ export function NewsDeck() {
           </div>
 
           {/* ------------------------------------------------------- список */}
+          {single ? null : (
           <div className={s.list} role="tablist" aria-orientation="vertical" aria-label="Обновления">
             {news.map((n, i) => (
               <button
@@ -129,6 +134,7 @@ export function NewsDeck() {
               </button>
             ))}
           </div>
+          )}
         </div>
       </div>
     </section>

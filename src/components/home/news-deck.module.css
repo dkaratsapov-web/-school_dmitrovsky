@@ -71,6 +71,24 @@
   }
 }
 
+/* Один материал: кадр слева, текст справа по центру высоты. */
+@media (min-width: 1024px) {
+  .deckSingle .feature {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.04fr);
+    gap: clamp(1.75rem, 3.4vw, 3rem);
+    align-items: center;
+  }
+
+  .deckSingle .words {
+    margin-top: 0;
+  }
+
+  .deckSingle .featureText {
+    max-width: 46ch;
+  }
+}
+
 /* -------------------------------------------------------- крупный материал */
 .frame {
   position: relative;
