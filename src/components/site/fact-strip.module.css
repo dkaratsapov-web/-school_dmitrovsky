@@ -1,0 +1,143 @@
+/* =========================================================================
+   Тонкая лента с цифрами на стыке с первым экраном
+   ========================================================================= */
+
+.strip {
+  --vel: 0;
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: linear-gradient(90deg, var(--c-navy-950), var(--c-navy-900) 45%, var(--c-navy-950));
+  border-block: 1px solid rgba(255, 255, 255, 0.1);
+  /* полоса, а не раздел: высота задаётся содержимым, отступов секции нет */
+  padding-block: clamp(0.65rem, 1.1vw, 0.9rem);
+}
+
+/* края растворяются, чтобы лента не обрывалась ножницами */
+.strip::before,
+.strip::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: clamp(40px, 7vw, 120px);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.strip::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--c-navy-950), transparent);
+}
+
+.strip::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--c-navy-950), transparent);
+}
+
+/* прокрутка наклоняет ленту и слегка сдвигает — отдельный слой,
+   чтобы не спорить с трансформацией самой бегущей строки */
+.lean {
+  transform: translate3d(calc(var(--vel) * -26px), 0, 0) skewX(calc(var(--vel) * -1.6deg));
+  transition: transform 220ms var(--ease);
+}
+
+.marquee {
+  display: flex;
+  width: max-content;
+  /* базовое движение — средствами CSS: без скрипта лента всё равно едет */
+  animation: drift 52s linear infinite;
+}
+
+@keyframes drift {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.strip:hover .marquee,
+.strip:focus-within .marquee {
+  animation-play-state: paused;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  padding-inline: clamp(1.1rem, 2.2vw, 2.1rem);
+  white-space: nowrap;
+}
+
+.atom {
+  width: 21px;
+  height: 21px;
+  flex: none;
+  align-self: center;
+  margin-right: 2px;
+  color: rgba(255, 255, 255, 0.3);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  /* орбиты медленно поворачиваются — тот же мотив, что в знаке школы */
+  animation: spin 14s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.core {
+  fill: var(--c-wine-600);
+  stroke: none;
+}
+
+.value {
+  font-family: var(--font-display);
+  font-size: clamp(1.0625rem, 0.9rem + 0.7vw, 1.5rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.label {
+  font-size: clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
+  color: rgba(255, 255, 255, 0.62);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lean {
+    transform: none;
+    transition: none;
+  }
+  .marquee {
+    width: 100%;
+    animation: none;
+    justify-content: center;
+  }
+  /* без движения вторая половина не нужна, а первая переносится по строкам */
+  .marquee > :last-child {
+    display: none;
+  }
+  .list {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 0.4rem;
+  }
+  /* повторы нужны только бегущей строке */
+  .list > li:nth-child(n + 5) {
+    display: none;
+  }
+  .atom {
+    animation: none;
+  }
+}

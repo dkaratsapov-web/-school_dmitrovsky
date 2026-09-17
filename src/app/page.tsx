@@ -1,3 +1,4 @@
+import { FactStrip } from '@/components/site/FactStrip';
 import { HeroVideo, heroPoster, heroVideo } from '@/components/site/HeroVideo';
 
 /**
@@ -8,12 +9,15 @@ import { HeroVideo, heroPoster, heroVideo } from '@/components/site/HeroVideo';
  */
 export default function HomePage() {
   return (
-    <HeroVideo
-      title="ГБОУ Школа «Дмитровский» г. Москва"
-      poster={heroPoster}
-      posterWidth={1920}
-      posterHeight={1080}
-      video={heroVideo}
-    />
+    <>
+      <HeroVideo
+        title="ГБОУ Школа «Дмитровский» г. Москва"
+        poster={heroPoster}
+        posterWidth={1920}
+        posterHeight={1080}
+        video={heroVideo}
+      />
+      <FactStrip />
+    </>
   );
 }
