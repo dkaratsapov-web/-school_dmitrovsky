@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from 'next';
 import '@/styles/globals.css';
-import { Header } from '@/components/site/Header';
+import { SiteHeader } from '@/components/site/SiteHeader';
 import { Footer } from '@/components/site/Footer';
 import { CookieNotice } from '@/components/ui/CookieNotice';
-import { footerNav, legalNav, mainNav } from '@/content/navigation';
+import { footerNav, legalNav } from '@/content/navigation';
 import { contacts, cookieNotice, siteName, siteUrl } from '@/content/site';
 
 /**
@@ -44,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Перейти к основному содержанию
         </a>
 
-        <Header nav={mainNav} contacts={contacts} />
+        <SiteHeader />
 
         <main id="main">{children}</main>
 

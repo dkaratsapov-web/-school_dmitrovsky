@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useSyncExternalStore } from 'react';
+import { useScrollY } from '@/lib/motion';
 import { Button } from './Button';
 import s from './ui.module.css';
 
@@ -43,8 +44,13 @@ type Props = {
   acceptLabel: string;
 };
 
+/* Уведомление не всплывает поверх первого экрана: оно появляется,
+   когда человек начал читать страницу. */
+const SHOW_AFTER = 320;
+
 export function CookieNotice({ text, policyHref, policyLabel, acceptLabel }: Props) {
   const accepted = useSyncExternalStore(subscribe, isAccepted, serverSnapshot);
+  const y = useScrollY();
 
   const accept = useCallback(() => {
     sessionAccepted = true;
@@ -56,7 +62,7 @@ export function CookieNotice({ text, policyHref, policyLabel, acceptLabel }: Pro
     listeners.forEach((l) => l());
   }, []);
 
-  if (accepted) return null;
+  if (accepted || y < SHOW_AFTER) return null;
 
   return (
     <div className={s.cookie} role="region" aria-label="Уведомление об использовании cookie">

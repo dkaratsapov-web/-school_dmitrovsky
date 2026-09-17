@@ -1,0 +1,451 @@
+/* =========================================================================
+   Двухуровневая шапка
+
+   Цвета взяты с действующего сайта: синий #013366, бордовый #7e1f2e.
+   При прокрутке нулевой и верхний уровни схлопываются, навигация
+   прилипает к верху окна.
+   ========================================================================= */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  background: #fff;
+  --upper-h: 84px;
+  --access-h: 40px;
+}
+
+/* --------------------------------------------------- версия для слабовидящих */
+.access {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: var(--access-h);
+  background: var(--c-navy-800);
+  overflow: hidden;
+  transition: height var(--t-slow) var(--ease), opacity var(--t-base) var(--ease);
+}
+
+.compact .access {
+  height: 0;
+  opacity: 0;
+}
+
+.accessLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 30px;
+  padding: 0 var(--s-6);
+  border-radius: var(--r-pill);
+  background: #fff;
+  color: var(--c-navy-800);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-medium);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+}
+
+.accessLink:hover {
+  color: var(--c-wine-700);
+  transform: translateY(-1px);
+}
+
+/* ------------------------------------------------------------ верхний уровень */
+.upper {
+  height: var(--upper-h);
+  overflow: hidden;
+  background: #fff;
+  transition: height var(--t-slow) var(--ease);
+}
+
+.compact .upper {
+  height: 58px;
+}
+
+.upperInner {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+  height: var(--upper-h);
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  transition: height var(--t-slow) var(--ease);
+}
+
+.compact .upperInner {
+  height: 58px;
+}
+
+/* ------------------------------------------------------------------ логотип */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex: none;
+  text-decoration: none;
+  color: var(--c-navy-800);
+}
+
+.mark {
+  display: block;
+  width: 56px;
+  height: 56px;
+  flex: none;
+  transition: width var(--t-slow) var(--ease), height var(--t-slow) var(--ease);
+}
+
+.compact .mark {
+  width: 40px;
+  height: 40px;
+}
+
+.markImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* знак школы — атом; орбиты оживают при наведении на логотип */
+  transition: transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.brand:hover .markImg {
+  transform: rotate(120deg);
+}
+
+.brandText {
+  display: none;
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: var(--fw-bold);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+@media (min-width: 900px) {
+  .brandText {
+    display: block;
+  }
+}
+
+.brandStrong {
+  display: block;
+  color: var(--c-navy-800);
+}
+
+/* ------------------------------------------------------------ адрес и телефон */
+.meta,
+.phone {
+  display: none;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--fs-small);
+  line-height: 1.25;
+  color: var(--c-ink-900);
+  text-decoration: none;
+  max-width: 15rem;
+}
+
+.phone {
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+  transition: color var(--t-fast) var(--ease);
+}
+
+.phone:hover {
+  color: var(--c-wine-700);
+}
+
+.metaIcon {
+  flex: none;
+  color: var(--c-wine-700);
+}
+
+@media (min-width: 1100px) {
+  .meta {
+    display: inline-flex;
+  }
+}
+
+@media (min-width: 1000px) {
+  .phone {
+    display: inline-flex;
+  }
+}
+
+/* ------------------------------------------------------------------ соцсети */
+.socials {
+  display: none;
+  gap: var(--s-2);
+  margin-left: auto;
+}
+
+@media (min-width: 1280px) {
+  .socials {
+    display: flex;
+  }
+}
+
+.social {
+  display: grid;
+  place-content: center;
+  min-width: 38px;
+  height: 38px;
+  padding-inline: 8px;
+  border-radius: var(--r-pill);
+  background: var(--c-wine-700);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: var(--fw-black);
+  letter-spacing: 0;
+  text-decoration: none;
+  transition: transform var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
+}
+
+.social:hover {
+  background: var(--c-navy-800);
+  color: #fff;
+  transform: translateY(-2px) scale(1.06);
+}
+
+/* ------------------------------------------------------------------ действия */
+.upperActions {
+  display: none;
+  gap: var(--s-3);
+  flex: none;
+}
+
+@media (min-width: 768px) {
+  .upperActions {
+    display: flex;
+    margin-left: auto;
+  }
+}
+
+@media (min-width: 1280px) {
+  .upperActions {
+    margin-left: 0;
+  }
+}
+
+.btnOutline,
+.btnSolid {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 var(--s-6);
+  border-radius: var(--r-md);
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-bold);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color var(--t-base) var(--ease), color var(--t-base) var(--ease),
+    transform var(--t-fast) var(--ease), box-shadow var(--t-base) var(--ease);
+}
+
+.btnOutline {
+  background: var(--c-wine-700);
+  color: #fff;
+}
+
+.btnOutline:hover {
+  background: var(--c-wine-800);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(126, 31, 46, 0.32);
+}
+
+.btnSolid {
+  background: var(--c-navy-800);
+  color: #fff;
+}
+
+.btnSolid:hover {
+  background: var(--c-navy-900);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(1, 51, 102, 0.32);
+}
+
+/* ------------------------------------------------------------------- бургер */
+.callBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  margin-left: auto;
+  border-radius: var(--r-md);
+  background: var(--c-wine-700);
+  color: #fff;
+  transition: transform var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
+}
+
+.callBtn:hover {
+  background: var(--c-wine-800);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+@media (min-width: 1024px) {
+  .callBtn {
+    display: none;
+  }
+}
+
+.burger {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  margin-left: var(--s-2);
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--r-md);
+  background: var(--c-navy-800);
+  cursor: pointer;
+  flex: none;
+}
+
+@media (min-width: 1024px) {
+  .burger {
+    display: none;
+  }
+}
+
+.burgerBar {
+  display: block;
+  height: 2px;
+  border-radius: 2px;
+  background: #fff;
+  transition: transform var(--t-base) var(--ease), opacity var(--t-base) var(--ease);
+}
+
+.burgerBar:nth-child(1) { width: 100%; }
+.burgerBar:nth-child(2) { width: 70%; }
+.burgerBar:nth-child(3) { width: 85%; }
+
+.burger:hover .burgerBar:nth-child(2) { transform: translateX(30%); }
+.burger:hover .burgerBar:nth-child(3) { transform: translateX(15%); }
+
+/* ------------------------------------------------------------- нижний уровень */
+.lower {
+  display: none;
+  padding-inline: var(--gutter);
+  padding-bottom: 0;
+  background: #fff;
+  transition: padding var(--t-slow) var(--ease);
+}
+
+@media (min-width: 1024px) {
+  .lower {
+    display: block;
+  }
+}
+
+.compact .lower {
+  padding-inline: 0;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s-3);
+  max-width: var(--container);
+  margin-inline: auto;
+  padding: var(--s-5) var(--s-6);
+  background: var(--c-navy-800);
+  border-radius: var(--r-xl);
+  transition: padding var(--t-slow) var(--ease), gap var(--t-slow) var(--ease),
+    border-radius var(--t-slow) var(--ease), box-shadow var(--t-slow) var(--ease);
+}
+
+.compact .nav {
+  gap: var(--s-2);
+  padding-block: var(--s-3);
+  max-width: none;
+  border-radius: 0;
+  box-shadow: 0 10px 30px rgba(0, 27, 58, 0.26);
+}
+
+/* ------------------------------------------------------------------- пилюли */
+.pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--s-6);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: var(--r-md);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-semibold);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: border-color var(--t-base) var(--ease), color var(--t-base) var(--ease),
+    transform var(--t-fast) var(--ease), min-height var(--t-slow) var(--ease);
+}
+
+.compact .pill {
+  min-height: 38px;
+  font-size: var(--fs-caption);
+}
+
+/* заливка приходит слева, а не просто меняет цвет фона */
+.pill::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--c-wine-700);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--t-slow) cubic-bezier(0.2, 0.7, 0.2, 1);
+  z-index: -1;
+}
+
+.pill:hover {
+  color: #fff;
+  border-color: var(--c-wine-700);
+  transform: translateY(-2px);
+}
+
+.pill:hover::before {
+  transform: scaleX(1);
+}
+
+.pillActive {
+  border-color: #fff;
+}
+
+.pillAccent {
+  background: var(--c-wine-700);
+  border-color: var(--c-wine-700);
+}
+
+.pillAccent::before {
+  background: var(--c-navy-900);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .access,
+  .upper,
+  .upperInner,
+  .mark,
+  .lower,
+  .nav,
+  .pill,
+  .markImg {
+    transition: none;
+  }
+}

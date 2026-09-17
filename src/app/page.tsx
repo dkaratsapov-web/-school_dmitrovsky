@@ -1,10 +1,9 @@
 import Image from 'next/image';
 import { Blocks } from '@/components/content/Blocks';
-import { Container } from '@/components/layout/Container';
+import { HeroVideo } from '@/components/site/HeroVideo';
 import { Section, SectionHead } from '@/components/layout/Section';
 import { Accordion } from '@/components/ui/Accordion';
 import { ButtonLink } from '@/components/ui/Button';
-import { Icon } from '@/components/ui/Icon';
 import { Stats } from '@/components/ui/Stat';
 import { dropRepeats, getPage } from '@/content/pages-data';
 import type { PageBlock } from '@/content/pages-data';
@@ -42,8 +41,6 @@ function images(id: string) {
 
 // rec735787688 — призыв «Получить консультацию»
 const intro = texts('rec735787688');
-// rec1376258911 — набор в предпрофессиональные 10-11 классы
-const admission = texts('rec1376258911');
 // rec1025633206 — инженерный класс
 const engineering = texts('rec1025633206');
 // rec911582704 — ТОП-170 и состав организации
@@ -82,41 +79,14 @@ const stats = [
 ];
 
 export default function HomePage() {
-  const title = 'ГБОУ Школа «Дмитровский» г. Москва';
-
   return (
     <>
-      {/* --------------------------------------------------------- первый экран */}
-      <section className={s.hero}>
-        {heroImage ? (
-          <div className={s.heroMedia}>
-            <Image
-              src={asset(heroImage.src)}
-              alt=""
-              width={heroImage.width}
-              height={heroImage.height}
-              priority
-              sizes="100vw"
-            />
-          </div>
-        ) : null}
-        <div className={s.heroScrim} aria-hidden="true" />
-        <Container>
-          <div className={s.heroInner}>
-            <h1 className={s.heroTitle}>{title}</h1>
-            {admission[0] ? <p className={s.heroLead}>{admission[0]}</p> : null}
-            <div className={s.heroActions}>
-              <ButtonLink href="/10-11class" variant="primary" size="lg">
-                Обучение в профильных 10 - 11 классах
-                <Icon name="arrow-right" size={18} />
-              </ButtonLink>
-              <ButtonLink href="/contacts" variant="onDarkOutline" size="lg">
-                Контакты
-              </ButtonLink>
-            </div>
-          </div>
-        </Container>
-      </section>
+      <HeroVideo
+        title="ГБОУ Школа «Дмитровский» г. Москва"
+        poster={heroImage ? asset(heroImage.src) : ''}
+        posterWidth={heroImage?.width ?? 1600}
+        posterHeight={heroImage?.height ?? 1200}
+      />
 
       {/* ------------------------------------------------------------- о школе */}
       <Section tone="surface">
