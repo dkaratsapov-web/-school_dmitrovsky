@@ -796,3 +796,15 @@
     animation: none;
   }
 }
+
+/* на тёмной подложке знак-курсор белый */
+@media (hover: hover) and (pointer: fine) {
+  .header {
+    cursor: var(--cursor-dark);
+  }
+
+  .header a,
+  .header button {
+    cursor: var(--cursor-dark-lg);
+  }
+}

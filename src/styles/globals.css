@@ -167,3 +167,40 @@ hr {
     scroll-behavior: auto !important;
   }
 }
+
+/* =========================================================================
+   Курсор со знаком школы
+   -------------------------------------------------------------------------
+   Только там, где есть мышь: на сенсорных экранах курсора нет вовсе.
+   Над ссылками и кнопками знак крупнее — это и есть подсказка, что
+   элемент нажимается, взамен системной руки. В полях ввода курсор
+   остаётся текстовым, иначе не видно, куда встанет каретка.
+   ========================================================================= */
+
+:root {
+  --cursor-light: url('../assets/brand/cursor-light.png') 16 16, auto;
+  --cursor-light-lg: url('../assets/brand/cursor-light@2x.png') 32 32, pointer;
+  --cursor-dark: url('../assets/brand/cursor-dark.png') 16 16, auto;
+  --cursor-dark-lg: url('../assets/brand/cursor-dark@2x.png') 32 32, pointer;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body {
+    cursor: var(--cursor-light);
+  }
+
+  a,
+  button,
+  summary,
+  label,
+  [role='tab'],
+  [role='button'] {
+    cursor: var(--cursor-light-lg);
+  }
+
+  input,
+  textarea,
+  select {
+    cursor: auto;
+  }
+}

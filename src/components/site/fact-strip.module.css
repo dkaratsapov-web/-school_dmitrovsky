@@ -137,3 +137,17 @@
     animation: none;
   }
 }
+
+/* на тёмном фоне знак-курсор белый */
+@media (hover: hover) and (pointer: fine) {
+  .strip {
+    cursor: var(--cursor-dark);
+  }
+
+  .strip a,
+  .strip button,
+  .strip label,
+  .strip [role='tab'] {
+    cursor: var(--cursor-dark-lg);
+  }
+}

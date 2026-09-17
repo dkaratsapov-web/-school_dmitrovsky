@@ -345,3 +345,17 @@
     font-size: var(--fs-small);
   }
 }
+
+/* на тёмном фоне знак-курсор белый */
+@media (hover: hover) and (pointer: fine) {
+  .section {
+    cursor: var(--cursor-dark);
+  }
+
+  .section a,
+  .section button,
+  .section label,
+  .section [role='tab'] {
+    cursor: var(--cursor-dark-lg);
+  }
+}

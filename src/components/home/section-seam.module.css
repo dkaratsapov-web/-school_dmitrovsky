@@ -100,3 +100,17 @@
 .flip .orbitTwo {
   stroke: rgba(126, 31, 46, 0.4);
 }
+
+/* на тёмном фоне знак-курсор белый */
+@media (hover: hover) and (pointer: fine) {
+  .seam {
+    cursor: var(--cursor-dark);
+  }
+
+  .seam a,
+  .seam button,
+  .seam label,
+  .seam [role='tab'] {
+    cursor: var(--cursor-dark-lg);
+  }
+}

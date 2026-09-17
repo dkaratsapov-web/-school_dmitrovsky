@@ -672,3 +672,15 @@
 .sheetClose:hover {
   background: var(--c-navy-50);
 }
+
+/* на тёмной подложке знак-курсор белый */
+@media (hover: hover) and (pointer: fine) {
+  .footer {
+    cursor: var(--cursor-dark);
+  }
+
+  .footer a,
+  .footer button {
+    cursor: var(--cursor-dark-lg);
+  }
+}
