@@ -50,19 +50,17 @@
   width: 100%;
 }
 
-/* перо на конце строки: мигает, пока строка набирается */
+/* перо на конце строки: заметное, мигает и после того, как дописано */
 .pen {
   display: inline-block;
-  width: 2px;
-  height: 0.86em;
-  margin-left: 0.06em;
-  vertical-align: -0.1em;
+  width: 4px;
+  height: 0.94em;
+  margin-left: 0.09em;
+  vertical-align: -0.12em;
+  border-radius: 1px;
   background: var(--c-wine-600);
-  animation: blink 900ms steps(1, end) infinite;
-}
-
-.penOff {
-  display: none;
+  box-shadow: 0 0 14px rgba(152, 40, 58, 0.75);
+  animation: blink 820ms steps(1, end) infinite;
 }
 
 @keyframes blink {
