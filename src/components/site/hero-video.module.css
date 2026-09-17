@@ -25,11 +25,19 @@
   will-change: transform;
 }
 
-.video {
+.plate {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  /* постер уступает место видео плавно, без рывка */
+  transition: opacity 700ms var(--ease);
+}
+
+.plateHidden {
+  opacity: 0;
 }
 
 /* затемнение: снизу плотное под текстом, сверху лёгкое под шапкой */
@@ -45,25 +53,31 @@
 
 .inner {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
   width: 100%;
   max-width: var(--container);
   margin-inline: auto;
-  /* содержимое начинается ниже капсул шапки */
-  padding: calc(var(--header-h, 150px) + clamp(1.5rem, 3vw, 3rem)) var(--gutter)
-    clamp(1.5rem, 3vw, 2.75rem);
+  /* заголовок и форма прижаты к низу: видео остаётся открытым */
+  padding: calc(var(--header-h, 150px) + var(--s-6)) var(--gutter) clamp(1rem, 1.8vw, 1.6rem);
+  text-align: center;
 }
 
 /* ------------------------------------------------------------------ заголовок */
 .title {
-  margin: 0 0 clamp(1.75rem, 3vw, 2.5rem);
+  margin: 0 0 clamp(1.25rem, 2.4vw, 2rem);
   font-family: var(--font-display);
-  font-size: clamp(2rem, 1.1rem + 3.5vw, 3.75rem);
+  font-size: clamp(1.75rem, 1rem + 2.9vw, 3.25rem);
   font-weight: var(--fw-black);
-  line-height: 1.04;
+  line-height: 1.06;
   letter-spacing: -0.03em;
   color: #fff;
-  max-width: 18ch;
+  max-width: 26ch;
   text-wrap: balance;
+  text-shadow: 0 2px 28px rgba(0, 12, 28, 0.55);
 }
 
 /* слова выезжают из-под маски — типографический приём, не общий fade */
@@ -87,51 +101,12 @@
   }
 }
 
-/* --------------------------------------------------------------- подсказка */
-.scrollHint {
-  position: absolute;
-  left: 50%;
-  bottom: 14px;
-  width: 24px;
-  height: 38px;
-  margin-left: -12px;
-  border: 1.5px solid rgba(255, 255, 255, 0.5);
-  border-radius: var(--r-pill);
-  display: none;
-}
-
-@media (min-width: 1024px) {
-  .scrollHint {
-    display: block;
-  }
-}
-
-.scrollDot {
-  position: absolute;
-  left: 50%;
-  top: 7px;
-  width: 3px;
-  height: 7px;
-  margin-left: -1.5px;
-  border-radius: 2px;
-  background: #fff;
-  animation: dot 1.9s ease-in-out infinite;
-}
-
-@keyframes dot {
-  0%, 100% { transform: translateY(0); opacity: 1; }
-  55% { transform: translateY(13px); opacity: 0.25; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .media {
     transform: none;
   }
   .word {
     transform: none;
-    animation: none;
-  }
-  .scrollDot {
     animation: none;
   }
 }

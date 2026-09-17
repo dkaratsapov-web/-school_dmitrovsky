@@ -163,7 +163,7 @@ export function SiteHeader() {
             <Image className={s.mark} src={logoBlue} alt="" priority />
           </span>
           <span className={s.brandText}>
-            <span className={s.brandLine}>Школа</span>
+            <span className={s.brandLine}>ГБОУ Школа</span>
             <span className={s.brandName}>«Дмитровский»</span>
           </span>
         </Link>

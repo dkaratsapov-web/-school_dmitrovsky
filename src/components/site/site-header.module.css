@@ -148,6 +148,7 @@
 }
 
 .chipMuted:hover {
+  color: rgba(255, 255, 255, 0.72);
   border-color: rgba(255, 255, 255, 0.24);
   background: rgba(0, 21, 45, 0.34);
   transform: none;
@@ -220,6 +221,7 @@
 }
 
 .brand:hover {
+  color: #fff;
   border-color: rgba(255, 255, 255, 0.5);
   transform: translateY(-2px);
 }
@@ -481,6 +483,9 @@
 }
 
 .phone:hover {
+  /* без явного цвета глобальное правило a:hover красит ссылку в бордовый,
+     и трубка сливается с фоном кружка */
+  color: #fff;
   border-color: rgba(255, 255, 255, 0.5);
   transform: translateY(-2px);
 }
@@ -504,9 +509,10 @@
 }
 
 .phone:hover .phoneIcon {
-  background: var(--c-wine-700);
-  border-color: var(--c-wine-700);
-  transform: rotate(-16deg);
+  /* цвета меняются местами: белая заливка, синяя трубка */
+  background: #fff;
+  border-color: #fff;
+  color: var(--c-navy-800);
 }
 
 .phoneNum {
@@ -637,10 +643,9 @@
 }
 
 .call:hover {
-  background: var(--c-wine-700);
-  border-color: var(--c-wine-700);
-  color: #fff;
-  transform: rotate(-16deg);
+  background: #fff;
+  border-color: #fff;
+  color: var(--c-navy-800);
 }
 
 .burger {
