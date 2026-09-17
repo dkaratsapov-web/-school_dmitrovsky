@@ -50,9 +50,21 @@ export const cadetPoints: readonly CadetPoint[] = [
   },
 ];
 
+/**
+ * Ролик о проекте, присланный школой. Со звуком и с речью, поэтому
+ * запускается по нажатию, а не сам: фоновым циклом такое не ставят.
+ */
+export const cadetVideo = {
+  mp4: '/video/cadets-story.mp4',
+  webm: '/video/cadets-story.webm',
+  poster: '/video/cadets-story-poster.webp',
+  width: 848,
+  height: 476,
+  label: 'Смотреть рассказ о кадетском корпусе',
+};
+
 /** Снимки из галереи проекта на той же странице. */
 export const cadetShots = [
   { src: '/images/d8aac662-5964-4c1e-9_ea8a347a88.webp', width: 1280, height: 960, alt: 'Строй кадет перед зданием' },
   { src: '/images/photo_52040729308311_dd527c4b7b.webp', width: 1280, height: 960, alt: 'Занятие кадет в классе' },
-  { src: '/images/photo_53732139011996_71e7644ab8.webp', width: 1280, height: 960, alt: 'Кадеты в походе на байдарках' },
 ] as const;

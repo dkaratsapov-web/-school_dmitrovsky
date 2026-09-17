@@ -6,7 +6,7 @@
   --sp: 0.5;
   position: relative;
   /* сверху нужен запас: верхний снимок стопки уезжает вверх при прокрутке */
-  padding-block: clamp(1.75rem, 3.4vw, 3rem) clamp(2.25rem, 4.2vw, 3.75rem);
+  padding-block: clamp(2.5rem, 4.8vw, 4.25rem) clamp(2.25rem, 4.2vw, 3.75rem);
   background: var(--c-navy-950);
   color: #fff;
   overflow: clip;
@@ -88,31 +88,6 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
-.more {
-  display: inline-block;
-  margin-top: clamp(1.25rem, 2.4vw, 1.75rem);
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: var(--fs-small);
-  font-weight: var(--fw-bold);
-  text-decoration: none;
-}
-
-.moreRule {
-  display: block;
-  height: 2px;
-  margin-top: 7px;
-  background: var(--c-wine-600);
-  transform: scaleX(0.34);
-  transform-origin: 0 50%;
-  transition: transform 460ms cubic-bezier(0.16, 0.9, 0.24, 1);
-}
-
-.more:hover .moreRule,
-.more:focus-visible .moreRule {
-  transform: scaleX(1);
-}
-
 /* ------------------------------------------------------------- стопка фото */
 .stack {
   position: relative;
@@ -157,6 +132,81 @@
   display: block;
   width: 100%;
   height: auto;
+}
+
+/* ------------------------------------------------------------ ролик */
+.clip {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #000;
+}
+
+.play {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: #fff;
+}
+
+/* затемнение под значком и подписью */
+.play::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 17, 38, 0.82), rgba(0, 17, 38, 0.1) 62%);
+  transition: opacity var(--t-base) var(--ease);
+}
+
+.play:hover::after,
+.play:focus-visible::after {
+  opacity: 0.72;
+}
+
+.playMark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: clamp(54px, 6vw, 72px);
+  height: clamp(54px, 6vw, 72px);
+  margin: calc(clamp(54px, 6vw, 72px) / -2) 0 0 calc(clamp(54px, 6vw, 72px) / -2);
+  border-radius: 50%;
+  background: var(--c-wine-700);
+  box-shadow: 0 0 0 0 rgba(126, 31, 46, 0.55);
+  transition: transform var(--t-base) var(--ease), box-shadow var(--t-slow) var(--ease);
+}
+
+.playMark svg {
+  width: 44%;
+  height: 44%;
+  fill: #fff;
+}
+
+.play:hover .playMark,
+.play:focus-visible .playMark {
+  transform: scale(1.08);
+  box-shadow: 0 0 0 14px rgba(126, 31, 46, 0.18);
+}
+
+.playLabel {
+  position: absolute;
+  left: clamp(0.9rem, 1.8vw, 1.25rem);
+  right: clamp(0.9rem, 1.8vw, 1.25rem);
+  bottom: clamp(0.8rem, 1.6vw, 1.1rem);
+  z-index: 1;
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-bold);
+  text-align: left;
+  color: #fff;
+  text-shadow: 0 2px 14px rgba(0, 12, 28, 0.6);
 }
 
 /* ---------------------------------------------------------- преимущества */
@@ -272,15 +322,12 @@
 @media (prefers-reduced-motion: reduce) {
   .shot,
   .item,
-  .moreRule,
-  .lineFill {
+  .lineFill,
+  .playMark {
     transform: none;
     transition: none;
   }
   .lineMark {
     top: 0;
-  }
-  .moreRule {
-    transform: scaleX(1);
   }
 }

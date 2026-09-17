@@ -1,0 +1,156 @@
+/* =========================================================================
+   Компактная форма консультации внутри блока
+   ========================================================================= */
+
+.form {
+  margin-top: clamp(1.25rem, 2.4vw, 1.75rem);
+  padding-top: clamp(1rem, 2vw, 1.4rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.title {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.015em;
+  color: #fff;
+}
+
+.fields {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 560px) {
+  .fields {
+    grid-template-columns: 1fr 1fr;
+  }
+  .submit {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1280px) {
+  .fields {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  }
+  .submit {
+    grid-column: auto;
+  }
+}
+
+.field {
+  display: block;
+  min-width: 0;
+}
+
+.input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 var(--s-4);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: var(--fs-small);
+  transition: background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease),
+    box-shadow var(--t-fast) var(--ease);
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.input:hover {
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(255, 255, 255, 0.44);
+}
+
+.input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.17);
+  border-color: #fff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+/* автозаполнение Chrome заливает поле белым — возвращаем тёмное */
+.input:-webkit-autofill,
+.input:-webkit-autofill:hover,
+.input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #fff;
+  caret-color: #fff;
+  box-shadow: inset 0 0 0 100px rgba(10, 34, 62, 0.94);
+}
+
+.submit {
+  position: relative;
+  min-height: 48px;
+  padding: 0 var(--s-6);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--r-md);
+  background: var(--c-wine-700);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-base) var(--ease);
+}
+
+.submit::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  width: 45%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transform: skewX(-18deg);
+  transition: transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(126, 31, 46, 0.5);
+}
+
+.submit:hover::after {
+  transform: translateX(340%) skewX(-18deg);
+}
+
+.submit:active {
+  transform: translateY(0);
+}
+
+.submitLabel {
+  position: relative;
+  z-index: 1;
+}
+
+.consent {
+  margin: 10px 0 0;
+  font-size: var(--fs-caption);
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.note {
+  margin: 10px 0 0;
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: var(--fs-caption);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .submit,
+  .submit::after {
+    transition: none;
+  }
+}

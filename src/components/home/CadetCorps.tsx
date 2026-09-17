@@ -1,9 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
-import { useEffect, useRef } from 'react';
-import { cadetHref, cadetLead, cadetPoints, cadetPrice, cadetShots, cadetText } from '@/content/cadets';
+import { useEffect, useRef, useState } from 'react';
+import { cadetLead, cadetPoints, cadetPrice, cadetShots, cadetText, cadetVideo } from '@/content/cadets';
+import { ConsultInline } from '../forms/ConsultInline';
 import { asset } from '@/lib/asset';
 import { prefersReducedMotion } from '@/lib/motion';
 import s from './cadet-corps.module.css';
@@ -14,10 +14,13 @@ const DEPTH = [0.12, -0.22, 0.3];
 /**
  * Кадетский корпус — отдельный крупный блок.
  *
- * Слева рассказ о проекте, справа стопка снимков: строй, занятие, поход.
- * Снимки идут с разной скоростью относительно прокрутки, поэтому стопка
- * живёт как объёмная, а не как три картинки в ряд. Это фоновые слои,
- * текст неподвижен.
+ * Слева рассказ о проекте, справа стопка: ролик о проекте, строй,
+ * занятие. Слои идут с разной скоростью относительно прокрутки, поэтому
+ * стопка живёт как объёмная, а не как три картинки в ряд. Это фоновые
+ * слои, текст неподвижен.
+ *
+ * Ролик со звуком и речью, поэтому запускается по нажатию: фоновым
+ * циклом такое не ставят.
  *
  * Под рассказом — преимущества проекта. Вдоль них сверху вниз чертится
  * строевая линия, по которой идёт метка: чем дальше прокручен блок,
@@ -26,6 +29,8 @@ const DEPTH = [0.12, -0.22, 0.3];
  */
 export function CadetCorps() {
   const ref = useRef<HTMLElement>(null);
+  /* Ролик со звуком и речью: играет по нажатию, а не сам. */
+  const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
@@ -70,18 +75,52 @@ export function CadetCorps() {
               <span className={s.priceNote}>{cadetPrice.note}</span>
             </p>
 
-            <Link className={s.more} href={cadetHref}>
-              <span className={s.moreLabel}>О проекте и правилах приёма</span>
-              <span className={s.moreRule} aria-hidden="true" />
-            </Link>
+            <ConsultInline
+              title="Получить бесплатную консультацию"
+              action="Получить консультацию"
+            />
           </div>
 
           <div className={s.stack}>
+            <span className={s.shot} style={{ '--d': DEPTH[0], '--i': 0 } as React.CSSProperties}>
+              {playing ? (
+                <video
+                  className={s.clip}
+                  controls
+                  autoPlay
+                  playsInline
+                  poster={asset(cadetVideo.poster)}
+                  width={cadetVideo.width}
+                  height={cadetVideo.height}
+                >
+                  <source src={asset(cadetVideo.webm)} type="video/webm" />
+                  <source src={asset(cadetVideo.mp4)} type="video/mp4" />
+                </video>
+              ) : (
+                <button className={s.play} type="button" onClick={() => setPlaying(true)}>
+                  <Image
+                    className={s.photo}
+                    src={asset(cadetVideo.poster)}
+                    alt=""
+                    width={cadetVideo.width}
+                    height={cadetVideo.height}
+                    sizes="(min-width: 1024px) 40vw, 90vw"
+                  />
+                  <span className={s.playMark} aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M9 6.5l9 5.5-9 5.5z" />
+                    </svg>
+                  </span>
+                  <span className={s.playLabel}>{cadetVideo.label}</span>
+                </button>
+              )}
+            </span>
+
             {cadetShots.map((shot, i) => (
               <span
                 className={s.shot}
                 key={shot.src}
-                style={{ '--d': DEPTH[i] ?? 0, '--i': i } as React.CSSProperties}
+                style={{ '--d': DEPTH[i + 1] ?? 0, '--i': i + 1 } as React.CSSProperties}
               >
                 <Image
                   className={s.photo}
