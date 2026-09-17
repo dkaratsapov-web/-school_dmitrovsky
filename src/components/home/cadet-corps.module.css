@@ -24,7 +24,9 @@
   display: grid;
   gap: clamp(2rem, 4vw, 3.5rem);
   grid-template-columns: 1fr;
-  align-items: center;
+  /* стопка выше текстовой колонки: выравниваем по верху, иначе она
+     вылезает за край секции и обрезается */
+  align-items: start;
 }
 
 @media (min-width: 1024px) {

@@ -63,8 +63,18 @@ export const cadetVideo = {
   label: 'Смотреть рассказ о кадетском корпусе',
 };
 
-/** Снимки из галереи проекта на той же странице. */
+/** Снимки проекта, присланные школой. */
 export const cadetShots = [
-  { src: '/images/d8aac662-5964-4c1e-9_ea8a347a88.webp', width: 1280, height: 960, alt: 'Строй кадет перед зданием' },
-  { src: '/images/photo_52040729308311_dd527c4b7b.webp', width: 1280, height: 960, alt: 'Занятие кадет в классе' },
+  {
+    src: '/images/cadets-memorial.webp',
+    width: 1100,
+    height: 1100,
+    alt: 'Кадеты в парадной форме на посту у мемориала',
+  },
+  {
+    src: '/images/cadets-field.webp',
+    width: 1100,
+    height: 1100,
+    alt: 'Кадеты в полевой форме на выездных занятиях',
+  },
 ] as const;
