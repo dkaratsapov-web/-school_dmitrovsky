@@ -1,0 +1,347 @@
+/* =========================================================================
+   Ступени обучения — плитки разного размера
+   ========================================================================= */
+
+.section {
+  position: relative;
+  padding-block: clamp(3rem, 6vw, 5.5rem);
+  background: var(--c-navy-950);
+  color: #fff;
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.title {
+  margin: 0 0 clamp(1.5rem, 3vw, 2.5rem);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.05rem + 1.9vw, 2.5rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+
+/* ------------------------------------------------------------------ сетка */
+.grid {
+  display: grid;
+  gap: clamp(0.75rem, 1.4vw, 1.125rem);
+  grid-template-columns: 1fr;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .cardWide {
+    grid-column: span 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    /* три плитки в первой строке, во второй — обычная и двойная */
+    grid-template-columns: repeat(6, 1fr);
+  }
+  .card {
+    grid-column: span 2;
+  }
+  .cardWide {
+    grid-column: span 4;
+  }
+}
+
+/* ----------------------------------------------------------------- плитка */
+.card {
+  --mx: 50%;
+  --my: 50%;
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  position: relative;
+  min-height: 236px;
+  perspective: 900px;
+}
+
+@media (min-width: 1024px) {
+  .card {
+    min-height: 268px;
+  }
+}
+
+/* Пока скрипта нет, плитки видны сразу: ничего не ждёт наблюдателя. */
+.grid[data-js='true'] .card:not([data-in='true']) .link {
+  opacity: 0;
+  transform: translate3d(var(--from-x, 0), var(--from-y, 0), 0) scale(var(--from-s, 1));
+}
+
+.link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
+  padding: clamp(1.1rem, 2vw, 1.6rem);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--r-xl);
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(1, 51, 102, 0.55), transparent 62%),
+    rgba(255, 255, 255, 0.035);
+  color: #fff;
+  text-decoration: none;
+  overflow: hidden;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  transition:
+    opacity 620ms var(--ease) var(--delay, 0ms),
+    transform 620ms cubic-bezier(0.16, 0.9, 0.24, 1) var(--delay, 0ms),
+    border-color var(--t-base) var(--ease),
+    background var(--t-base) var(--ease);
+}
+
+.link:hover,
+.link:focus-visible {
+  border-color: rgba(255, 255, 255, 0.4);
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(1, 67, 132, 0.7), transparent 62%),
+    rgba(255, 255, 255, 0.06);
+}
+
+/* наклон к курсору — отдельным правилом, чтобы не спорить с появлением */
+@media (hover: hover) and (min-width: 1024px) {
+  .card[data-in='true'] .link:hover {
+    transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translateZ(0);
+    transition:
+      transform 220ms var(--ease),
+      border-color var(--t-base) var(--ease),
+      background var(--t-base) var(--ease);
+  }
+}
+
+/* свет идёт за курсором */
+.glow {
+  position: absolute;
+  inset: -20%;
+  z-index: -1;
+  background: radial-gradient(240px 240px at var(--mx) var(--my), rgba(126, 31, 46, 0.36), transparent 70%);
+  opacity: 0;
+  transition: opacity var(--t-base) var(--ease);
+  pointer-events: none;
+}
+
+.link:hover .glow,
+.link:focus-visible .glow {
+  opacity: 1;
+}
+
+/* орбиты атома на фоне */
+.orbits {
+  position: absolute;
+  right: -46px;
+  top: -52px;
+  width: 210px;
+  height: 210px;
+  z-index: -1;
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.13);
+  stroke-width: 1;
+  animation: spin 42s linear infinite;
+  transition: stroke var(--t-base) var(--ease);
+  pointer-events: none;
+}
+
+.nucleus {
+  fill: rgba(126, 31, 46, 0.85);
+  stroke: none;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.link:hover .orbits,
+.link:focus-visible .orbits {
+  stroke: rgba(255, 255, 255, 0.26);
+  animation-duration: 11s;
+}
+
+/* метка ступени — в углу, чтобы не спорить с названием */
+.mark {
+  position: absolute;
+  right: clamp(1rem, 1.8vw, 1.5rem);
+  top: clamp(0.6rem, 1.2vw, 1rem);
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 1.2rem + 1.9vw, 2.75rem);
+  font-weight: var(--fw-black);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: rgba(255, 255, 255, 0.16);
+  transition: color var(--t-base) var(--ease), transform var(--t-slow) var(--ease);
+  pointer-events: none;
+}
+
+.link:hover .mark,
+.link:focus-visible .mark {
+  color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-6px);
+}
+
+/* ------------------------------------------------------ лицо и подробности */
+.face {
+  display: block;
+  /* правый край освобождён под метку ступени */
+  padding-right: clamp(3rem, 6vw, 5rem);
+}
+
+.name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.02em;
+}
+
+.lead {
+  display: block;
+  margin-top: 6px;
+  font-size: var(--fs-small);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.back {
+  display: block;
+  margin-top: auto;
+  padding-top: 14px;
+}
+
+.points {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.point {
+  display: block;
+  padding-left: 14px;
+  font-size: var(--fs-caption);
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.78);
+  position: relative;
+}
+
+/* на двойной плитке пункты — это названия профилей: ставим их в строку,
+   иначе половина плитки остаётся пустой */
+@media (min-width: 640px) {
+  .cardWide .points {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px 26px;
+  }
+}
+
+.point::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.52em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--c-wine-600);
+}
+
+/* Пункты появляются вместе с плиткой, по очереди — и остаются видимыми:
+   ничего не прячется за наведение. */
+.grid[data-js='true'] .card[data-in='true'] .point {
+  animation: pointIn 460ms cubic-bezier(0.16, 0.9, 0.24, 1) backwards;
+  animation-delay: calc(var(--delay, 0ms) + 180ms + var(--i, 0) * 70ms);
+}
+
+@keyframes pointIn {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+}
+
+/* по нижнему краю плитки пробегает линия — заметно, что это ссылка */
+.link::after {
+  content: '';
+  position: absolute;
+  left: clamp(1.1rem, 2vw, 1.6rem);
+  right: clamp(1.1rem, 2vw, 1.6rem);
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--c-wine-600), rgba(255, 255, 255, 0.5));
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 460ms cubic-bezier(0.16, 0.9, 0.24, 1);
+}
+
+.link:hover::after,
+.link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link,
+  .face,
+  .back,
+  .point,
+  .mark,
+  .link::after {
+    transition: none;
+    transform: none;
+    animation: none;
+  }
+  .orbits {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------- двойная плитка иначе */
+/* У профильных классов другой внутренний строй: слева ведущая строка,
+   справа четыре профиля в два столбца. Блок перестаёт быть набором
+   одинаковых карточек, и пустота в середине уходит. */
+@media (min-width: 1024px) {
+  .cardWide .link {
+    flex-direction: row;
+    align-items: center;
+    gap: clamp(1.5rem, 3vw, 3rem);
+  }
+
+  .cardWide .face {
+    flex: 1 1 44%;
+    padding-right: 0;
+  }
+
+  .cardWide .back {
+    flex: 1 1 56%;
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  .cardWide .points {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 22px;
+    padding-top: 0;
+    padding-left: clamp(1.25rem, 2.4vw, 2rem);
+    border-top: 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.14);
+  }
+
+  .cardWide .point {
+    font-size: var(--fs-small);
+  }
+}

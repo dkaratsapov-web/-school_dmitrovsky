@@ -55,11 +55,6 @@
   }
 }
 
-.strip:hover .marquee,
-.strip:focus-within .marquee {
-  animation-play-state: paused;
-}
-
 .list {
   display: flex;
   align-items: center;

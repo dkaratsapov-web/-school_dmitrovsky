@@ -1,3 +1,4 @@
+import { StageGrid } from '@/components/home/StageGrid';
 import { FactStrip } from '@/components/site/FactStrip';
 import { HeroVideo, heroPoster, heroVideo } from '@/components/site/HeroVideo';
 
@@ -18,6 +19,7 @@ export default function HomePage() {
         video={heroVideo}
       />
       <FactStrip />
+      <StageGrid />
     </>
   );
 }
