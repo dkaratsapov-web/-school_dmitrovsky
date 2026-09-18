@@ -69,9 +69,6 @@
 
 :global(body:not(.has-hero)) .cta,
 :global(body:not(.has-hero)) .compact .cta {
-  /* кнопка, а не ссылка: сбрасываем оформление кнопки браузера */
-  font-family: inherit;
-  cursor: pointer;
   background: var(--c-wine-700);
   border-color: var(--c-wine-700);
 }
@@ -598,6 +595,9 @@
 
 /* главное действие — единственная залитая капсула */
 .cta {
+  /* кнопка, а не ссылка: сбрасываем оформление кнопки браузера */
+  font-family: var(--font-display);
+  cursor: pointer;
   display: none;
   height: 64px;
   padding: 0 12px 0 26px;
@@ -809,5 +809,57 @@
   .header a,
   .header button {
     cursor: var(--cursor-dark-lg);
+  }
+}
+
+/* ------------------------------------------- письмо директору */
+/* Синяя кнопка рядом с бордовой: два разных действия, два разных цвета.
+   Правила стоят в конце файла: иначе общие стили капсулы, объявленные
+   ниже, перебивают фон, высоту и зазор. */
+.letter {
+  display: none;
+  height: 64px;
+  padding: 0 20px;
+  gap: 10px;
+  background: var(--c-navy-700);
+  border-color: var(--c-navy-600);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 14.5px;
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease),
+    transform var(--t-fast) var(--ease), box-shadow var(--t-base) var(--ease);
+}
+
+@media (min-width: 1280px) {
+  .letter {
+    display: inline-flex;
+  }
+}
+
+.letter:hover {
+  background: var(--c-navy-600);
+  border-color: var(--c-navy-300);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(1, 51, 102, 0.45);
+}
+
+.letter:active {
+  transform: translateY(0);
+}
+
+.compact .letter {
+  height: 52px;
+  padding-inline: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .letter {
+    transition: none;
+  }
+  .letter:hover {
+    transform: none;
   }
 }

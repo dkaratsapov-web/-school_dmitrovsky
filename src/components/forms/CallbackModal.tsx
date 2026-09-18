@@ -10,6 +10,12 @@ type Props = {
   /** Заголовок окна: у разных кнопок он свой. */
   title?: string;
   action?: string;
+  /** Подпись под заголовком. */
+  text?: string;
+  /** Своя форма вместо короткой заявки на звонок. */
+  children?: React.ReactNode;
+  /** Окно шире: для форм с большим числом полей. */
+  wide?: boolean;
 };
 
 /**
@@ -19,7 +25,15 @@ type Props = {
  * его по Esc и возвращает фокус кнопке, которая окно открыла. Это дешевле
  * и надёжнее, чем собственная ловушка фокуса.
  */
-export function CallbackModal({ open, onClose, title = 'Заказать звонок', action = 'Отправить' }: Props) {
+export function CallbackModal({
+  open,
+  onClose,
+  title = 'Заказать звонок',
+  action = 'Отправить',
+  text = 'Оставьте имя и телефон — перезвоним и ответим на вопросы.',
+  children,
+  wide = false,
+}: Props) {
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -31,7 +45,7 @@ export function CallbackModal({ open, onClose, title = 'Заказать зво�
 
   return (
     <dialog
-      className={s.dialog}
+      className={[s.dialog, wide ? s.dialogWide : ''].filter(Boolean).join(' ')}
       ref={ref}
       onClose={onClose}
       onClick={(e) => {
@@ -46,9 +60,9 @@ export function CallbackModal({ open, onClose, title = 'Заказать зво�
         </button>
 
         <p className={s.title}>{title}</p>
-        <p className={s.text}>Оставьте имя и телефон — перезвоним и ответим на вопросы.</p>
+        <p className={s.text}>{text}</p>
 
-        <ConsultInline title="" action={action} />
+        {children ?? <ConsultInline title="" action={action} />}
       </div>
     </dialog>
   );

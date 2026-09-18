@@ -9,6 +9,7 @@ import { Icon } from '../ui/Icon';
 import { BrandIcon } from '../ui/BrandIcon';
 import type { BrandName } from '../ui/BrandIcon';
 import { CallbackModal } from '../forms/CallbackModal';
+import { DirectorForm } from '../forms/DirectorForm';
 import { MobileMenu } from './MobileMenu';
 import { contacts, siteName } from '@/content/site';
 import { headerNav, mainNav } from '@/content/navigation';
@@ -43,6 +44,8 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   /* «Заказать звонок» открывает окно с формой, а не ведёт по якорю. */
   const [callOpen, setCallOpen] = useState(false);
+  /* «Написать директору» — окно с расширенной формой. */
+  const [letterOpen, setLetterOpen] = useState(false);
   const [openSub, setOpenSub] = useState<string | null>(null);
   const [marker, setMarker] = useState<Marker>({ left: 0, width: 0, visible: false });
 
@@ -296,6 +299,15 @@ export function SiteHeader() {
           ) : null}
 
           <button
+            className={[s.capsule, s.letter].join(' ')}
+            type="button"
+            onClick={() => setLetterOpen(true)}
+          >
+            <Icon name="mail" size={16} />
+            <span className={s.letterLabel}>Написать директору</span>
+          </button>
+
+          <button
             className={[s.capsule, s.cta].join(' ')}
             type="button"
             onClick={() => setCallOpen(true)}
@@ -329,6 +341,16 @@ export function SiteHeader() {
       <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} items={mainNav} contacts={contacts} />
 
       <CallbackModal open={callOpen} onClose={() => setCallOpen(false)} />
+
+      <CallbackModal
+        open={letterOpen}
+        onClose={() => setLetterOpen(false)}
+        title="Написать директору"
+        text="Расскажите, с чем обращаетесь. Ответим на указанную почту или по телефону."
+        wide
+      >
+        <DirectorForm />
+      </CallbackModal>
     </header>
   );
 }

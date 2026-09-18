@@ -77,31 +77,35 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  margin-top: clamp(0.9rem, 1.8vw, 1.4rem);
+  gap: 2px;
+  margin-top: clamp(0.85rem, 1.6vw, 1.25rem);
   font-family: var(--font-display);
 }
 
 .authorName {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: var(--fs-small);
-  font-weight: var(--fw-semibold);
-  color: rgba(255, 255, 255, 0.62);
+  gap: 14px;
+  /* имя — тем же пером, что и цитата: подпись под текстом */
+  font-family: var(--font-script);
+  font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .authorRole {
   font-size: var(--fs-caption);
   font-weight: var(--fw-regular);
-  color: rgba(255, 255, 255, 0.38);
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.42);
 }
 
 .rule {
   display: block;
-  width: clamp(28px, 5vw, 58px);
+  width: clamp(26px, 4.5vw, 52px);
   height: 1px;
-  background: rgba(255, 255, 255, 0.35);
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.5));
 }
 
 @media (prefers-reduced-motion: reduce) {
