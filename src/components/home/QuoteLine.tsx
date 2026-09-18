@@ -6,6 +6,8 @@ import s from './quote-line.module.css';
 
 const QUOTE = 'Тяжело в учении — легко в бою!';
 const AUTHOR = 'Александр Васильевич Суворов';
+/* Кем он был — коротко и по факту: полководец, генералиссимус, годы жизни. */
+const AUTHOR_ROLE = 'русский полководец, генералиссимус · 1730–1800';
 
 /** Общее начало правильной строки и оговорки. */
 const STEM = 'Тяжело в учении — ';
@@ -127,8 +129,11 @@ export function QuoteLine() {
           </blockquote>
 
           <figcaption className={s.author}>
-            <span className={s.rule} aria-hidden="true" />
-            {AUTHOR}
+            <span className={s.authorName}>
+              <span className={s.rule} aria-hidden="true" />
+              {AUTHOR}
+            </span>
+            <span className={s.authorRole}>{AUTHOR_ROLE}</span>
           </figcaption>
         </figure>
       </div>

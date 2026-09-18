@@ -75,14 +75,26 @@
 
 .author {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
+  gap: 4px;
   margin-top: clamp(0.9rem, 1.8vw, 1.4rem);
   font-family: var(--font-display);
+}
+
+.authorName {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   font-size: var(--fs-small);
   font-weight: var(--fw-semibold);
   color: rgba(255, 255, 255, 0.62);
+}
+
+.authorRole {
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-regular);
+  color: rgba(255, 255, 255, 0.38);
 }
 
 .rule {
