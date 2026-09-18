@@ -5,7 +5,7 @@ import { consentText } from '@/content/site';
 import s from './consult-inline.module.css';
 
 type Props = {
-  /** Заголовок над полями. */
+  /** Заголовок над полями. Пустая строка — заголовка нет. */
   title: string;
   /** Подпись на кнопке. */
   action?: string;
@@ -30,7 +30,7 @@ export function ConsultInline({ title, action = 'Получить консуль
         setSent(true);
       }}
     >
-      <p className={s.title}>{title}</p>
+      {title ? <p className={s.title}>{title}</p> : null}
 
       <div className={s.fields}>
         <label className={s.field}>
@@ -62,7 +62,10 @@ export function ConsultInline({ title, action = 'Получить консуль
         </button>
       </div>
 
-      <p className={s.consent}>{consentText}</p>
+      <label className={s.consent}>
+        <input className={s.check} type="checkbox" name="consent" required />
+        <span>{consentText}</span>
+      </label>
 
       {sent ? (
         <p className={s.note} role="status">

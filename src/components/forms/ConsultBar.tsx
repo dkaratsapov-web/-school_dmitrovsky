@@ -57,7 +57,10 @@ export function ConsultBar() {
         </button>
       </div>
 
-      <p className={s.consent}>{consentText}</p>
+      <label className={s.consent}>
+        <input className={s.check} type="checkbox" name="consent" required />
+        <span>{consentText}</span>
+      </label>
 
       {sent ? (
         <p className={s.note} role="status">

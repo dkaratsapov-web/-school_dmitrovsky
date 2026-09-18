@@ -53,6 +53,11 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    # Права нужны и на самой задаче: без id-token deploy-pages не может
+    # получить OIDC-токен и падает с «Ensure GITHUB_TOKEN has permission».
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

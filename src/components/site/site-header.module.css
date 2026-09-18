@@ -69,6 +69,9 @@
 
 :global(body:not(.has-hero)) .cta,
 :global(body:not(.has-hero)) .compact .cta {
+  /* кнопка, а не ссылка: сбрасываем оформление кнопки браузера */
+  font-family: inherit;
+  cursor: pointer;
   background: var(--c-wine-700);
   border-color: var(--c-wine-700);
 }

@@ -8,6 +8,7 @@ import logoBlue from '@/assets/brand/logo.png';
 import { Icon } from '../ui/Icon';
 import { BrandIcon } from '../ui/BrandIcon';
 import type { BrandName } from '../ui/BrandIcon';
+import { CallbackModal } from '../forms/CallbackModal';
 import { MobileMenu } from './MobileMenu';
 import { contacts, siteName } from '@/content/site';
 import { headerNav, mainNav } from '@/content/navigation';
@@ -40,6 +41,8 @@ export function SiteHeader() {
   const compact = y > COLLAPSE_AT;
 
   const [menuOpen, setMenuOpen] = useState(false);
+  /* «Заказать звонок» открывает окно с формой, а не ведёт по якорю. */
+  const [callOpen, setCallOpen] = useState(false);
   const [openSub, setOpenSub] = useState<string | null>(null);
   const [marker, setMarker] = useState<Marker>({ left: 0, width: 0, visible: false });
 
@@ -292,10 +295,14 @@ export function SiteHeader() {
             </a>
           ) : null}
 
-          <a className={[s.capsule, s.cta].join(' ')} href={PENDING}>
+          <button
+            className={[s.capsule, s.cta].join(' ')}
+            type="button"
+            onClick={() => setCallOpen(true)}
+          >
             <span className={s.ctaLabel}>Заказать звонок</span>
             <span className={s.ctaDot} aria-hidden="true" />
-          </a>
+          </button>
 
           {phone ? (
             <a className={[s.capsule, s.call].join(' ')} href={`tel:${phone.tel}`} aria-label={`Позвонить ${phone.display}`}>
@@ -320,6 +327,8 @@ export function SiteHeader() {
       <span ref={progressRef} className={s.progress} aria-hidden="true" />
 
       <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} items={mainNav} contacts={contacts} />
+
+      <CallbackModal open={callOpen} onClose={() => setCallOpen(false)} />
     </header>
   );
 }
