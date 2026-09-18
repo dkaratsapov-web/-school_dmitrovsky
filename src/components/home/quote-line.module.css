@@ -48,7 +48,7 @@
   display: inline-block;
   width: 4px;
   height: 0.94em;
-  margin-left: 0.09em;
+  margin-left: 0.24em;
   vertical-align: -0.12em;
 }
 
@@ -64,7 +64,8 @@
   display: inline-block;
   width: 4px;
   height: 0.94em;
-  margin-left: 0.09em;
+  /* отступ больше: иначе перо налезает на последний знак */
+  margin-left: 0.24em;
   vertical-align: -0.12em;
   border-radius: 1px;
   background: var(--c-wine-600);
