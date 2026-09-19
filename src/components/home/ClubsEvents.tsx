@@ -2,17 +2,16 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { CallbackModal } from '../forms/CallbackModal';
-import { clubGroups, clubs, clubsHref, events, eventsHref } from '@/content/clubs';
-import type { Club, ClubGroup, EventItem } from '@/content/clubs';
+import { clubs, clubsHref, events, eventsHref } from '@/content/clubs';
+import type { Club, EventItem } from '@/content/clubs';
 import { asset } from '@/lib/asset';
-import { prefersReducedMotion } from '@/lib/motion';
 import s from './clubs-events.module.css';
 
-type Filter = 'Все' | ClubGroup;
+type Tab = 'clubs' | 'events';
 
-/** Что показываем в окне материала: и у кружка, и у мероприятия одно и то же. */
+/** Что показываем в окне: у кружка и у мероприятия содержимое одинаковое. */
 type Detail = {
   title: string;
   lead: string;
@@ -20,21 +19,66 @@ type Detail = {
   points?: readonly string[];
   facts?: readonly { label: string; value: string }[];
   signup?: string;
-  /** Подпись на кнопке: у кружка запись, у мероприятия регистрация. */
+  image?: { src: string; width: number; height: number; alt: string };
   action: string;
 };
 
-function clubDetail(c: Club): Detail {
-  return { title: c.title, lead: c.lead, text: c.text, points: c.points, facts: c.facts,
-    signup: c.signup, action: 'Записаться на занятия' };
+/** Плитка стены: у кружка метка — возраст, у мероприятия — дата. */
+type Tile = {
+  title: string;
+  lead: string;
+  chip?: string;
+  image?: { src: string; width: number; height: number; alt: string };
+  detail?: Detail;
+  draft?: boolean;
+};
+
+function clubTile(c: Club): Tile {
+  const tile: Tile = {
+    title: c.title,
+    lead: c.lead,
+    chip: c.groups.join(', '),
+    ...(c.image ? { image: c.image } : {}),
+    ...(c.draft ? { draft: true } : {}),
+  };
+  if (c.draft) return tile;
+  return {
+    ...tile,
+    detail: {
+      title: c.title,
+      lead: c.lead,
+      ...(c.text ? { text: c.text } : {}),
+      ...(c.points ? { points: c.points } : {}),
+      ...(c.facts ? { facts: c.facts } : {}),
+      ...(c.signup ? { signup: c.signup } : {}),
+      ...(c.image ? { image: c.image } : {}),
+      action: 'Записаться на занятия',
+    },
+  };
 }
 
-function eventDetail(e: EventItem): Detail {
-  return { title: e.title, lead: e.text, text: e.full, points: e.points, facts: e.facts,
-    signup: e.signup, action: 'Зарегистрироваться' };
+function eventTile(e: EventItem): Tile {
+  const tile: Tile = {
+    title: e.title,
+    lead: e.text,
+    ...(e.when ? { chip: e.when } : {}),
+    image: e.image,
+  };
+  if (!e.full) return tile;
+  return {
+    ...tile,
+    detail: {
+      title: e.title,
+      lead: e.text,
+      text: e.full,
+      ...(e.points ? { points: e.points } : {}),
+      ...(e.facts ? { facts: e.facts } : {}),
+      ...(e.signup ? { signup: e.signup } : {}),
+      image: e.image,
+      action: 'Зарегистрироваться',
+    },
+  };
 }
-
-const FILTERS: readonly Filter[] = ['Все', ...clubGroups];
 
 /** Знак школы на месте афиши, пока её не передали. */
 function Mark() {
@@ -49,204 +93,113 @@ function Mark() {
 }
 
 /**
- * Кружки и мероприятия.
+ * Кружки и мероприятия — стена афиш.
  *
- * Кружки фильтруются по возрастной группе — теми же вкладками, что
- * на странице кружков. Карточка с переданным материалом открывает окно
- * с полным описанием, расписанием, стоимостью и ссылкой на запись;
- * карточка-заготовка помечена и не открывается.
+ * Афиши школа рисует сама, поэтому плитка отдана им целиком: кадр во всю
+ * площадь, название поверх затемнения, метка в углу — возраст у кружка,
+ * дата у мероприятия. Рамок и белых подложек нет: они бы спорили
+ * с самими афишами.
  *
- * Мероприятия идут строками: при наведении за курсором едет афиша
- * события — это и есть предпросмотр, вместо ряда одинаковых плиток.
+ * Переключатель наверху меняет раздел. Плитки при этом перекладываются
+ * по очереди — это единственное движение, которое запускается само.
+ * Остальное отвечает на действие: нажатие открывает окно материала.
  */
 export function ClubsEvents() {
-  const [filter, setFilter] = useState<Filter>('Все');
-  /* Одно окно на кружок и на мероприятие: содержимое у них одинаковое. */
+  const [tab, setTab] = useState<Tab>('clubs');
   const [open, setOpen] = useState<Detail | null>(null);
-  const peekRef = useRef<HTMLSpanElement>(null);
-  const listRef = useRef<HTMLUListElement>(null);
-  const [peek, setPeek] = useState<number | null>(null);
 
-  const shown = clubs.filter((c) => filter === 'Все' || c.groups.includes(filter));
-
-  /* Афиша едет за курсором: координаты пишем в стиль, без состояния. */
-  const movePeek = (e: React.PointerEvent<HTMLUListElement>) => {
-    const box = listRef.current;
-    const el = peekRef.current;
-    if (!box || !el || e.pointerType !== 'mouse' || prefersReducedMotion()) return;
-    const r = box.getBoundingClientRect();
-    el.style.setProperty('--x', `${e.clientX - r.left}px`);
-    el.style.setProperty('--y', `${e.clientY - r.top}px`);
-  };
+  const tiles: Tile[] = tab === 'clubs' ? clubs.map(clubTile) : events.map(eventTile);
+  const href = tab === 'clubs' ? clubsHref : eventsHref;
+  const hrefLabel = tab === 'clubs' ? 'Все кружки' : 'Все мероприятия';
 
   return (
     <section className={s.section} aria-labelledby="clubs-title">
       <div className={s.inner}>
         <div className={s.head}>
-          <div>
-            <h2 id="clubs-title" className={s.title}>
-              Кружки и мероприятия
-            </h2>
-            <p className={s.lead}>
-              Дополнительное образование школы: занятия по возрастным группам и ближайшие события.
-            </p>
-          </div>
+          <h2 id="clubs-title" className={s.title}>
+            Кружки и мероприятия
+          </h2>
 
-          <Link className={s.all} href={clubsHref}>
-            <span>Все кружки</span>
-            <span className={s.allRule} aria-hidden="true" />
-          </Link>
-        </div>
-
-        {/* ------------------------------------------------------- вкладки */}
-        <div className={s.tabs} role="tablist" aria-label="Возрастные группы">
-          {FILTERS.map((f) => (
+          <div className={s.switch} role="tablist" aria-label="Разделы">
+            <span className={[s.slider, tab === 'events' ? s.sliderRight : ''].filter(Boolean).join(' ')} aria-hidden="true" />
             <button
-              key={f}
-              className={[s.tab, f === filter ? s.tabOn : ''].filter(Boolean).join(' ')}
+              className={[s.tab, tab === 'clubs' ? s.tabOn : ''].filter(Boolean).join(' ')}
               type="button"
               role="tab"
-              aria-selected={f === filter}
-              onClick={() => setFilter(f)}
+              aria-selected={tab === 'clubs'}
+              onClick={() => setTab('clubs')}
             >
-              {f}
+              Кружки
+              <span className={s.count}>{clubs.length}</span>
             </button>
-          ))}
+            <button
+              className={[s.tab, tab === 'events' ? s.tabOn : ''].filter(Boolean).join(' ')}
+              type="button"
+              role="tab"
+              aria-selected={tab === 'events'}
+              onClick={() => setTab('events')}
+            >
+              Мероприятия
+              <span className={s.count}>{events.length}</span>
+            </button>
+          </div>
         </div>
 
-        {/* ------------------------------------------------------ карточки */}
-        <ul className={s.grid}>
-          {shown.map((club, i) => (
-            <li className={s.card} key={`${club.title}-${i}`} style={{ '--i': i } as React.CSSProperties}>
-              <button
-                className={[s.face, club.draft ? s.faceDraft : ''].filter(Boolean).join(' ')}
-                type="button"
-                disabled={club.draft}
-                onClick={() => setOpen(clubDetail(club))}
-              >
+        <ul className={s.wall} key={tab}>
+          {tiles.map((t, i) => {
+            const inner = (
+              <>
                 <span className={s.shot}>
-                  {club.image ? (
+                  {t.image ? (
                     <Image
                       className={s.photo}
-                      src={asset(club.image.src)}
-                      alt={club.image.alt}
-                      width={club.image.width}
-                      height={club.image.height}
-                      sizes="(min-width: 1024px) 380px, 90vw"
+                      src={asset(t.image.src)}
+                      alt={t.image.alt}
+                      width={t.image.width}
+                      height={t.image.height}
+                      sizes="(min-width: 1500px) 24vw, (min-width: 1100px) 32vw, (min-width: 640px) 46vw, 92vw"
                     />
                   ) : (
                     <Mark />
                   )}
-                  <span className={s.corner} aria-hidden="true" />
+                  <span className={s.veil} aria-hidden="true" />
                 </span>
 
-                <span className={s.body}>
-                  <span className={s.groups}>
-                    {club.groups.map((g) => (
-                      <span className={s.group} key={g}>
-                        {g}
-                      </span>
-                    ))}
-                  </span>
+                {t.chip ? <span className={s.chip}>{t.chip}</span> : null}
 
-                  <span className={s.cardTitle}>{club.title}</span>
-                  <span className={s.cardText}>{club.lead}</span>
-
-                  {club.facts ? (
-                    <span className={s.facts}>
-                      {club.facts.slice(0, 2).map((f) => (
-                        <span className={s.fact} key={f.label}>
-                          <span className={s.factLabel}>{f.label}</span>
-                          <span className={s.factValue}>{f.value}</span>
-                        </span>
-                      ))}
-                    </span>
-                  ) : null}
-
-                  {club.draft ? null : <span className={s.more}>Подробнее</span>}
+                <span className={s.words}>
+                  <span className={s.rule} aria-hidden="true" />
+                  <span className={s.tileTitle}>{t.title}</span>
+                  <span className={s.tileLead}>{t.lead}</span>
                 </span>
-              </button>
-            </li>
-          ))}
+              </>
+            );
+
+            return (
+              <li
+                className={[s.tile, t.draft ? s.tileDraft : ''].filter(Boolean).join(' ')}
+                key={`${t.title}-${i}`}
+                style={{ '--i': i } as React.CSSProperties}
+              >
+                {t.detail ? (
+                  <button className={s.face} type="button" onClick={() => setOpen(t.detail ?? null)}>
+                    {inner}
+                  </button>
+                ) : (
+                  <span className={s.face}>{inner}</span>
+                )}
+              </li>
+            );
+          })}
         </ul>
 
-        {/* ---------------------------------------------------- мероприятия */}
-        <div className={s.events}>
-          <div className={s.eventsHead}>
-            <h3 className={s.eventsTitle}>Ближайшие мероприятия</h3>
-            <Link className={s.all} href={eventsHref}>
-              <span>Все мероприятия</span>
-              <span className={s.allRule} aria-hidden="true" />
-            </Link>
-          </div>
-
-          <ul
-            className={s.eventList}
-            ref={listRef}
-            onPointerMove={movePeek}
-            onPointerLeave={() => setPeek(null)}
-          >
-            {events.map((e, i) => {
-              const body = (
-                <>
-                  <span className={s.eventNum}>{String(i + 1).padStart(2, '0')}</span>
-                  <span className={s.eventBody}>
-                    <span className={s.eventTitle}>{e.title}</span>
-                    <span className={s.eventText}>{e.text}</span>
-                  </span>
-                </>
-              );
-
-              return (
-                <li key={e.title}>
-                  {e.full ? (
-                    /* материал передан целиком — открываем окно */
-                    <button
-                      className={s.event}
-                      type="button"
-                      onPointerEnter={() => setPeek(i)}
-                      onFocus={() => setPeek(i)}
-                      onClick={() => setOpen(eventDetail(e))}
-                    >
-                      {body}
-                    </button>
-                  ) : (
-                    <Link
-                      className={s.event}
-                      href={eventsHref}
-                      onPointerEnter={() => setPeek(i)}
-                      onFocus={() => setPeek(i)}
-                    >
-                      {body}
-                    </Link>
-                  )}
-                </li>
-              );
-            })}
-
-            {/* афиша едет за курсором */}
-            <span
-              className={[s.peek, peek === null ? '' : s.peekOn].filter(Boolean).join(' ')}
-              ref={peekRef}
-              aria-hidden="true"
-            >
-              {events.map((e, i) => (
-                <Image
-                  key={e.image.src}
-                  className={[s.peekImage, i === peek ? s.peekImageOn : ''].filter(Boolean).join(' ')}
-                  src={asset(e.image.src)}
-                  alt=""
-                  width={e.image.width}
-                  height={e.image.height}
-                  sizes="220px"
-                />
-              ))}
-            </span>
-          </ul>
-        </div>
+        <Link className={s.all} href={href}>
+          <span>{hrefLabel}</span>
+          <span className={s.allRule} aria-hidden="true" />
+        </Link>
       </div>
 
-      {/* ----------------------------------------------- окно кружка */}
+      {/* ----------------------------------------------- окно материала */}
       <CallbackModal
         open={open !== null}
         onClose={() => setOpen(null)}
@@ -255,6 +208,17 @@ export function ClubsEvents() {
         wide
       >
         <div className={s.detail}>
+          {open?.image ? (
+            <Image
+              className={s.detailShot}
+              src={asset(open.image.src)}
+              alt={open.image.alt}
+              width={open.image.width}
+              height={open.image.height}
+              sizes="(min-width: 640px) 560px, 88vw"
+            />
+          ) : null}
+
           {open?.text?.map((para) => (
             <p className={s.detailText} key={para}>
               {para}

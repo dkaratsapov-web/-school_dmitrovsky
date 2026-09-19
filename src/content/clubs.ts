@@ -74,6 +74,8 @@ export const clubs: readonly Club[] = [
 
 export type EventItem = {
   title: string;
+  /** Короткая метка даты для афиши, если школа её передала. */
+  when?: string;
   /** Короткая строка для списка. */
   text: string;
   /** Абзацы полного описания — для окна материала. */
@@ -92,6 +94,7 @@ export const eventsHref = '/meropriyatiya';
 export const events: readonly EventItem[] = [
   {
     title: 'Фестиваль дополнительного образования «Интеллектуальный хаб»',
+    when: '29 августа',
     text: 'Записывайтесь скорее, будет интересно и детям, и взрослым!',
     full: [
       'Уже 29 августа в 11:00 мы встретимся с вами на фестивале дополнительного образования ' +
@@ -144,6 +147,7 @@ export const events: readonly EventItem[] = [
   },
   {
     title: 'Пеший поход «Большая Валдайская тропа» с 27 по 31 мая',
+    when: '27 – 31 мая',
     text: 'Школа «Дмитровский» приглашает завершить учебный год ярко и дружно.',
     image: {
       src: '/images/Instagram_story_-_43_c931362470.webp',
