@@ -81,6 +81,12 @@
 }
 
 .link {
+  /* кнопка, а не ссылка: сбрасываем оформление браузера */
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
   position: relative;
   display: flex;
   flex-direction: column;

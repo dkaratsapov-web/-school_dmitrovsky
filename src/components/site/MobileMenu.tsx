@@ -5,13 +5,22 @@ import { useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '../ui/Icon';
 import { ButtonLink } from '../ui/Button';
-import type { NavItem, SiteContacts } from '@/content/types';
+import type { SiteContacts } from '@/content/types';
 import s from './site.module.css';
+
+/**
+ * Пункт меню: либо адрес, либо действие (окно со справкой на лендинге).
+ */
+export type MenuEntry = {
+  label: string;
+  href?: string | null;
+  onSelect?: () => void;
+};
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  items: readonly NavItem[];
+  items: readonly MenuEntry[];
   contacts: SiteContacts;
   /** Главное действие шапки. Текст и адрес берутся из текущего сайта. */
   cta?: { label: string; href: string };
@@ -92,6 +101,18 @@ export function MobileMenu({ open, onClose, items, contacts, cta }: Props) {
                     {item.label}
                     <Icon name="chevron-right" size={20} />
                   </Link>
+                ) : item.onSelect ? (
+                  <button
+                    type="button"
+                    className={s.sheetLink}
+                    onClick={() => {
+                      onClose();
+                      item.onSelect?.();
+                    }}
+                  >
+                    {item.label}
+                    <Icon name="chevron-right" size={20} />
+                  </button>
                 ) : (
                   <span className={s.sheetLink} style={{ color: 'var(--c-ink-300)' }}>
                     {item.label}

@@ -54,7 +54,7 @@ export function NewsDeck() {
   };
 
   return (
-    <section className={s.section} aria-labelledby="news-title">
+    <section className={s.section} id="news" aria-labelledby="news-title">
       <div className={s.inner}>
         <div className={s.head}>
           <h2 id="news-title" className={s.title}>

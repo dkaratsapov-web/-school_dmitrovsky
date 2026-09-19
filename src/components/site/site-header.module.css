@@ -863,3 +863,39 @@
     transform: none;
   }
 }
+
+/* =========================================================================
+   Кнопки вместо ссылок
+   Главная собрана как лендинг: пункты без своего блока открывают окно
+   со справкой. Браузерное оформление кнопки снимается, чтобы такие пункты
+   не отличались от соседних ссылок ни шрифтом, ни отступами.
+   ========================================================================= */
+button.capsule,
+button.studyLink,
+button.subLink,
+button.navLink {
+  appearance: none;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+
+button.studyLink,
+button.subLink {
+  background: none;
+}
+
+button.subLink {
+  width: 100%;
+}
+
+button.navLink {
+  font-family: var(--font-display);
+  font-size: 14px;
+}
+
+button.chip {
+  font-size: 12.5px;
+}

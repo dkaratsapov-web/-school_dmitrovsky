@@ -98,6 +98,42 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
+/* ------------------------------------------------- разбивка по классам */
+.groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
+}
+
+.group {
+  height: 36px;
+  padding-inline: 16px;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--c-ink-500);
+  font-family: var(--font-display);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  cursor: pointer;
+  transition: color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease),
+    background var(--t-fast) var(--ease);
+}
+
+.group:hover {
+  color: var(--c-navy-800);
+  border-color: var(--c-navy-300);
+  background: #fff;
+}
+
+.groupOn {
+  background: #fff;
+  border-color: var(--c-navy-800);
+  color: var(--c-navy-900);
+  box-shadow: inset 0 0 0 1px var(--c-navy-800);
+}
+
 /* --------------------------------------------------------------- стена */
 .wall {
   display: grid;
@@ -324,103 +360,13 @@ button.face:focus-visible .rule {
   transform: scaleX(1);
 }
 
-/* --------------------------------------------------------- окно материала */
-.detail {
-  margin-top: clamp(1rem, 2vw, 1.4rem);
-  padding-top: clamp(1rem, 2vw, 1.4rem);
-  border-top: 1px solid rgba(255, 255, 255, 0.16);
-}
-
-.detailShot {
-  width: 100%;
-  height: auto;
-  margin-bottom: clamp(1rem, 2vw, 1.4rem);
-  border-radius: 3px;
-}
-
-.detailText {
-  margin: 0 0 10px;
-  font-size: var(--fs-small);
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.detailList {
-  margin: 14px 0 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.detailPoint {
-  position: relative;
-  padding-left: 16px;
-  font-size: var(--fs-small);
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.82);
-}
-
-.detailPoint::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.55em;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--c-wine-600);
-}
-
-.detailFacts {
-  display: grid;
-  gap: 10px 20px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin: 18px 0 0;
-  padding: 14px 0 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.16);
-}
-
-.detailFact {
-  min-width: 0;
-}
-
-.detailFactLabel {
-  font-size: var(--fs-caption);
-  color: rgba(255, 255, 255, 0.55);
-}
-
-.detailFactValue {
-  margin: 2px 0 0;
-  font-family: var(--font-display);
-  font-size: var(--fs-small);
-  font-weight: var(--fw-bold);
-  color: #fff;
-}
-
-.signup {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 50px;
-  margin-top: 18px;
-  padding-inline: var(--s-6);
-  border-radius: var(--r-md);
-  background: var(--c-wine-700);
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: var(--fs-small);
-  font-weight: var(--fw-bold);
-  text-decoration: none;
-  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-base) var(--ease);
-}
-
-.signup:hover,
-.signup:focus-visible {
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(126, 31, 46, 0.5);
+/* невидимая метка для перехода по адресу: учитывает высоту шапки */
+.anchor {
+  display: block;
+  height: 1px;
+  margin-top: calc(var(--header-h, 150px) * -1);
+  padding-top: var(--header-h, 150px);
+  pointer-events: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -429,8 +375,7 @@ button.face:focus-visible .rule {
   .photo,
   .rule,
   .slider,
-  .allRule,
-  .signup {
+  .allRule {
     animation: none;
     transition: none;
     transform: none;
@@ -443,9 +388,3 @@ button.face:focus-visible .rule {
   }
 }
 
-/* на тёмной подложке окна знак-курсор белый */
-@media (hover: hover) and (pointer: fine) {
-  .detail a {
-    cursor: var(--cursor-dark-lg);
-  }
-}

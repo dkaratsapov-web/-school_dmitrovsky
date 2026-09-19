@@ -1,15 +1,18 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CallbackModal } from '../forms/CallbackModal';
-import { clubs, clubsHref, events, eventsHref } from '@/content/clubs';
-import type { Club, EventItem } from '@/content/clubs';
+import { clubGroups, clubs, events } from '@/content/clubs';
+import type { Club, ClubGroup, EventItem } from '@/content/clubs';
+import { InfoBody } from '../ui/InfoBody';
 import { asset } from '@/lib/asset';
 import s from './clubs-events.module.css';
 
 type Tab = 'clubs' | 'events';
+type Group = 'Все классы' | ClubGroup;
+
+const GROUPS: readonly Group[] = ['Все классы', ...clubGroups];
 
 /** Что показываем в окне: у кружка и у мероприятия содержимое одинаковое. */
 type Detail = {
@@ -106,14 +109,31 @@ function Mark() {
  */
 export function ClubsEvents() {
   const [tab, setTab] = useState<Tab>('clubs');
+  const [group, setGroup] = useState<Group>('Все классы');
   const [open, setOpen] = useState<Detail | null>(null);
 
-  const tiles: Tile[] = tab === 'clubs' ? clubs.map(clubTile) : events.map(eventTile);
-  const href = tab === 'clubs' ? clubsHref : eventsHref;
-  const hrefLabel = tab === 'clubs' ? 'Все кружки' : 'Все мероприятия';
+  /* Пункты меню ведут на #clubs и #events — раздел подстраивается под адрес.
+     Проверка отложена на кадр, чтобы не менять состояние в теле эффекта. */
+  useEffect(() => {
+    const apply = () => {
+      if (window.location.hash === '#events') setTab('events');
+      if (window.location.hash === '#clubs') setTab('clubs');
+    };
+    const id = window.setTimeout(apply, 0);
+    window.addEventListener('hashchange', apply);
+    return () => {
+      window.clearTimeout(id);
+      window.removeEventListener('hashchange', apply);
+    };
+  }, []);
+
+  const tiles: Tile[] =
+    tab === 'clubs'
+      ? clubs.filter((c) => group === 'Все классы' || c.groups.includes(group)).map(clubTile)
+      : events.map(eventTile);
 
   return (
-    <section className={s.section} aria-labelledby="clubs-title">
+    <section className={s.section} id="clubs" aria-labelledby="clubs-title">
       <div className={s.inner}>
         <div className={s.head}>
           <h2 id="clubs-title" className={s.title}>
@@ -145,7 +165,27 @@ export function ClubsEvents() {
           </div>
         </div>
 
-        <ul className={s.wall} key={tab}>
+        {/* второй уровень: кружки разбиты по классам */}
+        {tab === 'clubs' ? (
+          <div className={s.groups} role="tablist" aria-label="Классы">
+            {GROUPS.map((g) => (
+              <button
+                key={g}
+                className={[s.group, g === group ? s.groupOn : ''].filter(Boolean).join(' ')}
+                type="button"
+                role="tab"
+                aria-selected={g === group}
+                onClick={() => setGroup(g)}
+              >
+                {g}
+              </button>
+            ))}
+          </div>
+        ) : null}
+
+        <span className={s.anchor} id="events" aria-hidden="true" />
+
+        <ul className={s.wall} key={`${tab}-${group}`}>
           {tiles.map((t, i) => {
             const inner = (
               <>
@@ -193,10 +233,6 @@ export function ClubsEvents() {
           })}
         </ul>
 
-        <Link className={s.all} href={href}>
-          <span>{hrefLabel}</span>
-          <span className={s.allRule} aria-hidden="true" />
-        </Link>
       </div>
 
       {/* ----------------------------------------------- окно материала */}
@@ -207,51 +243,13 @@ export function ClubsEvents() {
         text={open?.lead ?? ''}
         wide
       >
-        <div className={s.detail}>
-          {open?.image ? (
-            <Image
-              className={s.detailShot}
-              src={asset(open.image.src)}
-              alt={open.image.alt}
-              width={open.image.width}
-              height={open.image.height}
-              sizes="(min-width: 640px) 560px, 88vw"
-            />
-          ) : null}
-
-          {open?.text?.map((para) => (
-            <p className={s.detailText} key={para}>
-              {para}
-            </p>
-          ))}
-
-          {open?.points?.length ? (
-            <ul className={s.detailList}>
-              {open.points.map((p) => (
-                <li className={s.detailPoint} key={p}>
-                  {p}
-                </li>
-              ))}
-            </ul>
-          ) : null}
-
-          {open?.facts?.length ? (
-            <dl className={s.detailFacts}>
-              {open.facts.map((f) => (
-                <div className={s.detailFact} key={f.label}>
-                  <dt className={s.detailFactLabel}>{f.label}</dt>
-                  <dd className={s.detailFactValue}>{f.value}</dd>
-                </div>
-              ))}
-            </dl>
-          ) : null}
-
-          {open?.signup ? (
-            <a className={s.signup} href={open.signup} target="_blank" rel="noopener noreferrer">
-              {open.action}
-            </a>
-          ) : null}
-        </div>
+        <InfoBody
+          {...(open?.image ? { image: open.image } : {})}
+          {...(open?.text ? { text: open.text } : {})}
+          {...(open?.points ? { points: open.points } : {})}
+          {...(open?.facts ? { facts: open.facts } : {})}
+          {...(open?.signup ? { link: { label: open.action, href: open.signup } } : {})}
+        />
       </CallbackModal>
     </section>
   );

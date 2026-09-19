@@ -651,3 +651,19 @@
 .cookieActions {
   flex: none;
 }
+
+/* Ссылка в уведомлении о cookie, пока политика не вынесена на свою страницу. */
+.cookiePolicy {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--c-navy-700);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.cookiePolicy:hover {
+  color: var(--c-wine-700);
+}

@@ -684,3 +684,27 @@
     cursor: var(--cursor-dark-lg);
   }
 }
+
+/* Пункт меню, открывающий окно со справкой, выглядит как соседняя ссылка. */
+button.sheetLink {
+  width: 100%;
+  appearance: none;
+  border: 0;
+  background: none;
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-semibold);
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Пункт подвала, открывающий окно со справкой, выглядит как соседняя ссылка. */
+button.footerLink {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}

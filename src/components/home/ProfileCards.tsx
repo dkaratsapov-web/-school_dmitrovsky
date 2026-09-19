@@ -1,9 +1,11 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
-import { useEffect, useRef } from 'react';
-import { profiles, profilesHref, profilesLead } from '@/content/profiles';
+import { useEffect, useRef, useState } from 'react';
+import { CallbackModal } from '../forms/CallbackModal';
+import { InfoBody } from '../ui/InfoBody';
+import { profiles, profilesLead } from '@/content/profiles';
+import type { Profile } from '@/content/profiles';
 import { asset } from '@/lib/asset';
 import { prefersReducedMotion } from '@/lib/motion';
 import s from './profile-cards.module.css';
@@ -33,6 +35,8 @@ const POSE: readonly { tilt: number; lag: number }[] = [
  */
 export function ProfileCards() {
   const ref = useRef<HTMLElement>(null);
+  /* Профиль раскрывается окном: главная работает как лендинг. */
+  const [open, setOpen] = useState<Profile | null>(null);
 
   useEffect(() => {
     const el = ref.current;
@@ -61,7 +65,7 @@ export function ProfileCards() {
   }, []);
 
   return (
-    <section className={s.section} ref={ref} aria-labelledby="profiles-title">
+    <section className={s.section} id="profiles" ref={ref} aria-labelledby="profiles-title">
       <div className={s.inner}>
         <h2 id="profiles-title" className={s.title}>
           Профильные 10 - 11 классы
@@ -83,7 +87,7 @@ export function ProfileCards() {
                   } as React.CSSProperties
                 }
               >
-                <Link className={s.link} href={profilesHref}>
+                <button className={s.link} type="button" onClick={() => setOpen(p)}>
                   <span className={s.shot}>
                     <Image
                       className={s.photo}
@@ -127,12 +131,33 @@ export function ProfileCards() {
                       </span>
                     </span>
                   </span>
-                </Link>
+                </button>
               </li>
             );
           })}
         </ul>
       </div>
+
+      <CallbackModal
+        open={open !== null}
+        onClose={() => setOpen(null)}
+        title={open?.name ?? ''}
+        text={profilesLead}
+        wide
+      >
+        <InfoBody
+          {...(open?.image ? { image: open.image } : {})}
+          {...(open
+            ? {
+                points: open.subjects
+                  .split(';')
+                  .map((part) => part.trim())
+                  .filter(Boolean),
+                facts: [{ label: 'Профессия в колледже', value: open.college.slice(open.college.indexOf(':') + 1).trim() }],
+              }
+            : {})}
+        />
+      </CallbackModal>
     </section>
   );
 }

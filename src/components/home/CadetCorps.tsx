@@ -59,7 +59,7 @@ export function CadetCorps() {
   }, []);
 
   return (
-    <section className={s.section} ref={ref} aria-labelledby="cadets-title">
+    <section className={s.section} id="cadets" ref={ref} aria-labelledby="cadets-title">
       <div className={s.inner}>
         <div className={s.top}>
           <div className={s.words}>

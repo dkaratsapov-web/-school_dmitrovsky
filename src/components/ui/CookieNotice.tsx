@@ -1,7 +1,10 @@
 'use client';
 
-import { useCallback, useSyncExternalStore } from 'react';
+import { useCallback, useState, useSyncExternalStore } from 'react';
 import { useScrollY } from '@/lib/motion';
+import { CallbackModal } from '../forms/CallbackModal';
+import { InfoBody } from './InfoBody';
+import { legalInfo } from '@/content/landing';
 import { Button } from './Button';
 import s from './ui.module.css';
 
@@ -39,7 +42,6 @@ function serverSnapshot(): boolean {
 type Props = {
   /** Текст уведомления — берётся из текущего наполнения сайта, не сочиняется. */
   text: string;
-  policyHref: string;
   policyLabel: string;
   acceptLabel: string;
 };
@@ -48,9 +50,12 @@ type Props = {
    когда человек начал читать страницу. */
 const SHOW_AFTER = 320;
 
-export function CookieNotice({ text, policyHref, policyLabel, acceptLabel }: Props) {
+export function CookieNotice({ text, policyLabel, acceptLabel }: Props) {
   const accepted = useSyncExternalStore(subscribe, isAccepted, serverSnapshot);
   const y = useScrollY();
+  /* Политика конфиденциальности ещё не перенесена отдельной страницей,
+     поэтому вместо перехода по несуществующему адресу открывается справка. */
+  const [policy, setPolicy] = useState(false);
 
   const accept = useCallback(() => {
     sessionAccepted = true;
@@ -67,13 +72,26 @@ export function CookieNotice({ text, policyHref, policyLabel, acceptLabel }: Pro
   return (
     <div className={s.cookie} role="region" aria-label="Уведомление об использовании cookie">
       <p className={s.cookieText}>
-        {text} <a href={policyHref}>{policyLabel}</a>
+        {text}{' '}
+        <button type="button" className={s.cookiePolicy} onClick={() => setPolicy(true)}>
+          {policyLabel}
+        </button>
       </p>
       <div className={s.cookieActions}>
         <Button variant="primary" size="sm" onClick={accept}>
           {acceptLabel}
         </Button>
       </div>
+
+      <CallbackModal
+        open={policy}
+        onClose={() => setPolicy(false)}
+        title={legalInfo.title}
+        text={legalInfo.lead ?? ''}
+        wide
+      >
+        <InfoBody {...(legalInfo.text ? { text: legalInfo.text } : {})} />
+      </CallbackModal>
     </div>
   );
 }

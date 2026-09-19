@@ -1,8 +1,10 @@
 'use client';
 
-import Link from 'next/link';
-import { useEffect, useRef, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { CallbackModal } from '../forms/CallbackModal';
+import { InfoBody } from '../ui/InfoBody';
 import { stages } from '@/content/stages';
+import type { Stage } from '@/content/stages';
 import { prefersReducedMotion } from '@/lib/motion';
 import s from './stage-grid.module.css';
 
@@ -48,6 +50,9 @@ function OrbitBack() {
  */
 export function StageGrid() {
   const gridRef = useRef<HTMLUListElement>(null);
+  /* Главная работает как лендинг: ступень раскрывается окном, а не уводит
+     на отдельную страницу. */
+  const [open, setOpen] = useState<Stage | null>(null);
   const hasJs = useSyncExternalStore(subscribeNoop, () => true, () => false);
 
   /* Появление по мере прокрутки. */
@@ -106,7 +111,7 @@ export function StageGrid() {
   };
 
   return (
-    <section className={s.section} aria-labelledby="stages-title">
+    <section className={s.section} id="stages" aria-labelledby="stages-title">
       <div className={s.inner}>
         <h2 id="stages-title" className={s.title}>
           Ступени обучения
@@ -131,7 +136,7 @@ export function StageGrid() {
                 onPointerMove={onMove}
                 onPointerLeave={onLeave}
               >
-                <Link className={s.link} href={stage.href}>
+                <button className={s.link} type="button" onClick={() => setOpen(stage)}>
                   <span className={s.glow} aria-hidden="true" />
                   <OrbitBack />
 
@@ -157,12 +162,22 @@ export function StageGrid() {
                       ))}
                     </span>
                   </span>
-                </Link>
+                </button>
               </li>
             );
           })}
         </ul>
       </div>
+
+      <CallbackModal
+        open={open !== null}
+        onClose={() => setOpen(null)}
+        title={open?.title ?? ''}
+        text={open?.lead ?? ''}
+        wide
+      >
+        <InfoBody {...(open?.points ? { points: open.points } : {})} />
+      </CallbackModal>
     </section>
   );
 }

@@ -11,8 +11,12 @@ import type { BrandName } from '../ui/BrandIcon';
 import { CallbackModal } from '../forms/CallbackModal';
 import { DirectorForm } from '../forms/DirectorForm';
 import { MobileMenu } from './MobileMenu';
+import type { MenuEntry } from './MobileMenu';
+import { InfoBody } from '../ui/InfoBody';
 import { contacts, siteName } from '@/content/site';
-import { headerNav, mainNav } from '@/content/navigation';
+import { accessInfo, landingAnchors, landingNav, stageInfo } from '@/content/landing';
+import type { LandingInfo } from '@/content/landing';
+import { stages } from '@/content/stages';
 import { useScrollY } from '@/lib/motion';
 import s from './site-header.module.css';
 
@@ -26,7 +30,6 @@ import s from './site-header.module.css';
  */
 
 const COLLAPSE_AT = 40;
-const PENDING = '#';
 
 const BRANDS: readonly BrandName[] = ['Telegram', 'ВКонтакте', 'MAX', 'Rutube'];
 
@@ -47,6 +50,10 @@ export function SiteHeader() {
   /* «Написать директору» — окно с расширенной формой. */
   const [letterOpen, setLetterOpen] = useState(false);
   const [openSub, setOpenSub] = useState<string | null>(null);
+  /* Главная работает как лендинг: пункты без своего блока раскрываются окном. */
+  const [info, setInfo] = useState<LandingInfo | null>(null);
+  /* Раздел, который сейчас на экране — подсвечивается в меню. */
+  const [here, setHere] = useState<string | null>(null);
   const [marker, setMarker] = useState<Marker>({ left: 0, width: 0, visible: false });
 
   const headerRef = useRef<HTMLElement>(null);
@@ -113,51 +120,93 @@ export function SiteHeader() {
     };
   }, [openSub]);
 
-  /* Пять ступеней обучения: тот же состав, что в списке «Обучение». */
-  const studyItems = headerNav.find((i) => i.children)?.children ?? [];
+  /* Какой блок сейчас под шапкой. Наблюдатель, а не расчёт на каждый кадр. */
+  useEffect(() => {
+    if (pathname !== '/' || typeof IntersectionObserver === 'undefined') return;
+    const nodes = landingAnchors
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (nodes.length === 0) return;
+
+    const seen = new Map<string, number>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => seen.set(e.target.id, e.intersectionRatio));
+        let best: string | null = null;
+        let top = 0.08;
+        seen.forEach((ratio, id) => {
+          if (ratio > top) {
+            top = ratio;
+            best = id;
+          }
+        });
+        setHere(best);
+      },
+      { threshold: [0, 0.12, 0.3, 0.6], rootMargin: '-20% 0px -40% 0px' },
+    );
+    nodes.forEach((n) => io.observe(n));
+    return () => io.disconnect();
+  }, [pathname]);
 
   const phone = contacts.phones[0];
   const address = contacts.addresses[0];
 
-  const isActive = (item: (typeof headerNav)[number]) =>
-    item.href === pathname || item.children?.some((c) => c.href === pathname) === true;
+  /* Пункт активен, если его блок сейчас на экране. */
+  const isHere = (anchor: string | undefined) =>
+    anchor !== undefined && here !== null && anchor === `/#${here}`;
+
+  /* Мобильное меню: те же пункты, ступени обучения развёрнуты списком. */
+  const mobileItems: readonly MenuEntry[] = landingNav.flatMap((item) =>
+    item.stages
+      ? item.stages.map((stage) => ({
+          label: stage.title,
+          onSelect: () => setInfo(stageInfo(stage)),
+        }))
+      : [
+          item.anchor
+            ? { label: item.label, href: item.anchor }
+            : { label: item.label, onSelect: () => item.info && setInfo(item.info) },
+        ],
+  );
 
   return (
     <header ref={headerRef} className={[s.header, compact ? s.compact : ''].filter(Boolean).join(' ')}>
       {/* --------------------------------------------- верхний ряд капсул */}
       <div className={s.rowTop}>
-        <a className={[s.capsule, s.chip].join(' ')} href={PENDING} style={{ '--d': '0ms' } as React.CSSProperties}>
+        <button
+          type="button"
+          className={[s.capsule, s.chip].join(' ')}
+          style={{ '--d': '0ms' } as React.CSSProperties}
+          onClick={() => setInfo(accessInfo)}
+        >
           <Icon name="eye" size={15} />
           <span className={s.chipText}>Версия для слабовидящих</span>
-        </a>
+        </button>
 
         <span className={s.gap} />
 
         {/* Ступени обучения вынесены в верхний ряд: на первом экране видно
             всё меню целиком, при прокрутке ряд схлопывается и они
             возвращаются в выпадающий список «Обучение». */}
-        {studyItems.length > 0 ? (
-          <nav
-            className={[s.capsule, s.studyNav].join(' ')}
-            aria-label="Ступени обучения"
-            style={{ '--d': '110ms' } as React.CSSProperties}
-          >
-            <span className={s.studyLabel}>Обучение</span>
-            {studyItems.map((item, i) => (
-              <Link
-                key={item.label}
-                className={s.studyLink}
-                href={item.href ?? '/'}
-                data-active={item.href === pathname}
-                aria-current={item.href === pathname ? 'page' : undefined}
-                style={{ '--i': i } as React.CSSProperties}
-                tabIndex={compact ? -1 : undefined}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-        ) : null}
+        <nav
+          className={[s.capsule, s.studyNav].join(' ')}
+          aria-label="Ступени обучения"
+          style={{ '--d': '110ms' } as React.CSSProperties}
+        >
+          <span className={s.studyLabel}>Обучение</span>
+          {stages.map((stage, i) => (
+            <button
+              key={stage.href}
+              type="button"
+              className={s.studyLink}
+              style={{ '--i': i } as React.CSSProperties}
+              tabIndex={compact ? -1 : undefined}
+              onClick={() => setInfo(stageInfo(stage))}
+            >
+              {stage.title}
+            </button>
+          ))}
+        </nav>
 
         <span className={s.gap} />
 
@@ -225,10 +274,10 @@ export function SiteHeader() {
             }}
           />
 
-          {headerNav.map((item) => {
-            const active = isActive(item);
+          {landingNav.map((item) => {
+            const active = isHere(item.anchor);
 
-            if (item.children) {
+            if (item.stages) {
               const open = openSub === item.label;
               return (
                 <span
@@ -242,7 +291,6 @@ export function SiteHeader() {
                   <button
                     type="button"
                     className={s.navLink}
-                    data-active={active}
                     aria-expanded={open}
                     aria-haspopup="true"
                     onClick={() => setOpenSub(open ? null : item.label)}
@@ -253,11 +301,18 @@ export function SiteHeader() {
 
                   <div className={s.sub} hidden={!open}>
                     <ul className={s.subList}>
-                      {item.children.map((child, i) => (
-                        <li key={child.label} style={{ '--i': i } as React.CSSProperties}>
-                          <Link className={s.subLink} href={child.href ?? '/'} onClick={() => setOpenSub(null)}>
-                            {child.label}
-                          </Link>
+                      {item.stages.map((stage, i) => (
+                        <li key={stage.href} style={{ '--i': i } as React.CSSProperties}>
+                          <button
+                            type="button"
+                            className={s.subLink}
+                            onClick={() => {
+                              setOpenSub(null);
+                              setInfo(stageInfo(stage));
+                            }}
+                          >
+                            {stage.title}
+                          </button>
                         </li>
                       ))}
                     </ul>
@@ -275,14 +330,24 @@ export function SiteHeader() {
                   setOpenSub(null);
                 }}
               >
-                <Link
-                  className={s.navLink}
-                  data-active={active}
-                  href={item.href ?? '/'}
-                  aria-current={active ? 'page' : undefined}
-                >
-                  {item.label}
-                </Link>
+                {item.anchor ? (
+                  <Link
+                    className={s.navLink}
+                    data-active={active}
+                    href={item.anchor}
+                    aria-current={active ? 'true' : undefined}
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    className={s.navLink}
+                    onClick={() => item.info && setInfo(item.info)}
+                  >
+                    {item.label}
+                  </button>
+                )}
               </span>
             );
           })}
@@ -338,9 +403,29 @@ export function SiteHeader() {
 
       <span ref={progressRef} className={s.progress} aria-hidden="true" />
 
-      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} items={mainNav} contacts={contacts} />
+      <MobileMenu
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        items={mobileItems}
+        contacts={contacts}
+      />
 
       <CallbackModal open={callOpen} onClose={() => setCallOpen(false)} />
+
+      <CallbackModal
+        open={info !== null}
+        onClose={() => setInfo(null)}
+        title={info?.title ?? ''}
+        text={info?.lead ?? ''}
+        wide
+      >
+        <InfoBody
+          {...(info?.text ? { text: info.text } : {})}
+          {...(info?.points ? { points: info.points } : {})}
+          {...(info?.facts ? { facts: info.facts } : {})}
+          {...(info?.link ? { link: info.link } : {})}
+        />
+      </CallbackModal>
 
       <CallbackModal
         open={letterOpen}

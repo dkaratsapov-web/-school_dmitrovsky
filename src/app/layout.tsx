@@ -3,7 +3,6 @@ import '@/styles/globals.css';
 import { SiteHeader } from '@/components/site/SiteHeader';
 import { Footer } from '@/components/site/Footer';
 import { CookieNotice } from '@/components/ui/CookieNotice';
-import { footerNav, legalNav } from '@/content/navigation';
 import { contacts, cookieNotice, siteName, siteUrl } from '@/content/site';
 
 /**
@@ -48,11 +47,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <main id="main">{children}</main>
 
-        <Footer nav={footerNav} serviceNav={legalNav} contacts={contacts} />
+        <Footer contacts={contacts} />
 
         <CookieNotice
           text={cookieNotice.text}
-          policyHref={cookieNotice.policyHref}
           policyLabel={cookieNotice.policyLabel}
           acceptLabel={cookieNotice.acceptLabel}
         />
