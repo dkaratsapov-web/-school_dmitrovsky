@@ -16,6 +16,8 @@ type Props = {
   children?: React.ReactNode;
   /** Окно шире: для форм с большим числом полей. */
   wide?: boolean;
+  /** Полоса под содержимым: остаётся на месте, когда окно прокручивают. */
+  foot?: React.ReactNode;
 };
 
 /**
@@ -33,6 +35,7 @@ export function CallbackModal({
   text = 'Оставьте имя и телефон — перезвоним и ответим на вопросы.',
   children,
   wide = false,
+  foot,
 }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
 
@@ -53,17 +56,19 @@ export function CallbackModal({
         if (e.target === ref.current) onClose();
       }}
     >
-      <div className={s.inner}>
-        <button className={s.close} type="button" onClick={onClose} aria-label="Закрыть">
-          <span className={s.closeBar} />
-          <span className={s.closeBar} />
-        </button>
+      <button className={s.close} type="button" onClick={onClose} aria-label="Закрыть">
+        <span className={s.closeBar} />
+        <span className={s.closeBar} />
+      </button>
 
+      <div className={s.inner}>
         <p className={s.title}>{title}</p>
         <p className={s.text}>{text}</p>
 
         {children ?? <ConsultInline title="" action={action} />}
       </div>
+
+      {foot ? <div className={s.foot}>{foot}</div> : null}
     </dialog>
   );
 }

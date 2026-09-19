@@ -388,3 +388,79 @@ button.face:focus-visible .rule {
   }
 }
 
+
+/* =========================================================================
+   Нижняя полоса окна: телефоны записи и переход к форме
+   Держится под содержимым и не уезжает вместе с текстом, поэтому до
+   контактов не нужно прокручивать материал до конца.
+   ========================================================================= */
+.callBox {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.callLabel {
+  font-size: var(--fs-caption);
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.callList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+}
+
+.call {
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-bold);
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+  transition: border-color var(--t-fast) var(--ease);
+}
+
+.call:hover,
+.call:focus-visible {
+  border-color: #fff;
+}
+
+.signup {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding-inline: var(--s-6);
+  border-radius: var(--r-md);
+  background: var(--c-wine-700);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-bold);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform var(--t-fast) var(--ease), box-shadow var(--t-base) var(--ease);
+}
+
+.signup:hover,
+.signup:focus-visible {
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(126, 31, 46, 0.5);
+}
+
+@media (max-width: 479px) {
+  .signup {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signup {
+    transition: none;
+    transform: none;
+  }
+}

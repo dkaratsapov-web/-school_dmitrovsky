@@ -22,6 +22,7 @@ type Detail = {
   points?: readonly string[];
   facts?: readonly { label: string; value: string }[];
   signup?: string;
+  phones?: readonly string[];
   image?: { src: string; width: number; height: number; alt: string };
   action: string;
 };
@@ -54,6 +55,7 @@ function clubTile(c: Club): Tile {
       ...(c.points ? { points: c.points } : {}),
       ...(c.facts ? { facts: c.facts } : {}),
       ...(c.signup ? { signup: c.signup } : {}),
+      ...(c.phones ? { phones: c.phones } : {}),
       ...(c.image ? { image: c.image } : {}),
       action: 'Записаться на занятия',
     },
@@ -242,13 +244,45 @@ export function ClubsEvents() {
         title={open?.title ?? ''}
         text={open?.lead ?? ''}
         wide
+        foot={
+          open?.signup || open?.phones?.length ? (
+            <>
+              {open.phones?.length ? (
+                <span className={s.callBox}>
+                  <span className={s.callLabel}>Запись по телефону</span>
+                  <span className={s.callList}>
+                    {open.phones.map((num) => (
+                      <a
+                        className={s.call}
+                        key={num}
+                        href={`tel:${num.replace(/[^+\d]/g, '')}`}
+                      >
+                        {num}
+                      </a>
+                    ))}
+                  </span>
+                </span>
+              ) : null}
+
+              {open.signup ? (
+                <a
+                  className={s.signup}
+                  href={open.signup}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {open.action}
+                </a>
+              ) : null}
+            </>
+          ) : undefined
+        }
       >
         <InfoBody
           {...(open?.image ? { image: open.image } : {})}
           {...(open?.text ? { text: open.text } : {})}
           {...(open?.points ? { points: open.points } : {})}
           {...(open?.facts ? { facts: open.facts } : {})}
-          {...(open?.signup ? { link: { label: open.action, href: open.signup } } : {})}
         />
       </CallbackModal>
     </section>

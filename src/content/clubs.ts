@@ -28,6 +28,8 @@ export type Club = {
   facts?: readonly { label: string; value: string }[];
   /** Ссылка на запись, если школа её передала. */
   signup?: string;
+  /** Телефоны записи — как передала школа. */
+  phones?: readonly string[];
   image?: { src: string; width: number; height: number; alt: string };
   /** Материал ещё не передан: карточка-заготовка. */
   draft?: boolean;
@@ -77,7 +79,7 @@ export const clubs: readonly Club[] = [
       'Изучаем свойства воды, воздуха, света и электричества через игру и практику. ' +
         'Без скучных формул — только удивительные эксперименты своими руками.',
     ],
-    facts: [{ label: 'Запись по телефону', value: '+7 915 412 54 50, +7 915 383 20 66' }],
+    phones: ['+7 915 412 54 50', '+7 915 383 20 66'],
     signup: 'https://forms.yandex.ru/u/69c102fc505690ef4980e9d6',
     image: {
       src: '/images/club-experimentarium.webp',
@@ -96,7 +98,7 @@ export const clubs: readonly Club[] = [
       'Развиваем инженерное мышление, логику, мелкую моторику и умение работать над проектом ' +
         'от идеи до запуска.',
     ],
-    facts: [{ label: 'Запись по телефону', value: '+7 915 412 54 50, +7 915 383 20 66' }],
+    phones: ['+7 915 412 54 50', '+7 915 383 20 66'],
     signup: 'https://forms.yandex.ru/u/69c102fc505690ef4980e9d6',
     image: {
       src: '/images/club-lego-robotics.webp',
@@ -114,7 +116,7 @@ export const clubs: readonly Club[] = [
         'рисунка и живописи, учимся сочетать цвета и превращаем любые идеи в яркие ' +
         'творческие работы.',
     ],
-    facts: [{ label: 'Запись по телефону', value: '+7 915 412 54 50, +7 915 383 20 66' }],
+    phones: ['+7 915 412 54 50', '+7 915 383 20 66'],
     signup: 'https://forms.yandex.ru/u/69c102fc505690ef4980e9d6',
     image: {
       src: '/images/club-art-studio.webp',
@@ -133,7 +135,7 @@ export const clubs: readonly Club[] = [
       'Мы развиваем силу, ловкость и координацию, учимся контролировать эмоции и уважать ' +
         'соперника. Занятия подходят для мальчиков и девочек с любым уровнем подготовки.',
     ],
-    facts: [{ label: 'Запись по телефону', value: '+7 915 412 54 50, +7 915 383 20 66' }],
+    phones: ['+7 915 412 54 50', '+7 915 383 20 66'],
     signup: 'https://forms.yandex.ru/u/69c102fc505690ef4980e9d6',
     image: {
       src: '/images/club-taekwondo.webp',
@@ -153,7 +155,7 @@ export const clubs: readonly Club[] = [
         'На занятиях ребята осваивают приёмы самообороны, броски, удержания и правильные падения.',
       'Безопасные тренировки, опытный тренер, сдача нормативов и участие в соревнованиях.',
     ],
-    facts: [{ label: 'Запись по телефону', value: '+7 915 412 54 50, +7 915 383 20 66' }],
+    phones: ['+7 915 412 54 50', '+7 915 383 20 66'],
     signup: 'https://forms.yandex.ru/u/69c102fc505690ef4980e9d6',
   },
   { title: 'Кружок готовится', lead: 'Материал передаёт школа.', groups: ['5-8 класс'], draft: true },

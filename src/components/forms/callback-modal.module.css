@@ -4,13 +4,23 @@
 
 .dialog {
   width: min(92vw, 520px);
+  /* окно не выше экрана: длинный материал прокручивается внутри него,
+     иначе телефоны и кнопка записи уходят за нижний край без возможности
+     до них добраться */
+  max-height: min(88dvh, 940px);
   padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--r-xl);
   background: var(--c-navy-900);
   color: #fff;
   box-shadow: 0 30px 80px rgba(0, 9, 22, 0.6);
-  overflow: visible;
+  overflow: hidden;
+}
+
+/* display задаётся только открытому окну: закрытое прячет сам браузер */
+.dialog[open] {
+  display: flex;
+  flex-direction: column;
 }
 
 .dialogWide {
@@ -36,7 +46,26 @@
 
 .inner {
   position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: clamp(1.5rem, 3vw, 2rem);
+}
+
+/* полоса действий: видна всегда, не уезжает вместе с текстом */
+.foot {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3) var(--s-5);
+  padding: var(--s-4) clamp(1.5rem, 3vw, 2rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.05);
+  /* тень вверх показывает, что материал продолжается под полосой */
+  box-shadow: 0 -16px 26px -20px rgba(0, 0, 0, 0.95);
 }
 
 .title {
@@ -58,6 +87,7 @@
 /* ------------------------------------------------------------- закрыть */
 .close {
   position: absolute;
+  z-index: 1;
   top: 12px;
   right: 12px;
   display: grid;
