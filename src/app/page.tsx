@@ -1,4 +1,5 @@
 import { CadetCorps } from '@/components/home/CadetCorps';
+import { ClubsEvents } from '@/components/home/ClubsEvents';
 import { NewsDeck } from '@/components/home/NewsDeck';
 import { QuoteLine } from '@/components/home/QuoteLine';
 import { ProfileCards } from '@/components/home/ProfileCards';
@@ -31,6 +32,8 @@ export default function HomePage() {
       <CadetCorps />
       <QuoteLine />
       <NewsDeck />
+      <SectionSeam />
+      <ClubsEvents />
     </>
   );
 }

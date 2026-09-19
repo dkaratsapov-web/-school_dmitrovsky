@@ -1,9 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { useId, useState } from 'react';
-import { news, newsHref } from '@/content/news';
+import { news } from '@/content/news';
 import { asset } from '@/lib/asset';
 import s from './news-deck.module.css';
 
@@ -59,12 +58,8 @@ export function NewsDeck() {
       <div className={s.inner}>
         <div className={s.head}>
           <h2 id="news-title" className={s.title}>
-            Обновления школы
+            Новости школы
           </h2>
-          <Link className={s.all} href={newsHref}>
-            <span>Все мероприятия</span>
-            <span className={s.allRule} aria-hidden="true" />
-          </Link>
         </div>
 
         <div className={[s.deck, single ? s.deckSingle : ''].filter(Boolean).join(' ')}>
