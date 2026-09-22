@@ -88,7 +88,7 @@ export function CookieNotice({ text, policyLabel, acceptLabel }: Props) {
         onClose={() => setPolicy(false)}
         title={legalInfo.title}
         text={legalInfo.lead ?? ''}
-        wide
+        size="md"
       >
         <InfoBody {...(legalInfo.text ? { text: legalInfo.text } : {})} />
       </CallbackModal>

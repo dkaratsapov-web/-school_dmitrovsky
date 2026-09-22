@@ -16,10 +16,13 @@ export type InfoContent = {
  *
  * Один и тот же вид у кружка, мероприятия, ступени обучения и профиля —
  * поэтому разметка и стили живут в одном месте, а не копируются по блокам.
+ *
+ * Со снимком материал идёт в две колонки: афиша квадратная, и в столбик
+ * окно вырастало выше экрана.
  */
 export function InfoBody({ text, points, facts, image, link }: InfoContent) {
   return (
-    <div className={s.body}>
+    <div className={[s.body, image ? s.bodySplit : ''].filter(Boolean).join(' ')}>
       {image ? (
         <Image
           className={s.shot}
@@ -27,42 +30,44 @@ export function InfoBody({ text, points, facts, image, link }: InfoContent) {
           alt={image.alt}
           width={image.width}
           height={image.height}
-          sizes="(min-width: 640px) 560px, 88vw"
+          sizes="(min-width: 760px) 340px, 88vw"
         />
       ) : null}
 
-      {text?.map((para) => (
-        <p className={s.text} key={para}>
-          {para}
-        </p>
-      ))}
+      <div className={s.words}>
+        {text?.map((para) => (
+          <p className={s.text} key={para}>
+            {para}
+          </p>
+        ))}
 
-      {points?.length ? (
-        <ul className={s.list}>
-          {points.map((p) => (
-            <li className={s.point} key={p}>
-              {p}
-            </li>
-          ))}
-        </ul>
-      ) : null}
+        {points?.length ? (
+          <ul className={s.list}>
+            {points.map((p) => (
+              <li className={s.point} key={p}>
+                {p}
+              </li>
+            ))}
+          </ul>
+        ) : null}
 
-      {facts?.length ? (
-        <dl className={s.facts}>
-          {facts.map((f) => (
-            <div className={s.fact} key={f.label}>
-              <dt className={s.factLabel}>{f.label}</dt>
-              <dd className={s.factValue}>{f.value}</dd>
-            </div>
-          ))}
-        </dl>
-      ) : null}
+        {facts?.length ? (
+          <dl className={s.facts}>
+            {facts.map((f) => (
+              <div className={s.fact} key={f.label}>
+                <dt className={s.factLabel}>{f.label}</dt>
+                <dd className={s.factValue}>{f.value}</dd>
+              </div>
+            ))}
+          </dl>
+        ) : null}
 
-      {link ? (
-        <a className={s.link} href={link.href} target="_blank" rel="noopener noreferrer">
-          {link.label}
-        </a>
-      ) : null}
+        {link ? (
+          <a className={s.link} href={link.href} target="_blank" rel="noopener noreferrer">
+            {link.label}
+          </a>
+        ) : null}
+      </div>
     </div>
   );
 }

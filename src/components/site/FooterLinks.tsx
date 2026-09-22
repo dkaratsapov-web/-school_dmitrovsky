@@ -79,7 +79,7 @@ export function FooterLinks() {
         onClose={() => setInfo(null)}
         title={info?.title ?? ''}
         text={info?.lead ?? ''}
-        wide
+        size="md"
       >
         <InfoBody
           {...(info?.text ? { text: info.text } : {})}

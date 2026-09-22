@@ -10,9 +10,6 @@ import { asset } from '@/lib/asset';
 import s from './clubs-events.module.css';
 
 type Tab = 'clubs' | 'events';
-type Group = 'Все классы' | ClubGroup;
-
-const GROUPS: readonly Group[] = ['Все классы', ...clubGroups];
 
 /** Что показываем в окне: у кружка и у мероприятия содержимое одинаковое. */
 type Detail = {
@@ -114,6 +111,10 @@ function Mark() {
 /**
  * Кружки и мероприятия — стена афиш.
  *
+ * Счётчиков у разделов нет: один кружок идёт сразу в нескольких классах,
+ * и общее число карточек больше числа кружков — такая цифра вводит
+ * в заблуждение.
+ *
  * Афиши школа рисует сама, поэтому плитка отдана им целиком: кадр во всю
  * площадь, название поверх затемнения, метка в углу — возраст у кружка,
  * дата у мероприятия. Рамок и белых подложек нет: они бы спорили
@@ -125,7 +126,9 @@ function Mark() {
  */
 export function ClubsEvents() {
   const [tab, setTab] = useState<Tab>('clubs');
-  const [group, setGroup] = useState<Group>('Все классы');
+  /* Разбивка по классам без общей вкладки: раздел открывается
+     на младших классах, остальные группы рядом. */
+  const [group, setGroup] = useState<ClubGroup>(clubGroups[0]);
   const [open, setOpen] = useState<Detail | null>(null);
 
   /* Пункты меню ведут на #clubs и #events — раздел подстраивается под адрес.
@@ -145,7 +148,7 @@ export function ClubsEvents() {
 
   const tiles: Tile[] =
     tab === 'clubs'
-      ? clubs.filter((c) => group === 'Все классы' || c.groups.includes(group)).map(clubTile)
+      ? clubs.filter((c) => c.groups.includes(group)).map(clubTile)
       : events.map(eventTile);
 
   return (
@@ -166,7 +169,6 @@ export function ClubsEvents() {
               onClick={() => setTab('clubs')}
             >
               Кружки
-              <span className={s.count}>{clubs.length}</span>
             </button>
             <button
               className={[s.tab, tab === 'events' ? s.tabOn : ''].filter(Boolean).join(' ')}
@@ -176,7 +178,6 @@ export function ClubsEvents() {
               onClick={() => setTab('events')}
             >
               Мероприятия
-              <span className={s.count}>{events.length}</span>
             </button>
           </div>
         </div>
@@ -184,7 +185,7 @@ export function ClubsEvents() {
         {/* второй уровень: кружки разбиты по классам */}
         {tab === 'clubs' ? (
           <div className={s.groups} role="tablist" aria-label="Классы">
-            {GROUPS.map((g) => (
+            {clubGroups.map((g) => (
               <button
                 key={g}
                 className={[s.group, g === group ? s.groupOn : ''].filter(Boolean).join(' ')}
@@ -257,7 +258,7 @@ export function ClubsEvents() {
         onClose={() => setOpen(null)}
         title={open?.title ?? ''}
         text={open?.lead ?? ''}
-        wide
+        size="lg"
         foot={
           open?.signup || open?.phones?.length ? (
             <>

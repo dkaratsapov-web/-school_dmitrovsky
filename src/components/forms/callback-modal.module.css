@@ -7,7 +7,7 @@
   /* окно не выше экрана: длинный материал прокручивается внутри него,
      иначе телефоны и кнопка записи уходят за нижний край без возможности
      до них добраться */
-  max-height: min(88dvh, 940px);
+  max-height: min(92dvh, 940px);
   padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--r-xl);
@@ -23,8 +23,14 @@
   flex-direction: column;
 }
 
-.dialogWide {
+.dialogMd {
   width: min(94vw, 640px);
+}
+
+/* окно материала: афиша и текст встают рядом, поэтому окно шире
+   и по высоте умещается в экран без прокрутки */
+.dialogLg {
+  width: min(94vw, 980px);
 }
 
 .dialog::backdrop {
@@ -53,6 +59,18 @@
   padding: clamp(1.5rem, 3vw, 2rem);
 }
 
+/* на телефоне окно занимает почти весь экран: так материал умещается
+   целиком и прокрутка внутри окна не нужна */
+@media (max-width: 759px) {
+  .dialog {
+    max-height: 92dvh;
+  }
+
+  .inner {
+    padding: 1.15rem 1.15rem 0.6rem;
+  }
+}
+
 /* полоса действий: видна всегда, не уезжает вместе с текстом */
 .foot {
   display: flex;
@@ -61,7 +79,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--s-3) var(--s-5);
-  padding: var(--s-4) clamp(1.5rem, 3vw, 2rem);
+  padding: var(--s-4) clamp(1.15rem, 3vw, 2rem);
   border-top: 1px solid rgba(255, 255, 255, 0.16);
   background: rgba(255, 255, 255, 0.05);
   /* тень вверх показывает, что материал продолжается под полосой */

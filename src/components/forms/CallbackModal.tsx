@@ -14,8 +14,12 @@ type Props = {
   text?: string;
   /** Своя форма вместо короткой заявки на звонок. */
   children?: React.ReactNode;
-  /** Окно шире: для форм с большим числом полей. */
-  wide?: boolean;
+  /**
+   * Ширина окна: 'sm' — короткая заявка, 'md' — форма с большим числом
+   * полей, 'lg' — материал со снимком: афиша и текст встают в две колонки
+   * и окно умещается в экран без прокрутки.
+   */
+  size?: 'sm' | 'md' | 'lg';
   /** Полоса под содержимым: остаётся на месте, когда окно прокручивают. */
   foot?: React.ReactNode;
 };
@@ -34,7 +38,7 @@ export function CallbackModal({
   action = 'Отправить',
   text = 'Оставьте имя и телефон — перезвоним и ответим на вопросы.',
   children,
-  wide = false,
+  size = 'sm',
   foot,
 }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -48,7 +52,9 @@ export function CallbackModal({
 
   return (
     <dialog
-      className={[s.dialog, wide ? s.dialogWide : ''].filter(Boolean).join(' ')}
+      className={[s.dialog, size === 'md' ? s.dialogMd : '', size === 'lg' ? s.dialogLg : '']
+        .filter(Boolean)
+        .join(' ')}
       ref={ref}
       onClose={onClose}
       onClick={(e) => {

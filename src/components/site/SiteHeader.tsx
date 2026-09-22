@@ -418,7 +418,7 @@ export function SiteHeader() {
         onClose={() => setInfo(null)}
         title={info?.title ?? ''}
         text={info?.lead ?? ''}
-        wide
+        size="md"
       >
         <InfoBody
           {...(info?.text ? { text: info.text } : {})}
@@ -433,7 +433,7 @@ export function SiteHeader() {
         onClose={() => setLetterOpen(false)}
         title="Написать директору"
         text="Расскажите, с чем обращаетесь. Ответим на указанную почту или по телефону."
-        wide
+        size="md"
       >
         <DirectorForm />
       </CallbackModal>

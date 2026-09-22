@@ -85,19 +85,6 @@
   color: #fff;
 }
 
-.count {
-  padding: 1px 8px;
-  border-radius: var(--r-pill);
-  background: rgba(1, 51, 102, 0.1);
-  font-size: var(--fs-caption);
-  font-weight: var(--fw-bold);
-  color: inherit;
-}
-
-.tabOn .count {
-  background: rgba(255, 255, 255, 0.2);
-}
-
 /* ------------------------------------------------- разбивка по классам */
 .groups {
   display: flex;

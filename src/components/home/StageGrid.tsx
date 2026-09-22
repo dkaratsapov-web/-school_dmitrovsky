@@ -174,7 +174,7 @@ export function StageGrid() {
         onClose={() => setOpen(null)}
         title={open?.title ?? ''}
         text={open?.lead ?? ''}
-        wide
+        size="md"
       >
         <InfoBody {...(open?.points ? { points: open.points } : {})} />
       </CallbackModal>

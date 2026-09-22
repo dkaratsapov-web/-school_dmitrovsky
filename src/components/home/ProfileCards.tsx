@@ -143,7 +143,7 @@ export function ProfileCards() {
         onClose={() => setOpen(null)}
         title={open?.name ?? ''}
         text={profilesLead}
-        wide
+        size="lg"
       >
         <InfoBody
           {...(open?.image ? { image: open.image } : {})}
