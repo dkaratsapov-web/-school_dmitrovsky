@@ -68,20 +68,26 @@
   display: inline-flex;
   align-items: baseline;
   gap: 10px;
-  padding-inline: clamp(1.1rem, 2.2vw, 2.1rem);
+  padding-inline: clamp(0.9rem, 1.8vw, 1.7rem);
   white-space: nowrap;
 }
 
-.atom {
-  width: 21px;
-  height: 21px;
+/* разделитель: отдельное звено ленты, отступы вокруг него равные,
+   поэтому знак стоит ровно посередине между соседними цифрами */
+.sep {
+  display: inline-flex;
+  align-items: center;
   flex: none;
-  align-self: center;
-  margin-right: 2px;
-  color: rgba(255, 255, 255, 0.3);
+}
+
+.atom {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  color: rgba(255, 255, 255, 0.62);
   fill: none;
   stroke: currentColor;
-  stroke-width: 1;
+  stroke-width: 1.2;
   /* орбиты медленно поворачиваются — тот же мотив, что в знаке школы */
   animation: spin 14s linear infinite;
 }
@@ -93,7 +99,7 @@
 }
 
 .core {
-  fill: var(--c-wine-600);
+  fill: var(--c-wine-500);
   stroke: none;
 }
 
@@ -130,7 +136,7 @@
     row-gap: 0.4rem;
   }
   /* повторы нужны только бегущей строке */
-  .list > li:nth-child(n + 5) {
+  .list > li:nth-child(n + 8) {
     display: none;
   }
   .atom {

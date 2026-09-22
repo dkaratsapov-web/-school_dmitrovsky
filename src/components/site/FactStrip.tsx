@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import { facts } from '@/content/facts';
 import { prefersReducedMotion } from '@/lib/motion';
 import s from './fact-strip.module.css';
@@ -8,7 +8,7 @@ import s from './fact-strip.module.css';
 /** Сколько раз повторить набор в одной половине ленты. */
 const REPEAT = 3;
 
-/** Знак школы между цифрами: ядро и две орбиты. */
+/** Знак школы — разделитель между цифрами: ядро и две орбиты. */
 function AtomMark() {
   return (
     <svg className={s.atom} viewBox="0 0 24 24" aria-hidden="true">
@@ -24,11 +24,17 @@ function Track({ hidden }: { hidden?: boolean }) {
     <ul className={s.list} aria-hidden={hidden ? 'true' : undefined}>
       {Array.from({ length: REPEAT }).flatMap((_, r) =>
         facts.map((f) => (
-          <li className={s.item} key={`${r}-${f.value}-${f.label}`}>
-            <AtomMark />
-            <span className={s.value}>{f.value}</span>
-            <span className={s.label}>{f.label}</span>
-          </li>
+          <Fragment key={`${r}-${f.value}-${f.label}`}>
+            <li className={s.item}>
+              <span className={s.value}>{f.value}</span>
+              <span className={s.label}>{f.label}</span>
+            </li>
+            {/* знак стоит отдельным звеном, поэтому приходится ровно
+                на середину промежутка между соседними цифрами */}
+            <li className={s.sep} aria-hidden="true">
+              <AtomMark />
+            </li>
+          </Fragment>
         )),
       )}
     </ul>
