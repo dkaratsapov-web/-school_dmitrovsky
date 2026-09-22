@@ -137,15 +137,22 @@
   }
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 1000px) {
   .wall {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (min-width: 1500px) {
+@media (min-width: 1240px) {
   .wall {
     grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* на широком экране — пять афиш в ряд */
+@media (min-width: 1440px) {
+  .wall {
+    grid-template-columns: repeat(5, 1fr);
   }
 }
 

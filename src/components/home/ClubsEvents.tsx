@@ -214,7 +214,7 @@ export function ClubsEvents() {
                       alt={t.image.alt}
                       width={t.image.width}
                       height={t.image.height}
-                      sizes="(min-width: 1500px) 24vw, (min-width: 1100px) 32vw, (min-width: 640px) 46vw, 92vw"
+                      sizes="(min-width: 1440px) 19vw, (min-width: 1240px) 24vw, (min-width: 1000px) 32vw, (min-width: 640px) 46vw, 92vw"
                     />
                   ) : (
                     <Mark />
