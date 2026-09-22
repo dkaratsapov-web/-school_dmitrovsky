@@ -143,7 +143,12 @@ export function Contacts() {
         <div className={s.form}>
           <p className={s.formTitle}>{consultTitle}</p>
           <p className={s.formText}>{consultText}</p>
-          <ConsultInline title="" action={consultAction} layout="stack" />
+          <ConsultInline
+            title=""
+            action={consultAction}
+            layout="stack"
+            {...(contacts.phones[0] ? { callPhone: contacts.phones[0] } : {})}
+          />
         </div>
 
         {/* карта школы: закрывает блок снимком места */}

@@ -15,8 +15,20 @@
 }
 
 .inner {
+  display: flex;
+  flex-direction: column;
   width: min(100% - 2 * var(--gutter), var(--container));
   margin-inline: auto;
+}
+
+/* Левая колонка широкого экрана. На узком её части встают в общий
+   поток, а заявка уходит под ролики: сначала смотрят, потом пишут. */
+.rail {
+  display: contents;
+}
+
+.ask {
+  order: 1;
 }
 
 .head {
@@ -196,6 +208,7 @@
 @media (min-width: 1200px) {
   .inner {
     display: grid;
+    display: grid;
     /* обе колонки ограничены и стоят по центру полосы: на мониторе
        в 1920 px растянутый на всю ширину заголовок оставлял под собой
        пустое поле в полэкрана */
@@ -206,28 +219,33 @@
     align-items: start;
   }
 
-  .head {
-    position: sticky;
-    top: 6.5rem;
+  .rail {
+    display: block;
     grid-column: 1;
     grid-row: 1;
-    max-width: 22ch;
-    margin-bottom: 0;
   }
 
-  .switch {
-    grid-column: 1;
-    grid-row: 2;
-    margin-bottom: 0;
+  .head {
+    max-width: 22ch;
   }
 
   .wall,
   .maps {
     grid-column: 2;
-    grid-row: 1 / span 2;
+    grid-row: 1;
     max-width: none;
     margin-top: 0;
   }
+}
+
+/* ------------------------------------------------------------- заявка */
+.ask {
+  max-width: 34rem;
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding: clamp(1.25rem, 2.4vw, 1.75rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-xl);
+  background: #fff;
 }
 
 /* ----------------------------------------------- отзывы с Яндекс Карт */

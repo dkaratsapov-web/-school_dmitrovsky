@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { ConsultInline } from '../forms/ConsultInline';
 import { Icon } from '../ui/Icon';
 import {
   reviewsLead,
@@ -9,6 +10,7 @@ import {
   yandexLink,
   yandexOrgId,
 } from '@/content/reviews';
+import { contacts } from '@/content/site';
 import s from './reviews.module.css';
 
 /**
@@ -50,41 +52,56 @@ export function Reviews({ videos: videoReviews = allVideos, bare = false }: Prop
       {...(bare ? { 'aria-label': 'Превью материала' } : { 'aria-labelledby': 'reviews-title' })}
     >
       <div className={s.inner}>
-        {bare ? null : (
-          <div className={s.head}>
-            <h2 id="reviews-title" className={s.title}>
-              Отзывы
-            </h2>
-            <p className={s.lead}>{reviewsLead}</p>
-          </div>
-        )}
+        <div className={s.rail}>
+          {bare ? null : (
+            <div className={s.head}>
+              <h2 id="reviews-title" className={s.title}>
+                Отзывы
+              </h2>
+              <p className={s.lead}>{reviewsLead}</p>
+            </div>
+          )}
 
-        {hasVideo && hasMaps && !bare ? (
-          <div className={s.switch} role="tablist" aria-label="Источник отзывов">
-            <span
-              className={[s.slider, tab === 'maps' ? s.sliderRight : ''].filter(Boolean).join(' ')}
-              aria-hidden="true"
-            />
-            <button
-              className={[s.tab, tab === 'video' ? s.tabOn : ''].filter(Boolean).join(' ')}
-              type="button"
-              role="tab"
-              aria-selected={tab === 'video'}
-              onClick={() => setTab('video')}
-            >
-              Видеоотзывы
-            </button>
-            <button
-              className={[s.tab, tab === 'maps' ? s.tabOn : ''].filter(Boolean).join(' ')}
-              type="button"
-              role="tab"
-              aria-selected={tab === 'maps'}
-              onClick={() => setTab('maps')}
-            >
-              Яндекс Карты
-            </button>
-          </div>
-        ) : null}
+          {hasVideo && hasMaps && !bare ? (
+            <div className={s.switch} role="tablist" aria-label="Источник отзывов">
+              <span
+                className={[s.slider, tab === 'maps' ? s.sliderRight : ''].filter(Boolean).join(' ')}
+                aria-hidden="true"
+              />
+              <button
+                className={[s.tab, tab === 'video' ? s.tabOn : ''].filter(Boolean).join(' ')}
+                type="button"
+                role="tab"
+                aria-selected={tab === 'video'}
+                onClick={() => setTab('video')}
+              >
+                Видеоотзывы
+              </button>
+              <button
+                className={[s.tab, tab === 'maps' ? s.tabOn : ''].filter(Boolean).join(' ')}
+                type="button"
+                role="tab"
+                aria-selected={tab === 'maps'}
+                onClick={() => setTab('maps')}
+              >
+                Яндекс Карты
+              </button>
+            </div>
+          ) : null}
+
+          {bare ? null : (
+            <div className={s.ask}>
+              <ConsultInline
+                title="Записаться на бесплатную консультацию"
+                action="Записаться"
+                layout="stack"
+                tone="light"
+                flush
+                {...(contacts.phones[0] ? { callPhone: contacts.phones[0] } : {})}
+              />
+            </div>
+          )}
+        </div>
 
         {hasVideo && (!hasMaps || tab === 'video') ? (
           <ul className={s.wall}>

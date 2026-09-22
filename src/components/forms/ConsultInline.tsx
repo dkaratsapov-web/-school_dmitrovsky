@@ -17,6 +17,13 @@ type Props = {
   layout?: 'row' | 'stack';
   /** Без верхней линейки и отступа: форма стоит в уже отбитой полосе. */
   flush?: boolean;
+  /** Фон под формой: тёмная полоса или светлый блок. */
+  tone?: 'dark' | 'light';
+  /**
+   * Телефон школы под формой: второй путь для тех, кто не хочет ждать
+   * ответа на заявку. Заодно закрывает пустоту под полями.
+   */
+  callPhone?: { display: string; tel: string };
 };
 
 /**
@@ -32,12 +39,23 @@ export function ConsultInline({
   action = 'Получить консультацию',
   layout = 'row',
   flush = false,
+  tone = 'dark',
+  callPhone,
 }: Props) {
   const [sent, setSent] = useState(false);
 
+  /* Столбцом поля стоят просторно — подписи видны над ними.
+     В строке места нет, там подпись читает только экранный диктор. */
+  const lab = layout === 'stack' ? s.lab : 'visually-hidden';
+
   return (
     <form
-      className={[s.form, layout === 'stack' ? s.stack : '', flush ? s.flush : '']
+      className={[
+        s.form,
+        layout === 'stack' ? s.stack : '',
+        flush ? s.flush : '',
+        tone === 'light' ? s.light : '',
+      ]
         .filter(Boolean)
         .join(' ')}
       onSubmit={(e) => {
@@ -49,7 +67,7 @@ export function ConsultInline({
 
       <div className={s.fields}>
         <label className={s.field}>
-          <span className="visually-hidden">Ваше имя</span>
+          <span className={lab}>Как вас зовут</span>
           <input
             className={s.input}
             type="text"
@@ -61,7 +79,7 @@ export function ConsultInline({
         </label>
 
         <label className={s.field}>
-          <span className="visually-hidden">Телефон</span>
+          <span className={lab}>Телефон для связи</span>
           <input
             className={s.input}
             type="tel"
@@ -81,6 +99,15 @@ export function ConsultInline({
         <input className={s.check} type="checkbox" name="consent" required />
         <span>{consentText}</span>
       </label>
+
+      {callPhone ? (
+        <p className={s.alt}>
+          Или позвоните:{' '}
+          <a className={s.altLink} href={`tel:${callPhone.tel}`}>
+            {callPhone.display}
+          </a>
+        </p>
+      ) : null}
 
       {sent ? (
         <p className={s.note} role="status">

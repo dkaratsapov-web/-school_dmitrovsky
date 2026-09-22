@@ -180,17 +180,16 @@
 .form {
   display: flex;
   flex-direction: column;
-  align-self: stretch;
   padding: clamp(1.5rem, 2.8vw, 2.25rem);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--r-xl);
   background: rgba(255, 255, 255, 0.05);
 }
 
-/* форма прижата к низу карточки, подпись сверху: так карточка
-   занимает высоту колонки с контактами, а не короткую полосу */
+/* форма идёт сразу за подписью: прижатая к низу карточки, она
+   оставляла над собой пустое поле в половину высоты */
 .form > form {
-  margin-top: auto;
+  margin-top: clamp(1.25rem, 2.4vw, 1.75rem);
 }
 
 .formTitle {
