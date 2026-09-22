@@ -24,7 +24,12 @@ const nextConfig: NextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [360, 390, 640, 768, 1024, 1280, 1440, 1920],
-    ...(isPreviewExport || isPagesExport ? { unoptimized: true } : {}),
+    /* Уменьшенные копии снимков готовит scripts/build-images.mjs,
+       а выбирает их этот загрузчик: на статическом хостинге некому
+       ужимать картинки на лету, и телефон качал снимок в 1400 px,
+       чтобы показать его в 220. */
+    loader: 'custom',
+    loaderFile: './src/lib/image-loader.ts',
   },
   /* Один источник правды для префикса: сборка и код должны видеть
      одно и то же значение. Раньше CI выставлял только PAGES_BASE_PATH,

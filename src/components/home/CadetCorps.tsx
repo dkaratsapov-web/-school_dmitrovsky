@@ -38,6 +38,7 @@ function BigClip({ at, onClose }: { at: number; onClose: (at: number) => void })
         ref={ref}
         controls
         playsInline
+        preload="none"
         controlsList="nofullscreen noremoteplayback"
         disablePictureInPicture
         poster={asset(cadetVideo.poster)}

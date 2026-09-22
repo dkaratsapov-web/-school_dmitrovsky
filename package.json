@@ -4,13 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run build:images && next build",
     "start": "next start",
     "lint": "eslint src --max-warnings=0",
     "typecheck": "next typegen && tsc --noEmit",
     "check:content": "node scripts/check-content.mjs",
-    "build:pages": "PAGES_BASE_PATH=/-school_dmitrovsky next build",
-    "build:preview": "EXPORT_PREVIEW=1 next build",
+    "build:images": "node scripts/build-images.mjs",
+    "build:pages": "npm run build:images && PAGES_BASE_PATH=/-school_dmitrovsky next build",
+    "build:preview": "npm run build:images && EXPORT_PREVIEW=1 next build",
     "check:layout": "node scripts/check-layout.mjs"
   },
   "dependencies": {
@@ -25,6 +26,7 @@
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.3.5",
     "playwright": "^1.63.0",
+    "sharp": "^0.35.4",
     "typescript": "^6.0.3"
   }
 }

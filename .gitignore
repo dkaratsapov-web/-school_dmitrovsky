@@ -15,3 +15,7 @@ next-env.d.ts
 shots.mjs
 out/
 screenshots/
+
+# уменьшённые копии снимков: собираются при сборке
+public/_img/
+src/content/images.generated.json

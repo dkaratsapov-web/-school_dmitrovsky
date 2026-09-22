@@ -7,7 +7,7 @@ import { useScrollProgressVar } from '@/lib/motion';
 import { asset } from '@/lib/asset';
 import s from './hero-video.module.css';
 
-type Sources = { large: string; small: string };
+type Sources = { large: string; small: string; phone: string };
 
 type Props = {
   /** Заголовок первого экрана. */
@@ -21,7 +21,9 @@ type Props = {
 };
 
 /** Ниже этой ширины хватает облегчённой версии. */
-const LARGE_FROM = '(min-width: 1400px)';
+const LARGE_FROM = '(min-width: 1600px)';
+/** А ниже этой — телефонной: 720 px вместо 1280 и втрое меньше веса. */
+const SMALL_FROM = '(min-width: 768px)';
 
 /* ------------------------------------------------------------------ */
 /* Можно ли грузить видео: без экономии трафика и без reduce-motion.    */
@@ -54,7 +56,34 @@ export function HeroVideo({ title, poster, posterWidth, posterHeight, video }: P
   const ref = useScrollProgressVar<HTMLElement>('--p');
   const videoRef = useRef<HTMLVideoElement>(null);
   const [ready, setReady] = useState(false);
+  /* Видео подключается не сразу: сначала страница должна показаться
+     и освободить сеть. Без этого телефон тянул три мегабайта видео
+     в тот же момент, когда грузил страницу. */
+  const [armed, setArmed] = useState(false);
   const allowVideo = useSyncExternalStore(subscribeMedia, readMedia, () => false);
+
+  useEffect(() => {
+    if (!allowVideo) return;
+
+    let timer = 0;
+    type WithIdle = Window & {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+    };
+    const idle = (window as WithIdle).requestIdleCallback;
+
+    const arm = () => {
+      if (typeof idle === 'function') idle(() => setArmed(true), { timeout: 2500 });
+      else timer = window.setTimeout(() => setArmed(true), 600);
+    };
+
+    if (document.readyState === 'complete') arm();
+    else window.addEventListener('load', arm, { once: true });
+
+    return () => {
+      window.removeEventListener('load', arm);
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [allowVideo]);
 
   /* Пока первый экран на странице, шапка знает, что под ней тёмный фон. */
   useEffect(() => {
@@ -66,7 +95,7 @@ export function HeroVideo({ title, poster, posterWidth, posterHeight, video }: P
      в разметку не выносит — выставляем его сами до вызова play(). */
   useEffect(() => {
     const v = videoRef.current;
-    if (!v || !allowVideo) return;
+    if (!v || !allowVideo || !armed) return;
 
     v.muted = true;
     v.defaultMuted = true;
@@ -79,7 +108,10 @@ export function HeroVideo({ title, poster, posterWidth, posterHeight, video }: P
       });
     };
 
-    v.load();
+    /* Браузер сам начинает выбор источника, когда в пустое видео
+       добавляют <source>. Свой load() поверх этого — вторая закачка
+       того же файла, и вес страницы удваивается. */
+    if (v.networkState === HTMLMediaElement.NETWORK_EMPTY) v.load();
     start();
     v.addEventListener('canplay', start);
 
@@ -114,7 +146,7 @@ export function HeroVideo({ title, poster, posterWidth, posterHeight, video }: P
       window.removeEventListener('keydown', onFirstTouch);
       cleanups.forEach((fn) => fn());
     };
-  }, [allowVideo]);
+  }, [allowVideo, armed]);
 
   const words = title.split(' ');
 
@@ -139,15 +171,17 @@ export function HeroVideo({ title, poster, posterWidth, posterHeight, video }: P
           loop
           autoPlay
           playsInline
-          preload="auto"
+          preload="none"
           aria-hidden="true"
         >
-          {allowVideo && video ? (
+          {allowVideo && armed && video ? (
             <>
               <source src={video.webm.large} type="video/webm" media={LARGE_FROM} />
-              <source src={video.webm.small} type="video/webm" />
+              <source src={video.webm.small} type="video/webm" media={SMALL_FROM} />
+              <source src={video.webm.phone} type="video/webm" />
               <source src={video.mp4.large} type="video/mp4" media={LARGE_FROM} />
-              <source src={video.mp4.small} type="video/mp4" />
+              <source src={video.mp4.small} type="video/mp4" media={SMALL_FROM} />
+              <source src={video.mp4.phone} type="video/mp4" />
             </>
           ) : null}
         </video>
@@ -177,10 +211,12 @@ export const heroVideo = {
   mp4: {
     large: asset('/video/school-1920.mp4'),
     small: asset('/video/school-1280.mp4'),
+    phone: asset('/video/school-720.mp4'),
   },
   webm: {
     large: asset('/video/school-1920.webm'),
     small: asset('/video/school-1280.webm'),
+    phone: asset('/video/school-720.webm'),
   },
 };
 
