@@ -76,6 +76,24 @@
   color: #fff;
 }
 
+/* ближайшее метро — подпись под адресом, не часть самого адреса */
+.metro {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: var(--fs-small);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.metro::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--c-wine-500);
+}
+
 .lines {
   margin-top: clamp(1.25rem, 2.4vw, 1.75rem);
 }

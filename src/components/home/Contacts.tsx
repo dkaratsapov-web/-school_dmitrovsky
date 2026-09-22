@@ -10,6 +10,7 @@ import {
   consultText,
   consultTitle,
   contactLabels,
+  metro,
   mapEmbed,
   mapLink,
   mapLinkLabel,
@@ -90,6 +91,7 @@ export function Contacts() {
             <p className={s.address}>
               <span className={s.label}>{contactLabels.address}</span>
               <span className={s.addressText}>{address}</span>
+              <span className={s.metro}>{metro}</span>
             </p>
           ) : null}
 
