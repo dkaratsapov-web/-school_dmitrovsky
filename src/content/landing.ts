@@ -87,6 +87,7 @@ export const landingNav: readonly LandingItem[] = [
   { label: 'Кадетский корпус', anchor: '/#cadets', accent: true },
   { label: 'О нас', info: aboutInfo },
   { label: 'Обучение', stages },
+  { label: 'Педагоги', anchor: '/#teachers' },
   { label: 'Мероприятия', anchor: '/#events' },
   { label: 'Кружки', anchor: '/#clubs' },
   { label: 'Контакты', anchor: '/#contacts' },
@@ -96,6 +97,7 @@ export const landingNav: readonly LandingItem[] = [
 export const landingFooterNav: readonly LandingItem[] = [
   { label: 'О нас', info: aboutInfo },
   ...stages.map((stage) => ({ label: stage.title, info: stageInfo(stage) })),
+  { label: 'Педагоги', anchor: '/#teachers' },
   { label: 'Кружки', anchor: '/#clubs' },
   { label: 'Мероприятия', anchor: '/#events' },
   { label: 'Кадетский корпус', anchor: '/#cadets' },
@@ -107,4 +109,11 @@ export function stageInfo(stage: Stage): LandingInfo {
 }
 
 /** Якоря блоков — для подсветки текущего раздела в меню. */
-export const landingAnchors: readonly string[] = ['stages', 'cadets', 'news', 'clubs', 'contacts'];
+export const landingAnchors: readonly string[] = [
+  'stages',
+  'cadets',
+  'news',
+  'clubs',
+  'teachers',
+  'contacts',
+];
