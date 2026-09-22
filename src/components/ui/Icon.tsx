@@ -11,6 +11,7 @@ export type IconName =
   | 'chevron-right'
   | 'chevron-left'
   | 'arrow-right'
+  | 'maximize'
   | 'phone'
   | 'mail'
   | 'pin'
@@ -35,6 +36,8 @@ const paths: Record<IconName, string> = {
   'chevron-right': 'M9 6l6 6-6 6',
   'chevron-left': 'M15 6l-6 6 6 6',
   'arrow-right': 'M4 12h15m0 0l-6-6m6 6l-6 6',
+  /* углы рамки: «показать крупнее» */
+  maximize: 'M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5',
   phone:
     'M6.5 3.5h3l1.5 4-2 1.5a12 12 0 006 6l1.5-2 4 1.5v3a2 2 0 01-2.2 2A17 17 0 014.5 5.7 2 2 0 016.5 3.5z',
   mail: 'M3 6.5h18v11H3zM3 7l9 6 9-6',

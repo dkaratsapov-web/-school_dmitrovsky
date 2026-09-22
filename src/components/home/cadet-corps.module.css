@@ -357,3 +357,109 @@
     cursor: var(--cursor-dark-lg);
   }
 }
+
+/* =========================================================================
+   Ролик крупнее
+   Полноэкранный режим у плеера отключён: он вырывает страницу из окна
+   и на большом мониторе растягивает кадр до нечитаемого. Вместо него
+   окно по центру экрана — больше блока, но не во всю ширину.
+   ========================================================================= */
+.wider {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: var(--r-pill);
+  background: rgba(0, 12, 28, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+}
+
+.wider:hover,
+.wider:focus-visible {
+  background: var(--c-wine-700);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.bigDialog {
+  width: min(1100px, 92vw);
+  max-height: 92dvh;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--r-xl);
+  background: #000;
+  overflow: hidden;
+}
+
+.bigDialog::backdrop {
+  background: rgba(0, 12, 28, 0.82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.bigInner {
+  position: relative;
+  display: block;
+}
+
+.bigClip {
+  display: block;
+  width: 100%;
+  max-height: 92dvh;
+  background: #000;
+}
+
+.bigClose {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: var(--r-pill);
+  background: rgba(0, 12, 28, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+}
+
+.bigClose:hover,
+.bigClose:focus-visible {
+  background: var(--c-wine-700);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.bigBar {
+  position: absolute;
+  width: 16px;
+  height: 1.6px;
+  border-radius: 1px;
+  background: #fff;
+}
+
+.bigBar:first-of-type {
+  transform: rotate(45deg);
+}
+
+.bigBar:last-of-type {
+  transform: rotate(-45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wider,
+  .bigClose {
+    transition: none;
+  }
+}
