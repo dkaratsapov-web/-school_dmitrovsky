@@ -27,7 +27,7 @@ export function FooterLinks() {
     <>
       <div>
         <p className={s.footerColTitle}>Разделы</p>
-        <ul className={s.footerList}>
+        <ul className={[s.footerList, s.footerListSplit].join(' ')}>
           {landingFooterNav.map((item) => (
             <li key={item.label}>
               {item.anchor ? (

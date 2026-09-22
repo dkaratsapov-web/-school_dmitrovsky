@@ -332,12 +332,13 @@ export function SiteHeader() {
               >
                 {item.anchor ? (
                   <Link
-                    className={s.navLink}
+                    className={[s.navLink, item.accent ? s.navAccent : ''].filter(Boolean).join(' ')}
                     data-active={active}
                     href={item.anchor}
                     aria-current={active ? 'true' : undefined}
                   >
                     {item.label}
+                    {item.accent ? <span className={s.patrol} aria-hidden="true" /> : null}
                   </Link>
                 ) : (
                   <button

@@ -4,6 +4,8 @@ import logoWhite from '@/assets/brand/logo-white.png';
 import { Container } from '../layout/Container';
 import { FooterLinks } from './FooterLinks';
 import { Icon } from '../ui/Icon';
+import { BrandIcon } from '../ui/BrandIcon';
+import type { BrandName } from '../ui/BrandIcon';
 import { siteName } from '@/content/site';
 import type { SiteContacts } from '@/content/types';
 import s from './site.module.css';
@@ -13,6 +15,12 @@ type Props = {
   /** Реквизиты организации — переносятся дословно (ТЗ §2). */
   legalLines?: readonly string[];
 };
+
+const BRANDS: readonly BrandName[] = ['Telegram', 'ВКонтакте', 'MAX', 'Rutube'];
+
+function brandOf(network: string): BrandName | null {
+  return BRANDS.find((b) => b === network) ?? null;
+}
 
 /** Компактный структурный подвал: реквизиты, ссылки и контакты сохраняются. */
 export function Footer({ contacts, legalLines }: Props) {
@@ -51,17 +59,22 @@ export function Footer({ contacts, legalLines }: Props) {
 
             {contacts.socials.length > 0 ? (
               <div className={s.socials}>
-                {contacts.socials.map((soc) => (
-                  <a
-                    key={soc.href}
-                    className={s.socialLink}
-                    href={soc.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {soc.label}
-                  </a>
-                ))}
+                {contacts.socials.map((soc) => {
+                  const brand = brandOf(soc.network);
+                  return (
+                    <a
+                      key={soc.href}
+                      className={s.socialLink}
+                      href={soc.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={soc.label}
+                      title={soc.label}
+                    >
+                      {brand ? <BrandIcon name={brand} size={20} /> : soc.label}
+                    </a>
+                  );
+                })}
               </div>
             ) : null}
 

@@ -8,14 +8,18 @@ import { asset } from '@/lib/asset';
 import { prefersReducedMotion } from '@/lib/motion';
 import s from './cadet-corps.module.css';
 
-/** Скорость каждого снимка в стопке: разная, отсюда глубина. */
+/** Скорость каждого слоя в стопке: разная, отсюда глубина. */
 const DEPTH = [0.12, -0.22, 0.3];
+
+/* Строй — верхний широкий слой, мемориал — квадратный справа. */
+const [cadetMemorial, cadetField] = cadetShots;
 
 /**
  * Кадетский корпус — отдельный крупный блок.
  *
- * Слева рассказ о проекте, справа стопка: ролик о проекте, строй,
- * занятие. Слои идут с разной скоростью относительно прокрутки, поэтому
+ * Слева рассказ о проекте, справа стопка: строй на выездных занятиях,
+ * пост у мемориала и ролик о проекте. Слои идут с разной скоростью
+ * относительно прокрутки, поэтому
  * стопка живёт как объёмная, а не как три картинки в ряд. Это фоновые
  * слои, текст неподвижен.
  *
@@ -82,7 +86,31 @@ export function CadetCorps() {
           </div>
 
           <div className={s.stack}>
+            {/* Порядок слоёв: сначала снимки, ролик — нижним слоем.
+                Первым в стопке идёт строй, ролик открывается под ним. */}
             <span className={s.shot} style={{ '--d': DEPTH[0], '--i': 0 } as React.CSSProperties}>
+              <Image
+                className={s.photo}
+                src={asset(cadetField.src)}
+                alt={cadetField.alt}
+                width={cadetField.width}
+                height={cadetField.height}
+                sizes="(min-width: 1024px) 40vw, 90vw"
+              />
+            </span>
+
+            <span className={s.shot} style={{ '--d': DEPTH[1], '--i': 1 } as React.CSSProperties}>
+              <Image
+                className={s.photo}
+                src={asset(cadetMemorial.src)}
+                alt={cadetMemorial.alt}
+                width={cadetMemorial.width}
+                height={cadetMemorial.height}
+                sizes="(min-width: 1024px) 40vw, 90vw"
+              />
+            </span>
+
+            <span className={s.shot} style={{ '--d': DEPTH[2], '--i': 2 } as React.CSSProperties}>
               {playing ? (
                 <video
                   className={s.clip}
@@ -115,23 +143,6 @@ export function CadetCorps() {
                 </button>
               )}
             </span>
-
-            {cadetShots.map((shot, i) => (
-              <span
-                className={s.shot}
-                key={shot.src}
-                style={{ '--d': DEPTH[i + 1] ?? 0, '--i': i + 1 } as React.CSSProperties}
-              >
-                <Image
-                  className={s.photo}
-                  src={asset(shot.src)}
-                  alt={shot.alt}
-                  width={shot.width}
-                  height={shot.height}
-                  sizes="(min-width: 1024px) 40vw, 90vw"
-                />
-              </span>
-            ))}
           </div>
         </div>
 

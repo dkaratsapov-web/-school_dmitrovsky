@@ -73,13 +73,20 @@ export type LandingItem = {
   info?: LandingInfo;
   /** Раскрывающийся список ступеней обучения. */
   stages?: readonly Stage[];
+  /** Выделенный пункт: обводка в фирменном бордовом. */
+  accent?: boolean;
 };
 
-/** Меню шапки на лендинге. */
+/**
+ * Меню шапки на лендинге.
+ *
+ * «Кадетский корпус» стоит первым и выделен: это отдельный платный проект
+ * школы, ради которого приходят на главную чаще всего.
+ */
 export const landingNav: readonly LandingItem[] = [
+  { label: 'Кадетский корпус', anchor: '/#cadets', accent: true },
   { label: 'О нас', info: aboutInfo },
   { label: 'Обучение', stages },
-  { label: 'Кадетский корпус', anchor: '/#cadets' },
   { label: 'Мероприятия', anchor: '/#events' },
   { label: 'Кружки', anchor: '/#clubs' },
   { label: 'Контакты', anchor: '/#contacts' },
