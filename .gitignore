@@ -17,5 +17,5 @@ out/
 screenshots/
 
 # уменьшённые копии снимков: собираются при сборке
+# (сам список ширин лежит в git — без него не проходит проверка типов)
 public/_img/
-src/content/images.generated.json
