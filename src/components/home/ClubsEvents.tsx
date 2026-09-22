@@ -131,7 +131,7 @@ export function ClubsEvents() {
   const [tab, setTab] = useState<Tab>('clubs');
   /* Разбивка по классам без общей вкладки: раздел открывается
      на младших классах, остальные группы рядом. */
-  const [group, setGroup] = useState<ClubGroup>(clubGroups[0]);
+  const [group, setGroup] = useState<ClubGroup>(clubGroups[0] ?? '');
   const [open, setOpen] = useState<Detail | null>(null);
 
   /* Пункты меню ведут на #clubs и #events — раздел подстраивается под адрес.
