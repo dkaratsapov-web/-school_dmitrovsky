@@ -1,13 +1,34 @@
 /* =========================================================================
    Содержимое окна материала
+
+   Афишу показывает само окно — левой панелью во всю высоту. Здесь остаётся
+   текстовая часть: абзацы, перечень и короткие сведения.
+
+   Перечень набран не точками, а тонкими бордовыми засечками слева: они
+   продолжают ту же черту, что открывает карточку на стене афиш, и не
+   превращают окно в общий список с кружками-маркерами.
    ========================================================================= */
 
 .body {
-  margin-top: clamp(1rem, 2vw, 1.4rem);
-  padding-top: clamp(1rem, 2vw, 1.4rem);
-  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  margin-top: clamp(0.9rem, 1.8vw, 1.25rem);
 }
 
+/* черта, которой открывается карточка на стене, продолжается в окне */
+.body::before {
+  content: '';
+  display: block;
+  width: 44px;
+  height: 2px;
+  margin-bottom: clamp(0.9rem, 1.8vw, 1.25rem);
+  border-radius: 1px;
+  background: var(--c-wine-600);
+}
+
+.words {
+  min-width: 0;
+}
+
+/* снимок внутри текста — только там, где окно не показывает афишу панелью */
 .shot {
   width: 100%;
   height: auto;
@@ -16,71 +37,90 @@
 }
 
 .text {
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   font-size: var(--fs-small);
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.62;
+  color: rgba(255, 255, 255, 0.78);
 }
 
+.text:last-child {
+  margin-bottom: 0;
+}
+
+/* ------------------------------------------------------------- перечень */
 .list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin: 14px 0 0;
+  gap: 10px;
+  margin: 16px 0 0;
   padding: 0;
   list-style: none;
 }
 
 .point {
   position: relative;
-  padding-left: 16px;
+  padding-left: 15px;
   font-size: var(--fs-small);
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.88);
 }
 
 .point::before {
   content: '';
   position: absolute;
   left: 0;
-  top: 0.55em;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
+  top: 0.35em;
+  bottom: 0.35em;
+  width: 2px;
+  border-radius: 1px;
   background: var(--c-wine-600);
 }
 
+/* ------------------------------------------------------------- сведения */
 .facts {
-  display: grid;
-  gap: 10px 20px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin: 18px 0 0;
-  padding: 14px 0 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  margin: 20px 0 0;
+  padding: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
 
+/* строка сведений читается как строка расписания: подпись слева,
+   значение справа, между строками тонкая линейка */
 .fact {
-  min-width: 0;
+  display: grid;
+  gap: 2px 20px;
+  grid-template-columns: 1fr;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+@media (min-width: 420px) {
+  .fact {
+    grid-template-columns: minmax(0, 8.5rem) minmax(0, 1fr);
+    align-items: baseline;
+  }
 }
 
 .factLabel {
   font-size: var(--fs-caption);
+  line-height: 1.4;
   color: rgba(255, 255, 255, 0.55);
 }
 
 .factValue {
-  margin: 2px 0 0;
+  margin: 0;
   font-family: var(--font-display);
   font-size: var(--fs-small);
   font-weight: var(--fw-bold);
+  line-height: 1.45;
   color: #fff;
 }
 
+/* --------------------------------------------------------------- ссылка */
 .link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 50px;
+  min-height: 48px;
   margin-top: 18px;
   padding-inline: var(--s-6);
   border-radius: var(--r-md);
@@ -104,57 +144,5 @@
   .link {
     transition: none;
     transform: none;
-  }
-}
-
-/* =========================================================================
-   Материал со снимком: афиша слева, текст справа
-   Афиша квадратная, и в столбик окно вырастало выше экрана — приходилось
-   прокручивать. В две колонки материал умещается целиком.
-   ========================================================================= */
-.words {
-  min-width: 0;
-}
-
-@media (min-width: 760px) {
-  .bodySplit {
-    display: grid;
-    grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
-    gap: clamp(1.25rem, 2.4vw, 2rem);
-    align-items: start;
-  }
-
-  .bodySplit .shot {
-    margin-bottom: 0;
-    position: sticky;
-    top: 0;
-  }
-}
-
-/* на узком экране афиша кадрируется по высоте, иначе окно опять
-   перерастает экран */
-@media (max-width: 759px) {
-  .shot {
-    max-height: 22vh;
-    object-fit: cover;
-    margin-bottom: 0.85rem;
-  }
-
-  .body {
-    margin-top: 0.85rem;
-    padding-top: 0.85rem;
-  }
-}
-
-/* очень низкий экран старых телефонов: афиша ужимается ещё сильнее,
-   чтобы материал умещался без прокрутки */
-@media (max-width: 759px) and (max-height: 720px) {
-  .shot {
-    max-height: 17vh;
-  }
-
-  .text {
-    margin-bottom: 7px;
-    line-height: 1.5;
   }
 }

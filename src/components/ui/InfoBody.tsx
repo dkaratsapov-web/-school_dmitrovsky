@@ -17,12 +17,12 @@ export type InfoContent = {
  * Один и тот же вид у кружка, мероприятия, ступени обучения и профиля —
  * поэтому разметка и стили живут в одном месте, а не копируются по блокам.
  *
- * Со снимком материал идёт в две колонки: афиша квадратная, и в столбик
- * окно вырастало выше экрана.
+ * Афишу материала показывает само окно — левой панелью во всю высоту.
+ * Поле image остаётся для окон без такой панели.
  */
 export function InfoBody({ text, points, facts, image, link }: InfoContent) {
   return (
-    <div className={[s.body, image ? s.bodySplit : ''].filter(Boolean).join(' ')}>
+    <div className={s.body}>
       {image ? (
         <Image
           className={s.shot}

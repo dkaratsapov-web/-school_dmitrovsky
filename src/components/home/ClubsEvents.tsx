@@ -259,6 +259,7 @@ export function ClubsEvents() {
         title={open?.title ?? ''}
         text={open?.lead ?? ''}
         size="lg"
+        {...(open?.image ? { media: open.image } : {})}
         foot={
           open?.signup || open?.phones?.length ? (
             <>
@@ -294,7 +295,6 @@ export function ClubsEvents() {
         }
       >
         <InfoBody
-          {...(open?.image ? { image: open.image } : {})}
           {...(open?.text ? { text: open.text } : {})}
           {...(open?.points ? { points: open.points } : {})}
           {...(open?.facts ? { facts: open.facts } : {})}

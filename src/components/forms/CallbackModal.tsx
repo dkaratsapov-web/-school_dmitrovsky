@@ -1,7 +1,9 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 import { ConsultInline } from './ConsultInline';
+import { asset } from '@/lib/asset';
 import s from './callback-modal.module.css';
 
 type Props = {
@@ -22,6 +24,11 @@ type Props = {
   size?: 'sm' | 'md' | 'lg';
   /** Полоса под содержимым: остаётся на месте, когда окно прокручивают. */
   foot?: React.ReactNode;
+  /**
+   * Афиша материала. Занимает левую панель окна во всю высоту: школа рисует
+   * афиши сама, и уменьшать их до миниатюры рядом с текстом нет смысла.
+   */
+  media?: { src: string; width: number; height: number; alt: string };
 };
 
 /**
@@ -40,6 +47,7 @@ export function CallbackModal({
   children,
   size = 'sm',
   foot,
+  media,
 }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
 
@@ -67,14 +75,29 @@ export function CallbackModal({
         <span className={s.closeBar} />
       </button>
 
-      <div className={s.inner}>
-        <p className={s.title}>{title}</p>
-        <p className={s.text}>{text}</p>
+      {media ? (
+        <div className={s.media}>
+          <Image
+            className={s.shot}
+            src={asset(media.src)}
+            alt={media.alt}
+            width={media.width}
+            height={media.height}
+            sizes="(min-width: 760px) 380px, 100vw"
+          />
+        </div>
+      ) : null}
 
-        {children ?? <ConsultInline title="" action={action} />}
+      <div className={s.column}>
+        <div className={s.inner}>
+          <p className={s.title}>{title}</p>
+          {text ? <p className={s.text}>{text}</p> : null}
+
+          {children ?? <ConsultInline title="" action={action} />}
+        </div>
+
+        {foot ? <div className={s.foot}>{foot}</div> : null}
       </div>
-
-      {foot ? <div className={s.foot}>{foot}</div> : null}
     </dialog>
   );
 }
