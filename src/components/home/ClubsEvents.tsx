@@ -37,11 +37,25 @@ type Tile = {
   draft?: boolean;
 };
 
+/**
+ * Метка возраста в углу афиши.
+ *
+ * Кружки идут сразу в нескольких группах, и полный перечень
+ * «1-4 класс, 5-8 класс, 9 класс, 10-11 класс» в угловую метку не влезает.
+ * Поэтому слово «класс» остаётся один раз в конце, а весь набор групп
+ * сворачивается в «Все классы».
+ */
+function groupChip(groups: readonly ClubGroup[]): string {
+  if (groups.length >= clubGroups.length) return 'Все классы';
+  const parts = groups.map((g) => g.replace(' класс', ''));
+  return `${parts.join(', ')} класс`;
+}
+
 function clubTile(c: Club): Tile {
   const tile: Tile = {
     title: c.title,
     lead: c.lead,
-    chip: c.groups.join(', '),
+    chip: groupChip(c.groups),
     ...(c.image ? { image: c.image } : {}),
     ...(c.draft ? { draft: true } : {}),
   };
