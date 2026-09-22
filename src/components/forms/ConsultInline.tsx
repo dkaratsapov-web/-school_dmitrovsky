@@ -9,6 +9,12 @@ type Props = {
   title: string;
   /** Подпись на кнопке. */
   action?: string;
+  /**
+   * Раскладка полей: 'row' — в строку (внутри узкого блока),
+   * 'stack' — столбцом, поля крупнее. Столбцом форма занимает
+   * высоту соседней колонки, а не висит короткой полосой сверху.
+   */
+  layout?: 'row' | 'stack';
 };
 
 /**
@@ -19,12 +25,16 @@ type Props = {
  * Поля, проверка и состояние работают, отправка подключается после
  * подтверждения адресата (ТЗ §13).
  */
-export function ConsultInline({ title, action = 'Получить консультацию' }: Props) {
+export function ConsultInline({
+  title,
+  action = 'Получить консультацию',
+  layout = 'row',
+}: Props) {
   const [sent, setSent] = useState(false);
 
   return (
     <form
-      className={s.form}
+      className={[s.form, layout === 'stack' ? s.stack : ''].filter(Boolean).join(' ')}
       onSubmit={(e) => {
         e.preventDefault();
         setSent(true);

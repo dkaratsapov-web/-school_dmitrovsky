@@ -168,3 +168,31 @@
     transition: none;
   }
 }
+
+/* =========================================================================
+   Раскладка столбцом: поля друг под другом и крупнее
+   Так форма занимает высоту соседней колонки, а не висит короткой
+   полосой поверх пустоты.
+   ========================================================================= */
+.stack .fields {
+  gap: var(--s-3);
+  grid-template-columns: 1fr;
+}
+
+.stack .submit {
+  grid-column: auto;
+}
+
+.stack .input,
+.stack .submit {
+  min-height: 58px;
+  font-size: var(--fs-body);
+}
+
+.stack .input {
+  padding-inline: var(--s-5);
+}
+
+.stack .consent {
+  margin-top: var(--s-4);
+}
