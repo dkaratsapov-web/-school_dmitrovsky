@@ -4,6 +4,7 @@ import { ClubsEvents } from '@/components/home/ClubsEvents';
 import { NewsDeck } from '@/components/home/NewsDeck';
 import { QuoteLine } from '@/components/home/QuoteLine';
 import { ProfileCards } from '@/components/home/ProfileCards';
+import { Reviews } from '@/components/home/Reviews';
 import { SectionSeam } from '@/components/home/SectionSeam';
 import { StageGrid } from '@/components/home/StageGrid';
 import { Teachers } from '@/components/home/Teachers';
@@ -37,6 +38,7 @@ export default function HomePage() {
       <SectionSeam />
       <ClubsEvents />
       <Teachers />
+      <Reviews />
       <SectionSeam flip />
       <Contacts />
     </>
