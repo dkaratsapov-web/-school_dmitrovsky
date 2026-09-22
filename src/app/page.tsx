@@ -5,6 +5,7 @@ import { QuoteLine } from '@/components/home/QuoteLine';
 import { ProfileCards } from '@/components/home/ProfileCards';
 import { SectionSeam } from '@/components/home/SectionSeam';
 import { StageGrid } from '@/components/home/StageGrid';
+import { Teachers } from '@/components/home/Teachers';
 import { FactStrip } from '@/components/site/FactStrip';
 import { HeroVideo, heroPoster, heroVideo } from '@/components/site/HeroVideo';
 
@@ -34,6 +35,7 @@ export default function HomePage() {
       <NewsDeck />
       <SectionSeam />
       <ClubsEvents />
+      <Teachers />
     </>
   );
 }

@@ -1,0 +1,273 @@
+/* =========================================================================
+   Педагоги — список коллектива с портретом рядом
+   ========================================================================= */
+
+.section {
+  position: relative;
+  padding-block: clamp(3rem, 6vw, 5rem);
+  background: var(--color-surface);
+  color: var(--c-ink-800);
+}
+
+.inner {
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+
+.head {
+  max-width: 44rem;
+  margin-bottom: clamp(1.75rem, 3vw, 2.75rem);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 1.3rem + 2.4vw, 3.25rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.03em;
+  color: var(--c-navy-900);
+}
+
+.lead {
+  margin: var(--s-3) 0 0;
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  color: var(--c-ink-600);
+}
+
+.body {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 3rem);
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+@media (min-width: 1100px) {
+  .body {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
+  }
+}
+
+/* ------------------------------------------------------------- список */
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-border);
+}
+
+.row {
+  margin: 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* строки проявляются линиями: короткая черта раскрывается в полную
+   ширину, текст подтягивается следом */
+.row[data-in='true'] .entry {
+  animation: rowIn 560ms cubic-bezier(0.16, 0.9, 0.24, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+
+@keyframes rowIn {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+}
+
+.entry {
+  position: relative;
+  display: grid;
+  width: 100%;
+  gap: 2px var(--s-4);
+  grid-template-columns: 56px minmax(0, 1fr);
+  align-items: center;
+  padding: clamp(0.6rem, 1.1vw, 0.9rem) 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--t-fast) var(--ease);
+}
+
+@media (min-width: 720px) {
+  .entry {
+    grid-template-columns: 56px minmax(0, 1fr) minmax(0, 20rem);
+    align-items: baseline;
+  }
+}
+
+/* на широком экране портрет виден рядом со списком — миниатюра лишняя */
+@media (min-width: 1100px) {
+  .entry {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 21rem);
+  }
+
+  .thumb {
+    display: none;
+  }
+}
+
+.thumb {
+  grid-row: span 2;
+  width: 56px;
+  height: 72px;
+  border-radius: 2px;
+  object-fit: cover;
+  object-position: center 22%;
+  filter: saturate(0.85);
+}
+
+@media (min-width: 720px) {
+  .thumb {
+    grid-row: auto;
+    align-self: center;
+  }
+}
+
+.name {
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 0.9rem + 0.55vw, 1.375rem);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  color: var(--c-navy-900);
+  transition: color var(--t-fast) var(--ease);
+}
+
+.role {
+  min-width: 0;
+  font-size: var(--fs-small);
+  line-height: 1.4;
+  color: var(--c-ink-600);
+}
+
+@media (min-width: 720px) {
+  .role {
+    text-align: right;
+  }
+}
+
+/* линия под строкой прочерчивается от левого края к правому */
+.rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--c-wine-600);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 420ms cubic-bezier(0.16, 0.9, 0.24, 1);
+}
+
+.entry:hover .rule,
+.entry:focus-visible .rule {
+  transform: scaleX(1);
+}
+
+.entry:hover .name,
+.entry:focus-visible .name {
+  color: var(--c-wine-700);
+}
+
+/* ------------------------------------------------------------- портрет */
+.preview {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .preview {
+    display: block;
+    position: sticky;
+    top: calc(var(--header-h, 150px) + var(--s-5));
+  }
+}
+
+.frame {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--c-navy-800);
+}
+
+.portrait {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 260ms var(--ease);
+}
+
+.portrait[data-on='true'] {
+  opacity: 1;
+}
+
+.previewName {
+  margin: var(--s-4) 0 0;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.015em;
+  color: var(--c-navy-900);
+}
+
+.previewRole {
+  margin: 2px 0 0;
+  font-size: var(--fs-small);
+  color: var(--c-ink-600);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row[data-in='true'] .entry {
+    animation: none;
+  }
+
+  .rule,
+  .portrait,
+  .name {
+    transition: none;
+  }
+}
+
+/* подпись под портретом: звание, диагностика, достижения */
+.previewNote {
+  margin: var(--s-3) 0 0;
+  font-size: var(--fs-caption);
+  line-height: 1.45;
+  color: var(--c-ink-600);
+}
+
+.previewList {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: var(--s-4) 0 0;
+  padding: var(--s-4) 0 0;
+  border-top: 1px solid var(--color-border);
+  list-style: none;
+}
+
+.previewPoint {
+  position: relative;
+  padding-left: 13px;
+  font-size: var(--fs-caption);
+  line-height: 1.45;
+  color: var(--c-ink-700);
+}
+
+.previewPoint::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.35em;
+  bottom: 0.35em;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--c-wine-600);
+}
