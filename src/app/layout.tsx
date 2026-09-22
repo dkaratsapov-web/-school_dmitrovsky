@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import '@/styles/globals.css';
 import { SiteHeader } from '@/components/site/SiteHeader';
 import { Footer } from '@/components/site/Footer';
+import { SiteChrome } from '@/components/site/SiteChrome';
 import { CookieNotice } from '@/components/ui/CookieNotice';
 import { contacts, cookieNotice, siteName, siteUrl } from '@/content/site';
 
@@ -47,13 +48,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <main id="main">{children}</main>
 
-        <Footer contacts={contacts} />
+        <SiteChrome>
+          <Footer contacts={contacts} />
+        </SiteChrome>
 
-        <CookieNotice
-          text={cookieNotice.text}
-          policyLabel={cookieNotice.policyLabel}
-          acceptLabel={cookieNotice.acceptLabel}
-        />
+        <SiteChrome>
+          <CookieNotice
+            text={cookieNotice.text}
+            policyLabel={cookieNotice.policyLabel}
+            acceptLabel={cookieNotice.acceptLabel}
+          />
+        </SiteChrome>
       </body>
     </html>
   );

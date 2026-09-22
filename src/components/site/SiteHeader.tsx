@@ -56,6 +56,9 @@ export function SiteHeader() {
   const [here, setHere] = useState<string | null>(null);
   const [marker, setMarker] = useState<Marker>({ left: 0, width: 0, visible: false });
 
+  /* админка — служебная страница: шапка и подвал сайта ей не нужны */
+  const isAdmin = pathname?.startsWith('/admin') === true;
+
   const headerRef = useRef<HTMLElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const progressRef = useRef<HTMLSpanElement>(null);
@@ -168,6 +171,8 @@ export function SiteHeader() {
             : { label: item.label, onSelect: () => item.info && setInfo(item.info) },
         ],
   );
+
+  if (isAdmin) return null;
 
   return (
     <header ref={headerRef} className={[s.header, compact ? s.compact : ''].filter(Boolean).join(' ')}>
