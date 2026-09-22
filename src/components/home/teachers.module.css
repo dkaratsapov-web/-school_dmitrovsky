@@ -46,7 +46,8 @@
 
 @media (min-width: 1100px) {
   .body {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
+    /* портрет слева и крупно: блок про людей, лицо важнее перечня фамилий */
+    grid-template-columns: minmax(0, 460px) minmax(0, 1fr);
   }
 }
 
@@ -56,6 +57,26 @@
   padding: 0;
   list-style: none;
   border-top: 1px solid var(--color-border);
+}
+
+/* две колонки имён: в одну они растягивались на всю ширину, и между
+   именем и должностью оставалась пустая полоса */
+@media (min-width: 1100px) {
+  .list {
+    columns: 2;
+    column-gap: clamp(2rem, 3.5vw, 3.5rem);
+    column-rule: 1px solid var(--color-border);
+    border-top: 0;
+  }
+
+  .row {
+    break-inside: avoid;
+  }
+
+  .row:first-child,
+  .list > .row:nth-child(11) {
+    border-top: 1px solid var(--color-border);
+  }
 }
 
 .row {
@@ -93,17 +114,10 @@
   transition: color var(--t-fast) var(--ease);
 }
 
-@media (min-width: 720px) {
-  .entry {
-    grid-template-columns: 56px minmax(0, 1fr) minmax(0, 20rem);
-    align-items: baseline;
-  }
-}
-
 /* на широком экране портрет виден рядом со списком — миниатюра лишняя */
 @media (min-width: 1100px) {
   .entry {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 21rem);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .thumb {
@@ -119,13 +133,6 @@
   object-fit: cover;
   object-position: center 22%;
   filter: saturate(0.85);
-}
-
-@media (min-width: 720px) {
-  .thumb {
-    grid-row: auto;
-    align-self: center;
-  }
 }
 
 .name {
@@ -146,11 +153,7 @@
   color: var(--c-ink-600);
 }
 
-@media (min-width: 720px) {
-  .role {
-    text-align: right;
-  }
-}
+
 
 /* линия под строкой прочерчивается от левого края к правому */
 .rule {
@@ -189,6 +192,10 @@
 }
 
 .frame {
+  box-shadow: 0 24px 60px rgba(0, 21, 45, 0.18);
+}
+
+.frame {
   position: relative;
   aspect-ratio: 3 / 4;
   overflow: hidden;
@@ -211,17 +218,18 @@
 }
 
 .previewName {
-  margin: var(--s-4) 0 0;
+  margin: var(--s-5) 0 0;
   font-family: var(--font-display);
-  font-size: 1.125rem;
+  font-size: clamp(1.25rem, 1.05rem + 0.5vw, 1.625rem);
+  letter-spacing: -0.02em;
   font-weight: var(--fw-bold);
   letter-spacing: -0.015em;
   color: var(--c-navy-900);
 }
 
 .previewRole {
-  margin: 2px 0 0;
-  font-size: var(--fs-small);
+  margin: 4px 0 0;
+  font-size: var(--fs-body);
   color: var(--c-ink-600);
 }
 
@@ -240,7 +248,7 @@
 /* подпись под портретом: звание, диагностика, достижения */
 .previewNote {
   margin: var(--s-3) 0 0;
-  font-size: var(--fs-caption);
+  font-size: var(--fs-small);
   line-height: 1.45;
   color: var(--c-ink-600);
 }
@@ -257,8 +265,8 @@
 
 .previewPoint {
   position: relative;
-  padding-left: 13px;
-  font-size: var(--fs-caption);
+  padding-left: 14px;
+  font-size: var(--fs-small);
   line-height: 1.45;
   color: var(--c-ink-700);
 }

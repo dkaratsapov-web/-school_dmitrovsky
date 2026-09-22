@@ -17,8 +17,10 @@ import s from './teachers.module.css';
  * и разглядеть в ней кого-то конкретного нельзя. Поэтому блок собран как
  * список коллектива: строка на человека, имя крупно, должность справа.
  *
- * На широком экране рядом со списком висит портрет того, на кого наведён
- * курсор или переведён фокус, — так список остаётся списком, а лица видно.
+ * На широком экране слева стоит крупный портрет того, на кого наведён курсор
+ * или переведён фокус, с должностью и достижениями: в блоке про людей лицо
+ * важнее перечня фамилий. Список идёт справа в две колонки — так между
+ * именем и должностью не остаётся пустой полосы.
  * Портрет декоративный: всё то же самое открывается в окне по нажатию.
  *
  * Движение отвечает на действие: под наведённой строкой прочерчивается
@@ -77,33 +79,7 @@ export function Teachers() {
         </div>
 
         <div className={s.body}>
-          <ul className={s.list} ref={listRef}>
-            {teachers.map((t, i) => (
-              <li className={s.row} key={t.name} data-row="" style={{ '--i': i % 8 } as React.CSSProperties}>
-                <button
-                  className={s.entry}
-                  type="button"
-                  onMouseEnter={() => setHere(i)}
-                  onFocus={() => setHere(i)}
-                  onClick={() => setOpen(t)}
-                >
-                  <Image
-                    className={s.thumb}
-                    src={asset(t.photo.src)}
-                    alt=""
-                    width={t.photo.width}
-                    height={t.photo.height}
-                    sizes="64px"
-                  />
-                  <span className={s.name}>{t.name}</span>
-                  <span className={s.role}>{t.role}</span>
-                  <span className={s.rule} aria-hidden="true" />
-                </button>
-              </li>
-            ))}
-          </ul>
-
-          {/* портрет рядом со списком: повторяет строку под курсором */}
+          {/* портрет: главное в блоке, повторяет строку под курсором */}
           <div className={s.preview} aria-hidden="true">
             <div className={s.frame}>
               {teachers.map((t, i) => (
@@ -138,6 +114,32 @@ export function Teachers() {
               </ul>
             ) : null}
           </div>
+          <ul className={s.list} ref={listRef}>
+            {teachers.map((t, i) => (
+              <li className={s.row} key={t.name} data-row="" style={{ '--i': i % 8 } as React.CSSProperties}>
+                <button
+                  className={s.entry}
+                  type="button"
+                  onMouseEnter={() => setHere(i)}
+                  onFocus={() => setHere(i)}
+                  onClick={() => setOpen(t)}
+                >
+                  <Image
+                    className={s.thumb}
+                    src={asset(t.photo.src)}
+                    alt=""
+                    width={t.photo.width}
+                    height={t.photo.height}
+                    sizes="64px"
+                  />
+                  <span className={s.name}>{t.name}</span>
+                  <span className={s.role}>{t.role}</span>
+                  <span className={s.rule} aria-hidden="true" />
+                </button>
+              </li>
+            ))}
+          </ul>
+
         </div>
       </div>
 
