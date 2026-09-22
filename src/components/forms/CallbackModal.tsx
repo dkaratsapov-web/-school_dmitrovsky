@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { ConsultInline } from './ConsultInline';
+import { Icon } from '../ui/Icon';
 import { asset } from '@/lib/asset';
 import s from './callback-modal.module.css';
 
@@ -35,14 +36,22 @@ type Props = {
 type Shot = { src: string; width: number; height: number; alt: string };
 
 /**
- * Панель со снимками. Своё состояние и свой ключ: при смене материала
- * панель пересобирается и показывает первый кадр, а не тот, что листали
- * в прошлом окне.
+ * Панель со снимками.
+ *
+ * Своё состояние и свой ключ: при смене материала панель пересобирается
+ * и показывает первый кадр, а не тот, что листали в прошлом окне.
+ *
+ * Листается стрелками по краям кадра, точки внизу показывают, где мы
+ * в наборе. Полоса миниатюр отсюда убрана: у нижнего края окна она
+ * упиралась в скругление и вставала криво.
  */
 function Gallery({ shots }: { shots: readonly Shot[] }) {
   const [at, setAt] = useState(0);
   const shown = shots[at] ?? shots[0];
   if (!shown) return null;
+
+  const many = shots.length > 1;
+  const step = (d: number) => setAt((i) => (i + d + shots.length) % shots.length);
 
   return (
     <div className={s.media}>
@@ -55,41 +64,45 @@ function Gallery({ shots }: { shots: readonly Shot[] }) {
         sizes="(min-width: 760px) 380px, 100vw"
       />
 
-      {shots.length > 1 ? (
-        <div className={s.strip} role="tablist" aria-label="Снимки">
-          {shots.map((sh, i) => (
-            <button
-              className={[s.thumb, i === at ? s.thumbOn : ''].filter(Boolean).join(' ')}
-              key={sh.src}
-              type="button"
-              role="tab"
-              aria-selected={i === at}
-              aria-label={`Снимок ${i + 1} из ${shots.length}`}
-              onClick={() => setAt(i)}
-            >
-              <Image
-                className={s.thumbShot}
-                src={asset(sh.src)}
-                alt=""
-                width={sh.width}
-                height={sh.height}
-                sizes="72px"
+      {many ? (
+        <>
+          <button
+            className={[s.step, s.stepPrev].join(' ')}
+            type="button"
+            aria-label="Предыдущий снимок"
+            onClick={() => step(-1)}
+          >
+            <Icon name="chevron-left" size={22} />
+          </button>
+
+          <button
+            className={[s.step, s.stepNext].join(' ')}
+            type="button"
+            aria-label="Следующий снимок"
+            onClick={() => step(1)}
+          >
+            <Icon name="chevron-right" size={22} />
+          </button>
+
+          <div className={s.dots} role="tablist" aria-label="Снимки">
+            {shots.map((sh, i) => (
+              <button
+                className={[s.dot, i === at ? s.dotOn : ''].filter(Boolean).join(' ')}
+                key={sh.src}
+                type="button"
+                role="tab"
+                aria-selected={i === at}
+                aria-label={`Снимок ${i + 1} из ${shots.length}`}
+                onClick={() => setAt(i)}
               />
-            </button>
-          ))}
-        </div>
+            ))}
+          </div>
+        </>
       ) : null}
     </div>
   );
 }
 
-/**
- * Окно с формой заявки.
- *
- * Сделано на теге dialog: браузер сам держит фокус внутри окна, закрывает
- * его по Esc и возвращает фокус кнопке, которая окно открыла. Это дешевле
- * и надёжнее, чем собственная ловушка фокуса.
- */
 export function CallbackModal({
   open,
   onClose,

@@ -205,51 +205,100 @@
   }
 }
 
-/* ------------------------------------------------- ряд миниатюр снимков */
-.strip {
+/* ----------------------------------------------- листание снимков */
+.step {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  gap: 6px;
-  padding: 10px;
-  background: linear-gradient(to top, rgba(0, 12, 28, 0.82), transparent);
-}
-
-.thumb {
-  flex: 1 1 0;
-  min-width: 0;
-  aspect-ratio: 3 / 2;
+  top: 50%;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-top: -22px;
   padding: 0;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 2px;
-  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: var(--r-pill);
+  background: rgba(0, 12, 28, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
   cursor: pointer;
-  opacity: 0.6;
-  transition: opacity var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease),
+    transform var(--t-fast) var(--ease);
 }
 
-.thumb:hover,
-.thumb:focus-visible {
-  opacity: 0.9;
+.stepPrev {
+  left: 12px;
 }
 
-.thumbOn {
-  opacity: 1;
-  border-color: var(--c-wine-500);
+.stepNext {
+  right: 12px;
 }
 
-.thumbShot {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.step:hover,
+.step:focus-visible {
+  background: var(--c-wine-700);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.stepPrev:hover,
+.stepPrev:focus-visible {
+  transform: translateX(-2px);
+}
+
+.stepNext:hover,
+.stepNext:focus-visible {
+  transform: translateX(2px);
+}
+
+/* точки: сколько снимков и где мы в наборе */
+.dots {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  z-index: 1;
+  display: flex;
+  gap: 7px;
+  padding: 7px 10px;
+  transform: translateX(-50%);
+  border-radius: var(--r-pill);
+  background: rgba(0, 12, 28, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition: background-color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+}
+
+.dot:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.dotOn {
+  background: var(--c-wine-500);
+  transform: scale(1.35);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .thumb {
+  .step,
+  .dot {
     transition: none;
+  }
+
+  .step:hover,
+  .dotOn {
+    transform: none;
+  }
+
+  .dots {
+    transform: translateX(-50%);
   }
 }
