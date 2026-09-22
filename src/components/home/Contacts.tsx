@@ -5,7 +5,16 @@ import { ConsultInline } from '../forms/ConsultInline';
 import { BrandIcon } from '../ui/BrandIcon';
 import type { BrandName } from '../ui/BrandIcon';
 import { Icon } from '../ui/Icon';
-import { consultAction, consultText, consultTitle, contactLabels } from '@/content/contacts-block';
+import {
+  consultAction,
+  consultText,
+  consultTitle,
+  contactLabels,
+  mapEmbed,
+  mapLink,
+  mapLinkLabel,
+  mapTitle,
+} from '@/content/contacts-block';
 import { contacts } from '@/content/site';
 import { prefersReducedMotion } from '@/lib/motion';
 import s from './contacts.module.css';
@@ -24,6 +33,10 @@ function brandOf(network: string): BrandName | null {
  * во всю ширину колонки, по ним удобно попасть пальцем.
  *
  * Справа форма консультации с текстами со страницы /contacts.
+ *
+ * Снизу карта с меткой школы: блок заканчивается самим местом, а не ещё
+ * одной строкой текста. Карта грузится отложенно, под ней стоит подложка
+ * со знаком школы — если виджет не открылся, полоса не остаётся пустой.
  *
  * Движение одно и фоновое: орбита атома за адресом смещается по мере
  * прокрутки. Это декоративный слой без текста, параллакс здесь допустим.
@@ -129,6 +142,32 @@ export function Contacts() {
           <p className={s.formTitle}>{consultTitle}</p>
           <p className={s.formText}>{consultText}</p>
           <ConsultInline title="" action={consultAction} />
+        </div>
+
+        {/* карта школы: закрывает блок снимком места */}
+        <div className={s.map}>
+          {/* подложка видна, пока карта грузится, и если её заблокировали */}
+          <div className={s.mapHold} aria-hidden="true">
+            <svg className={s.mapMark} viewBox="0 0 120 120">
+              <ellipse cx="60" cy="60" rx="50" ry="20" />
+              <ellipse cx="60" cy="60" rx="50" ry="20" transform="rotate(60 60 60)" />
+              <ellipse cx="60" cy="60" rx="50" ry="20" transform="rotate(120 60 60)" />
+              <circle className={s.mapCore} cx="60" cy="60" r="7" />
+            </svg>
+          </div>
+
+          <iframe
+            className={s.mapFrame}
+            src={mapEmbed}
+            title={mapTitle}
+            loading="lazy"
+            allowFullScreen
+          />
+
+          <a className={s.mapLink} href={mapLink} target="_blank" rel="noopener noreferrer">
+            <Icon name="pin" size={17} />
+            <span>{mapLinkLabel}</span>
+          </a>
         </div>
       </div>
     </section>

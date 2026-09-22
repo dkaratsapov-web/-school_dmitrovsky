@@ -25,3 +25,22 @@ export const contactLabels = {
   email: 'Электронная почта',
   socials: 'Соцсети',
 } as const;
+
+/**
+ * Карта школы.
+ *
+ * Встраивается та же карта-конструктор, что стоит на действующем сайте
+ * (source_html/contacts.html, идентификатор конструктора сохранён без
+ * изменений) — она заведомо открывается. Кнопка «Открыть в Яндекс Картах»
+ * ведёт по ссылке на точку, которую передал владелец.
+ *
+ * scroll=false: карта не перехватывает прокрутку страницы, когда курсор
+ * проходит над ней.
+ */
+export const mapLink = 'https://yandex.ru/maps/-/CXENEHO2';
+export const mapEmbed =
+  'https://yandex.ru/map-widget/v1/?um=constructor%3A' +
+  'c904572df3a82a1825e2cb90b501c9c5db29373e7a1c281a75d1e9ac448b47ac' +
+  '&source=constructor&lang=ru_RU&scroll=false';
+export const mapLinkLabel = 'Открыть в Яндекс Картах';
+export const mapTitle = 'Карта: ГБОУ Школа «Дмитровский», Карельский бульвар, д. 20';

@@ -94,9 +94,13 @@ export function Teachers() {
                   data-on={i === here ? 'true' : undefined}
                 />
               ))}
+
+              {/* подпись лежит на снимке: имя принадлежит лицу */}
+              <div className={s.caption}>
+                <p className={s.previewName}>{shown?.name}</p>
+                <p className={s.previewRole}>{shown?.role}</p>
+              </div>
             </div>
-            <p className={s.previewName}>{shown?.name}</p>
-            <p className={s.previewRole}>{shown?.role}</p>
 
             {shown?.notes?.map((n) => (
               <p className={s.previewNote} key={n}>
