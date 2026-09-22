@@ -105,8 +105,16 @@
 
 @media (min-width: 1000px) {
   .wall {
+    /* два ряда по четыре должны умещаться в один экран, поэтому ширина
+       стены ограничена, а высота карточки считается от высоты окна */
+    max-width: 1180px;
     grid-template-columns: repeat(4, 1fr);
     align-items: start;
+  }
+
+  .face {
+    aspect-ratio: auto;
+    height: clamp(190px, 29vh, 320px);
   }
 
   /* дуга: середина ряда приподнята, края опущены */
