@@ -490,3 +490,8 @@ button.face:focus-visible .rule {
     transform: none;
   }
 }
+
+/* превью в админке: одна плитка без заголовка и переключателей */
+.bare {
+  padding-block: var(--s-4);
+}

@@ -2,7 +2,13 @@
 
 import { useState } from 'react';
 import { Icon } from '../ui/Icon';
-import { reviewsLead, rutubeEmbed, videoReviews, yandexLink, yandexOrgId } from '@/content/reviews';
+import {
+  reviewsLead,
+  rutubeEmbed,
+  videoReviews as allVideos,
+  yandexLink,
+  yandexOrgId,
+} from '@/content/reviews';
 import s from './reviews.module.css';
 
 /**
@@ -23,7 +29,14 @@ import s from './reviews.module.css';
  * Пока школа не передала ни одного ролика и не подтвердила карточку
  * организации, блок не выводится совсем.
  */
-export function Reviews() {
+type Props = {
+  /** Подмена роликов: админка показывает в превью один отзыв. */
+  videos?: readonly (typeof allVideos)[number][];
+  /** Превью: заголовок блока не нужен, важна карточка. */
+  bare?: boolean;
+};
+
+export function Reviews({ videos: videoReviews = allVideos, bare = false }: Props = {}) {
   const [tab, setTab] = useState<'video' | 'maps'>('video');
 
   const hasVideo = videoReviews.length > 0;
@@ -31,16 +44,22 @@ export function Reviews() {
   if (!hasVideo && !hasMaps) return null;
 
   return (
-    <section className={s.section} id="reviews" aria-labelledby="reviews-title">
+    <section
+      className={[s.section, bare ? s.bare : ''].filter(Boolean).join(' ')}
+      id="reviews"
+      {...(bare ? { 'aria-label': 'Превью материала' } : { 'aria-labelledby': 'reviews-title' })}
+    >
       <div className={s.inner}>
-        <div className={s.head}>
-          <h2 id="reviews-title" className={s.title}>
-            Отзывы
-          </h2>
-          <p className={s.lead}>{reviewsLead}</p>
-        </div>
+        {bare ? null : (
+          <div className={s.head}>
+            <h2 id="reviews-title" className={s.title}>
+              Отзывы
+            </h2>
+            <p className={s.lead}>{reviewsLead}</p>
+          </div>
+        )}
 
-        {hasVideo && hasMaps ? (
+        {hasVideo && hasMaps && !bare ? (
           <div className={s.switch} role="tablist" aria-label="Источник отзывов">
             <span
               className={[s.slider, tab === 'maps' ? s.sliderRight : ''].filter(Boolean).join(' ')}

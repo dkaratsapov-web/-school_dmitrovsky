@@ -423,3 +423,12 @@
     transform: none;
   }
 }
+
+/* превью в админке: один ролик без заголовка раздела */
+.bare {
+  padding-block: var(--s-4);
+}
+
+.bare .inner {
+  display: block;
+}

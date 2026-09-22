@@ -441,3 +441,8 @@
     cursor: var(--cursor-dark-lg);
   }
 }
+
+/* превью в админке: один материал без заголовка раздела */
+.bare {
+  padding-block: var(--s-4);
+}

@@ -2,7 +2,8 @@
 
 import Image from 'next/image';
 import { useId, useState } from 'react';
-import { news } from '@/content/news';
+import { news as newsItems } from '@/content/news';
+import type { NewsItem } from '@/content/news';
 import { asset } from '@/lib/asset';
 import s from './news-deck.module.css';
 
@@ -35,7 +36,14 @@ function Placeholder() {
  * пункт помечен для чтения с экрана. Материалы никуда не спрятаны —
  * на странице «Мероприятия» тот же список целиком.
  */
-export function NewsDeck() {
+type Props = {
+  /** Подмена материалов: админка показывает в превью одну новость. */
+  items?: readonly NewsItem[];
+  /** Превью: заголовок блока не нужен, важен сам материал. */
+  bare?: boolean;
+};
+
+export function NewsDeck({ items: news = newsItems, bare = false }: Props = {}) {
   const [active, setActive] = useState(0);
   /* Какой снимок материала показан крупно. */
   const [shot, setShot] = useState(0);
@@ -54,13 +62,19 @@ export function NewsDeck() {
   };
 
   return (
-    <section className={s.section} id="news" aria-labelledby="news-title">
+    <section
+      className={[s.section, bare ? s.bare : ''].filter(Boolean).join(' ')}
+      id="news"
+      {...(bare ? { 'aria-label': 'Превью материала' } : { 'aria-labelledby': 'news-title' })}
+    >
       <div className={s.inner}>
-        <div className={s.head}>
-          <h2 id="news-title" className={s.title}>
-            Новости школы
-          </h2>
-        </div>
+        {bare ? null : (
+          <div className={s.head}>
+            <h2 id="news-title" className={s.title}>
+              Новости школы
+            </h2>
+          </div>
+        )}
 
         <div className={[s.deck, single ? s.deckSingle : ''].filter(Boolean).join(' ')}>
           {/* ---------------------------------------------- крупный материал */}

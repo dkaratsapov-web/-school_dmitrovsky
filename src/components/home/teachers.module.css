@@ -48,8 +48,8 @@
 
 @media (min-width: 1100px) {
   .body {
-    /* портрет слева и крупно: блок про людей, лицо важнее перечня фамилий */
-    grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+    /* три равные доли: портрет и две колонки списка одной ширины */
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
   }
 }
 
@@ -66,7 +66,8 @@
 @media (min-width: 1100px) {
   .list {
     columns: 2;
-    column-gap: clamp(2rem, 3.5vw, 3.5rem);
+    /* тот же просвет, что между портретом и списком: доли равны */
+    column-gap: clamp(1.5rem, 3vw, 3rem);
     column-rule: 1px solid var(--color-border);
     border-top: 0;
   }
@@ -302,4 +303,9 @@
   width: 2px;
   border-radius: 1px;
   background: var(--c-wine-600);
+}
+
+/* превью в админке: один педагог без заголовка раздела */
+.bare {
+  padding-block: var(--s-4);
 }

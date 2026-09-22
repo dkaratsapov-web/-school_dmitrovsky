@@ -458,3 +458,133 @@
   padding-top: var(--s-4);
   border-top: 1px solid var(--color-border);
 }
+
+/* --------------------------------------------------------- превью */
+.stage {
+  padding: var(--s-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-lg);
+  background: var(--c-navy-50);
+}
+
+.stageHead {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: var(--fs-small);
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  color: var(--c-navy-900);
+  cursor: pointer;
+  list-style: none;
+}
+
+.stageHint {
+  font-family: inherit;
+  font-size: var(--fs-caption);
+  font-weight: 400;
+  color: var(--c-ink-500);
+}
+
+.panes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4);
+  margin-top: var(--s-3);
+}
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+/* компьютер занимает остаток строки, телефон стоит в своей ширине */
+.pane:first-child {
+  flex: 1 1 420px;
+}
+
+.pane:last-child {
+  flex: 0 1 390px;
+}
+
+.paneLabel {
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-semibold);
+  color: var(--c-ink-600);
+}
+
+.paneSize {
+  color: var(--c-ink-300);
+}
+
+.paneBox {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  background: #fff;
+}
+
+.paneFrame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 0;
+  transform-origin: top left;
+}
+
+/* ------------------------------------------------------ публикация */
+.keys {
+  width: 100%;
+  margin-top: var(--s-3);
+  padding: var(--s-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  background: #fff;
+}
+
+.keysHead {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: var(--fw-semibold);
+  color: var(--c-navy-900);
+  cursor: pointer;
+  list-style: none;
+}
+
+.keysHead::-webkit-details-marker {
+  display: none;
+}
+
+.keysBody {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: var(--s-3);
+}
+
+.keysBody .input {
+  flex: 1 1 260px;
+}
+
+.keysNote {
+  flex: 1 1 100%;
+  margin: 0;
+  font-size: var(--fs-caption);
+  line-height: 1.5;
+  color: var(--c-ink-500);
+}
+
+.busy {
+  opacity: 0.6;
+  cursor: progress;
+}

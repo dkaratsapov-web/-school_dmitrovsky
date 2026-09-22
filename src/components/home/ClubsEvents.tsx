@@ -127,16 +127,34 @@ function Mark() {
  * по очереди — это единственное движение, которое запускается само.
  * Остальное отвечает на действие: нажатие открывает окно материала.
  */
-export function ClubsEvents() {
-  const [tab, setTab] = useState<Tab>('clubs');
+type Props = {
+  /** Подмена материалов: админка показывает в превью один кружок. */
+  clubsData?: readonly Club[];
+  eventsData?: readonly EventItem[];
+  /** Раздел и класс, с которых открывается блок. */
+  startTab?: Tab;
+  startGroup?: ClubGroup;
+  /** Превью: заголовок и переключатели не нужны, важна одна плитка. */
+  bare?: boolean;
+};
+
+export function ClubsEvents({
+  clubsData = clubs,
+  eventsData = events,
+  startTab = 'clubs',
+  startGroup,
+  bare = false,
+}: Props = {}) {
+  const [tab, setTab] = useState<Tab>(startTab);
   /* Разбивка по классам без общей вкладки: раздел открывается
      на младших классах, остальные группы рядом. */
-  const [group, setGroup] = useState<ClubGroup>(clubGroups[0] ?? '');
+  const [group, setGroup] = useState<ClubGroup>(startGroup ?? clubGroups[0] ?? '');
   const [open, setOpen] = useState<Detail | null>(null);
 
   /* Пункты меню ведут на #clubs и #events — раздел подстраивается под адрес.
      Проверка отложена на кадр, чтобы не менять состояние в теле эффекта. */
   useEffect(() => {
+    if (bare) return;
     const apply = () => {
       if (window.location.hash === '#events') setTab('events');
       if (window.location.hash === '#clubs') setTab('clubs');
@@ -147,46 +165,52 @@ export function ClubsEvents() {
       window.clearTimeout(id);
       window.removeEventListener('hashchange', apply);
     };
-  }, []);
+  }, [bare]);
 
   const tiles: Tile[] =
     tab === 'clubs'
-      ? clubs.filter((c) => c.groups.includes(group)).map(clubTile)
-      : events.map(eventTile);
+      ? clubsData.filter((c) => bare || c.groups.includes(group)).map(clubTile)
+      : eventsData.map(eventTile);
 
   return (
-    <section className={s.section} id="clubs" aria-labelledby="clubs-title">
+    <section
+      className={[s.section, bare ? s.bare : ''].filter(Boolean).join(' ')}
+      id="clubs"
+      {...(bare ? { 'aria-label': 'Превью материала' } : { 'aria-labelledby': 'clubs-title' })}
+    >
       <div className={s.inner}>
-        <div className={s.head}>
-          <h2 id="clubs-title" className={s.title}>
-            Кружки и мероприятия
-          </h2>
+        {bare ? null : (
+          <div className={s.head}>
+            <h2 id="clubs-title" className={s.title}>
+              Кружки и мероприятия
+            </h2>
 
-          <div className={s.switch} role="tablist" aria-label="Разделы">
-            <span className={[s.slider, tab === 'events' ? s.sliderRight : ''].filter(Boolean).join(' ')} aria-hidden="true" />
-            <button
-              className={[s.tab, tab === 'clubs' ? s.tabOn : ''].filter(Boolean).join(' ')}
-              type="button"
-              role="tab"
-              aria-selected={tab === 'clubs'}
-              onClick={() => setTab('clubs')}
-            >
-              Кружки
-            </button>
-            <button
-              className={[s.tab, tab === 'events' ? s.tabOn : ''].filter(Boolean).join(' ')}
-              type="button"
-              role="tab"
-              aria-selected={tab === 'events'}
-              onClick={() => setTab('events')}
-            >
-              Мероприятия
-            </button>
+            <div className={s.switch} role="tablist" aria-label="Разделы">
+              <span className={[s.slider, tab === 'events' ? s.sliderRight : ''].filter(Boolean).join(' ')} aria-hidden="true" />
+              <button
+                className={[s.tab, tab === 'clubs' ? s.tabOn : ''].filter(Boolean).join(' ')}
+                type="button"
+                role="tab"
+                aria-selected={tab === 'clubs'}
+                onClick={() => setTab('clubs')}
+              >
+                Кружки
+              </button>
+              <button
+                className={[s.tab, tab === 'events' ? s.tabOn : ''].filter(Boolean).join(' ')}
+                type="button"
+                role="tab"
+                aria-selected={tab === 'events'}
+                onClick={() => setTab('events')}
+              >
+                Мероприятия
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* второй уровень: кружки разбиты по классам */}
-        {tab === 'clubs' ? (
+        {tab === 'clubs' && !bare ? (
           <div className={s.groups} role="tablist" aria-label="Классы">
             {clubGroups.map((g) => (
               <button

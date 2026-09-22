@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { CallbackModal } from '../forms/CallbackModal';
 import { InfoBody } from '../ui/InfoBody';
-import { teachers, teachersLead } from '@/content/teachers';
+import { teachers as allTeachers, teachersLead } from '@/content/teachers';
 import type { Teacher } from '@/content/teachers';
 import { asset } from '@/lib/asset';
 import { prefersReducedMotion } from '@/lib/motion';
@@ -27,7 +27,14 @@ import s from './teachers.module.css';
  * линия, портрет меняется перекрёстным проявлением. Появление строк при
  * прокрутке — одно общее движение на весь блок, линиями, а не всплытием.
  */
-export function Teachers() {
+type Props = {
+  /** Подмена списка: админка показывает в превью одного педагога. */
+  items?: readonly Teacher[];
+  /** Превью: заголовок блока не нужен, важна карточка. */
+  bare?: boolean;
+};
+
+export function Teachers({ items: teachers = allTeachers, bare = false }: Props = {}) {
   const listRef = useRef<HTMLUListElement>(null);
   const [here, setHere] = useState(0);
   const [open, setOpen] = useState<Teacher | null>(null);
@@ -69,14 +76,20 @@ export function Teachers() {
   const shown = teachers[here] ?? teachers[0];
 
   return (
-    <section className={s.section} id="teachers" aria-labelledby="teachers-title">
+    <section
+      className={[s.section, bare ? s.bare : ''].filter(Boolean).join(' ')}
+      id="teachers"
+      {...(bare ? { 'aria-label': 'Превью материала' } : { 'aria-labelledby': 'teachers-title' })}
+    >
       <div className={s.inner}>
-        <div className={s.head}>
-          <h2 id="teachers-title" className={s.title}>
-            Педагоги
-          </h2>
-          <p className={s.lead}>{teachersLead}</p>
-        </div>
+        {bare ? null : (
+          <div className={s.head}>
+            <h2 id="teachers-title" className={s.title}>
+              Педагоги
+            </h2>
+            <p className={s.lead}>{teachersLead}</p>
+          </div>
+        )}
 
         <div className={s.body}>
           {/* портрет: главное в блоке, повторяет строку под курсором */}

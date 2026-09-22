@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import clubsData from '@/content/data/clubs.json';
 import newsData from '@/content/data/news.json';
 import teachersData from '@/content/data/teachers.json';
@@ -15,6 +15,8 @@ import {
 import type { Schema } from '@/content/admin-schema';
 import { FieldEditor } from './fields';
 import type { Item } from './fields';
+import { Preview } from './Preview';
+import { publishFile, repo } from './publish';
 import s from './admin.module.css';
 
 /* Слепок опубликованных материалов: с ним сравниваем правки. */
@@ -33,6 +35,16 @@ const PUBLISHED: Data = {
 };
 
 const STORE = 'sd-admin-draft-1';
+/* Ключ доступа лежит только в браузере редактора. */
+const KEY = 'sd-admin-key-1';
+
+function readKey(): string {
+  try {
+    return window.localStorage.getItem(KEY) ?? '';
+  } catch {
+    return '';
+  }
+}
 
 type TabKey = 'clubs' | 'events' | 'news' | 'teachers' | 'reviews';
 
@@ -90,6 +102,10 @@ export function AdminApp() {
   const [tab, setTab] = useState<TabKey>('clubs');
   const [at, setAt] = useState(0);
   const [note, setNote] = useState('');
+  const [hasKey, setHasKey] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [keyOpen, setKeyOpen] = useState(false);
+  const keyRef = useRef<HTMLInputElement>(null);
 
   /* Черновик из прошлого захода. Чтение отложено на кадр: состояние
      нельзя менять прямо в теле эффекта. */
@@ -101,6 +117,7 @@ export function AdminApp() {
           setData(JSON.parse(raw) as Data);
           setNote('Открыт черновик из этого браузера');
         }
+        setHasKey(readKey() !== '');
       } catch {
         /* хранилище недоступно — работаем без черновика */
       }
@@ -159,7 +176,39 @@ export function AdminApp() {
     setAt(to);
   };
 
-  const dirty = JSON.stringify(data) !== JSON.stringify(PUBLISHED);
+  /* Что расходится с сайтом: публикуем только изменённые разделы. */
+  const changed = (Object.keys(FILE_NAMES) as (keyof Data)[]).filter(
+    (f) => JSON.stringify(data[f]) !== JSON.stringify(PUBLISHED[f]),
+  );
+  const dirty = changed.length > 0;
+
+  const publish = async () => {
+    const token = readKey();
+    if (token === '') {
+      setNote('Сначала вставьте ключ доступа — он ниже, под кнопками');
+      return;
+    }
+    if (changed.length === 0) {
+      setNote('Публиковать нечего: правок нет');
+      return;
+    }
+
+    setBusy(true);
+    setNote('Публикую…');
+    try {
+      for (const f of changed) {
+        await publishFile(token, FILE_NAMES[f], `${JSON.stringify(data[f], null, 2)}\n`);
+      }
+      setNote(
+        `Опубликовано: ${changed.map((f) => FILE_NAMES[f]).join(', ')}. ` +
+          'Сайт пересоберётся сам за две-три минуты.',
+      );
+    } catch (e) {
+      setNote(`Не опубликовалось — ${(e as Error).message}`);
+    } finally {
+      setBusy(false);
+    }
+  };
   const fileText = `${JSON.stringify(data[current.file], null, 2)}\n`;
 
   return (
@@ -236,6 +285,8 @@ export function AdminApp() {
                 </button>
               </div>
 
+              <Preview tab={current.key} item={item} />
+
               {current.schema.fields.map((f) => (
                 <FieldEditor key={f.key} field={f} item={item} onChange={putItem} />
               ))}
@@ -250,7 +301,16 @@ export function AdminApp() {
 
       <footer className={s.foot}>
         <button
-          className={s.primary}
+          className={[s.primary, busy ? s.busy : ''].filter(Boolean).join(' ')}
+          type="button"
+          disabled={busy}
+          onClick={() => void publish()}
+        >
+          {busy ? 'Публикую…' : 'Опубликовать на сайте'}
+        </button>
+
+        <button
+          className={s.small}
           type="button"
           onClick={() => download(FILE_NAMES[current.file], fileText)}
         >
@@ -304,6 +364,68 @@ export function AdminApp() {
         >
           Вернуть опубликованное
         </button>
+
+        <div className={s.keys}>
+          <button
+            className={s.keysHead}
+            type="button"
+            onClick={() => setKeyOpen((v) => !v)}
+            aria-expanded={keyOpen}
+          >
+            Ключ доступа для публикации {hasKey ? '— сохранён' : '— не задан'}
+          </button>
+
+          <div className={s.keysBody} hidden={!keyOpen}>
+            <input
+              className={s.input}
+              ref={keyRef}
+              type="password"
+              autoComplete="off"
+              placeholder="github_pat_…"
+            />
+            <button
+              className={s.small}
+              type="button"
+              onClick={() => {
+                const v = keyRef.current?.value.trim() ?? '';
+                try {
+                  if (v === '') window.localStorage.removeItem(KEY);
+                  else window.localStorage.setItem(KEY, v);
+                } catch {
+                  setNote('Браузер не даёт сохранить ключ');
+                  return;
+                }
+                if (keyRef.current) keyRef.current.value = '';
+                setHasKey(v !== '');
+                setNote(v === '' ? 'Ключ удалён' : 'Ключ сохранён в этом браузере');
+              }}
+            >
+              Сохранить
+            </button>
+            <button
+              className={s.small}
+              type="button"
+              onClick={() => {
+                try {
+                  window.localStorage.removeItem(KEY);
+                } catch {
+                  /* хранилище недоступно — ключа там и не было */
+                }
+                setHasKey(false);
+                setNote('Ключ удалён');
+              }}
+            >
+              Забыть
+            </button>
+
+            <p className={s.keysNote}>
+              Ключ нужен один раз: он остаётся в этом браузере и в сайт не попадает. Создаётся
+              в GitHub — Settings → Developer settings → Personal access tokens → Fine-grained,
+              доступ только к репозиторию <code>{repo.name}</code>, право Contents: Read and write.
+              На чужом компьютере после работы нажмите «Забыть».
+            </p>
+          </div>
+        </div>
       </footer>
     </div>
   );
