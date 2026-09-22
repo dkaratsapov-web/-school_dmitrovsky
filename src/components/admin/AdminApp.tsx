@@ -16,7 +16,9 @@ import type { Schema } from '@/content/admin-schema';
 import { FieldEditor } from './fields';
 import type { Item } from './fields';
 import { Preview } from './Preview';
-import { publishFile, repo } from './publish';
+import { publishFile, publishViaService, repo } from './publish';
+import { authReady, publishEndpoint } from '@/lib/auth';
+import type { Session } from '@/lib/auth';
 import s from './admin.module.css';
 
 /* Слепок опубликованных материалов: с ним сравниваем правки. */
@@ -97,7 +99,7 @@ function download(name: string, text: string) {
  * его не сбросили. Опубликованные материалы всегда доступны кнопкой
  * «Вернуть опубликованное».
  */
-export function AdminApp() {
+export function AdminApp({ session }: { session?: Session } = {}) {
   const [data, setData] = useState<Data>(() => copy(PUBLISHED));
   const [tab, setTab] = useState<TabKey>('clubs');
   const [at, setAt] = useState(0);
@@ -183,21 +185,28 @@ export function AdminApp() {
   const dirty = changed.length > 0;
 
   const publish = async () => {
-    const token = readKey();
-    if (token === '') {
-      setNote('Сначала вставьте ключ доступа — он ниже, под кнопками');
-      return;
-    }
     if (changed.length === 0) {
       setNote('Публиковать нечего: правок нет');
+      return;
+    }
+
+    const token = session ? '' : readKey();
+    if (!session && token === '') {
+      setNote('Сначала вставьте ключ доступа — он ниже, под кнопками');
       return;
     }
 
     setBusy(true);
     setNote('Публикую…');
     try {
-      for (const f of changed) {
-        await publishFile(token, FILE_NAMES[f], `${JSON.stringify(data[f], null, 2)}\n`);
+      if (session) {
+        const files: Record<string, string> = {};
+        for (const f of changed) files[FILE_NAMES[f]] = `${JSON.stringify(data[f], null, 2)}\n`;
+        await publishViaService(publishEndpoint(), session.token, files);
+      } else {
+        for (const f of changed) {
+          await publishFile(token, FILE_NAMES[f], `${JSON.stringify(data[f], null, 2)}\n`);
+        }
       }
       setNote(
         `Опубликовано: ${changed.map((f) => FILE_NAMES[f]).join(', ')}. ` +
@@ -365,7 +374,7 @@ export function AdminApp() {
           Вернуть опубликованное
         </button>
 
-        <div className={s.keys}>
+        <div className={s.keys} hidden={authReady}>
           <button
             className={s.keysHead}
             type="button"

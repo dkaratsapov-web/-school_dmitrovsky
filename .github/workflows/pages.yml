@@ -36,6 +36,13 @@ jobs:
 
       - name: Статическая сборка под Pages
         run: npm run build:pages
+        env:
+          # Вход в админку по почте. Значения публичные (адрес проекта
+          # и анонимный ключ) и задаются в Settings -> Secrets and
+          # variables -> Actions -> Variables. Пока их нет, админка
+          # открывается без входа — как раньше.
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
 
       # Без этого файла GitHub Pages игнорирует папку _next
       - name: Отключить Jekyll

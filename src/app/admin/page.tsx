@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { AdminApp } from '@/components/admin/AdminApp';
+import { Gate } from '@/components/admin/Gate';
 
 /**
  * Админка материалов сайта.
@@ -14,5 +14,5 @@ export const metadata: Metadata = {
 };
 
 export default function AdminPage() {
-  return <AdminApp />;
+  return <Gate />;
 }

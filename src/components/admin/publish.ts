@@ -71,3 +71,25 @@ export async function publishFile(token: string, file: string, text: string): Pr
 
   if (!res.ok) throw new Error(explain(res.status));
 }
+
+/**
+ * Публикация через сервис: ключ GitHub лежит на стороне Supabase,
+ * а браузер только показывает, что вошёл по почте. Так ключ не хранится
+ * у редактора и его нельзя утащить с чужого компьютера.
+ */
+export async function publishViaService(
+  endpoint: string,
+  token: string,
+  files: Record<string, string>,
+): Promise<void> {
+  const res = await fetch(endpoint, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ files }),
+  });
+
+  if (res.ok) return;
+  if (res.status === 401 || res.status === 403) throw new Error('вход устарел — войдите заново');
+  const text = await res.text().catch(() => '');
+  throw new Error(text.slice(0, 120) || `ошибка ${res.status}`);
+}
