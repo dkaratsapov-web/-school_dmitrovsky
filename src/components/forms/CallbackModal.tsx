@@ -56,12 +56,22 @@ function Gallery({ shots }: { shots: readonly Shot[] }) {
   return (
     <div className={s.media}>
       <Image
+        className={s.fill}
+        src={asset(shown.src)}
+        alt=""
+        aria-hidden="true"
+        width={shown.width}
+        height={shown.height}
+        sizes="(min-width: 760px) 470px, 100vw"
+      />
+
+      <Image
         className={s.shot}
         src={asset(shown.src)}
         alt={shown.alt}
         width={shown.width}
         height={shown.height}
-        sizes="(min-width: 760px) 380px, 100vw"
+        sizes="(min-width: 760px) 470px, 100vw"
       />
 
       {many ? (
