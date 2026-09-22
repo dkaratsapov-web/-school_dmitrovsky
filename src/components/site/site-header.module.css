@@ -418,7 +418,7 @@
   align-items: center;
   gap: 5px;
   height: 40px;
-  padding-inline: clamp(10px, 0.9vw, 16px);
+  padding-inline: clamp(7px, 0.62vw, 15px);
   border: 0;
   border-radius: var(--r-pill);
   background: none;
@@ -546,7 +546,7 @@
   white-space: nowrap;
 }
 
-@media (min-width: 1360px) {
+@media (min-width: 1500px) {
   .phone {
     display: inline-flex;
   }
@@ -707,7 +707,7 @@
   height: 46px;
 }
 
-@media (min-width: 1360px) {
+@media (min-width: 1500px) {
   .call {
     display: none;
   }
@@ -836,6 +836,30 @@
 @media (min-width: 1280px) {
   .letter {
     display: inline-flex;
+  }
+}
+
+/* На узком десктопе меню не помещается рядом с действиями: у письма
+   директору остаётся один знак, подпись возвращается на широком экране. */
+@media (max-width: 1699px) {
+  .letterLabel {
+    display: none;
+  }
+
+  .letter {
+    padding-inline: 18px;
+  }
+}
+
+/* самый узкий десктоп: пункты меню ещё плотнее, иначе выходят за капсулу */
+@media (max-width: 1319px) {
+  .navLink {
+    padding-inline: 6px;
+    font-size: 13.5px;
+  }
+
+  .nav {
+    padding-inline: 4px;
   }
 }
 

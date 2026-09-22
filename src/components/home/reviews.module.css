@@ -97,6 +97,29 @@
   list-style: none;
 }
 
+/* На телефоне ролики листаются вбок, а не уводят страницу вниз. */
+@media (max-width: 639px) {
+  .wall {
+    display: flex;
+    gap: var(--s-3);
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+  }
+
+  .wall::-webkit-scrollbar {
+    display: none;
+  }
+
+  .card {
+    flex: 0 0 58%;
+    scroll-snap-align: start;
+  }
+}
+
 @media (min-width: 640px) {
   .wall {
     grid-template-columns: repeat(2, 1fr);
@@ -105,16 +128,11 @@
 
 @media (min-width: 1000px) {
   .wall {
-    /* два ряда по четыре должны умещаться в один экран, поэтому ширина
-       стены ограничена, а высота карточки считается от высоты окна */
-    max-width: 1180px;
+    /* ролики сняты вертикально: ширина стены ограничена, иначе четыре
+       кадра 9:16 занимают два экрана по высоте */
+    max-width: 980px;
     grid-template-columns: repeat(4, 1fr);
     align-items: start;
-  }
-
-  .face {
-    aspect-ratio: auto;
-    height: clamp(190px, 29vh, 320px);
   }
 
   /* дуга: середина ряда приподнята, края опущены */
@@ -143,102 +161,33 @@
   min-width: 0;
 }
 
-.face {
-  position: relative;
+/* проигрыватель Rutube: он же показывает кадр из ролика и кнопку запуска */
+.player {
   display: block;
   width: 100%;
   aspect-ratio: 9 / 16;
-  padding: 0;
-  overflow: hidden;
   border: 0;
   border-radius: 4px;
   background: var(--c-navy-800);
-  cursor: pointer;
-  font: inherit;
-  text-align: left;
-}
-
-.frame {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.veil {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0, 14, 32, 0.88) 6%, rgba(0, 14, 32, 0.18) 46%, rgba(0, 14, 32, 0.3));
-}
-
-/* знак запуска: обводка, а не сплошной круг — кадр остаётся видно */
-.play {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: grid;
-  place-items: center;
-  width: 62px;
-  height: 62px;
-  margin: -31px 0 0 -31px;
-  border: 1.5px solid rgba(255, 255, 255, 0.85);
-  border-radius: 50%;
-  transition: background-color var(--t-base) var(--ease), transform var(--t-base) var(--ease);
-}
-
-.play svg {
-  width: 26px;
-  height: 26px;
-  margin-left: 3px;
-  fill: #fff;
-}
-
-.face:hover .play,
-.face:focus-visible .play {
-  background: var(--c-wine-700);
-  border-color: var(--c-wine-700);
-  transform: scale(1.06);
 }
 
 .who {
-  position: absolute;
-  left: clamp(0.85rem, 1.6vw, 1.15rem);
-  right: clamp(0.85rem, 1.6vw, 1.15rem);
-  bottom: clamp(0.85rem, 1.6vw, 1.15rem);
   display: flex;
   flex-direction: column;
-  gap: 3px;
-}
-
-.rule {
-  width: 26px;
-  height: 2px;
-  margin-bottom: 8px;
-  border-radius: 1px;
-  background: var(--c-wine-500);
-  transform-origin: left center;
-  transition: transform 420ms cubic-bezier(0.16, 0.9, 0.24, 1);
-}
-
-.face:hover .rule,
-.face:focus-visible .rule {
-  transform: scaleX(2.4);
+  gap: 2px;
+  margin: var(--s-3) 0 0;
 }
 
 .name {
   font-family: var(--font-display);
-  font-size: clamp(1rem, 0.94rem + 0.3vw, 1.1875rem);
+  font-size: var(--fs-small);
   font-weight: var(--fw-bold);
-  letter-spacing: -0.015em;
-  line-height: 1.25;
-  color: #fff;
+  color: var(--c-navy-900);
 }
 
 .role {
   font-size: var(--fs-caption);
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.78);
+  color: var(--c-ink-600);
 }
 
 /* ----------------------------------------------- отзывы с Яндекс Карт */

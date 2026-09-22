@@ -44,6 +44,33 @@
   list-style: none;
 }
 
+/* На телефоне ряд листается вбок: четыре карточки в столбик уводили
+   блок на три экрана вниз, а профили удобнее сравнивать рядом. */
+@media (max-width: 639px) {
+  .row {
+    display: flex;
+    gap: var(--s-3);
+    /* карточки выходят за поля контейнера и упираются в края экрана */
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+  }
+
+  .row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .card {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+    /* сдвиг по прокрутке мешает горизонтальной ленте */
+    transform: none;
+  }
+}
+
 @media (min-width: 640px) {
   .row {
     grid-template-columns: repeat(2, 1fr);

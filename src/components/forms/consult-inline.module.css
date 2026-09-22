@@ -196,3 +196,27 @@
 .stack .consent {
   margin-top: var(--s-4);
 }
+
+/* Форма в уже отбитой полосе (нижняя полоса окна): своя линейка лишняя. */
+.flush {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* На телефоне форма в полосе окна ужимается: поля ниже, подпись мельче. */
+@media (max-width: 759px) {
+  .flush .title {
+    margin-bottom: 8px;
+    font-size: var(--fs-small);
+  }
+
+  .flush .input,
+  .flush .submit {
+    min-height: 44px;
+  }
+
+  .flush .consent {
+    margin-top: 8px;
+  }
+}

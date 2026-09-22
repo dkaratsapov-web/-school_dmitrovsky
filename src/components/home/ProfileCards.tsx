@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { CallbackModal } from '../forms/CallbackModal';
+import { ConsultInline } from '../forms/ConsultInline';
 import { InfoBody } from '../ui/InfoBody';
 import { profiles, profilesLead } from '@/content/profiles';
 import type { Profile } from '@/content/profiles';
@@ -144,7 +145,14 @@ export function ProfileCards() {
         title={open?.name ?? ''}
         text={profilesLead}
         size="lg"
-        {...(open?.image ? { media: [open.image] } : {})}
+        {...(open?.image ? { media: [open.image, ...(open.gallery ?? [])] } : {})}
+        foot={
+          <ConsultInline
+            title="Записаться на консультацию по направлению"
+            action="Отправить заявку"
+            flush
+          />
+        }
       >
         <InfoBody
           {...(open

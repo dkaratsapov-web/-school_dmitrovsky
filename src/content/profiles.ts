@@ -17,6 +17,8 @@ export type Profile = {
   /** Программа профессионального обучения в колледже — формулировка сайта. */
   college: string;
   image: { src: string; width: number; height: number; alt: string };
+  /** Остальные снимки направления: листаются в окне за афишей. */
+  gallery?: readonly { src: string; width: number; height: number; alt: string }[];
 };
 
 /** Общая для всех профилей строка со страницы. */
@@ -39,6 +41,32 @@ export const profiles: readonly Profile[] = [
       height: 800,
       alt: 'Ученики медиакласса записывают интервью на камеру с микрофоном',
     },
+    gallery: [
+      {
+        src: '/images/profile-mediaklass-1.webp',
+        width: 1400,
+        height: 1050,
+        alt: 'Ученица медиакласса ведёт съёмку с камеры на штативе в библиотеке',
+      },
+      {
+        src: '/images/profile-mediaklass-2.webp',
+        width: 1400,
+        height: 644,
+        alt: 'Ученик в студии со светом перед камерой на съёмочной площадке',
+      },
+      {
+        src: '/images/profile-mediaklass-3.webp',
+        width: 933,
+        height: 1400,
+        alt: 'Команда медиакласса с камерами и хлопушкой',
+      },
+      {
+        src: '/images/profile-mediaklass-4.webp',
+        width: 1400,
+        height: 788,
+        alt: 'Ученики медиакласса с афишами фестиваля «Медиатон»',
+      },
+    ],
   },
   {
     name: 'Инженерный класс',
@@ -53,6 +81,32 @@ export const profiles: readonly Profile[] = [
       height: 800,
       alt: 'Ученики инженерного класса собирают робототехническую модель',
     },
+    gallery: [
+      {
+        src: '/images/profile-inzhenernyi-1.webp',
+        width: 1400,
+        height: 934,
+        alt: 'Ученицы собирают электронную плату рядом с ноутбуком',
+      },
+      {
+        src: '/images/profile-inzhenernyi-2.webp',
+        width: 1400,
+        height: 933,
+        alt: 'Ученица у лазерного станка с готовой деталью',
+      },
+      {
+        src: '/images/profile-inzhenernyi-3.webp',
+        width: 930,
+        height: 1400,
+        alt: 'Ученица у промышленного 3D-принтера в инженерной лаборатории',
+      },
+      {
+        src: '/images/profile-inzhenernyi-4.webp',
+        width: 1400,
+        height: 922,
+        alt: 'Собранные роботы на полигоне инженерного класса',
+      },
+    ],
   },
   {
     name: 'Медицинский класс',
@@ -67,6 +121,32 @@ export const profiles: readonly Profile[] = [
       height: 800,
       alt: 'Ученики медицинского класса в халатах работают с микроскопами',
     },
+    gallery: [
+      {
+        src: '/images/profile-meditsinskii-1.webp',
+        width: 1280,
+        height: 853,
+        alt: 'Ученики медицинского класса за интерактивным анатомическим столом',
+      },
+      {
+        src: '/images/profile-meditsinskii-2.webp',
+        width: 1400,
+        height: 933,
+        alt: 'Ученики рассматривают изображение на анатомическом столе',
+      },
+      {
+        src: '/images/profile-meditsinskii-3.webp',
+        width: 1400,
+        height: 933,
+        alt: 'Преподаватель ведёт занятие по вирусам и бактериям',
+      },
+      {
+        src: '/images/profile-meditsinskii-4.webp',
+        width: 1400,
+        height: 933,
+        alt: 'Урок медицинского класса: ученики за микроскопами',
+      },
+    ],
   },
   {
     name: 'Предпринимательский класс',
@@ -81,5 +161,31 @@ export const profiles: readonly Profile[] = [
       height: 802,
       alt: 'Ученицы предпринимательского класса работают за ноутбуком',
     },
+    gallery: [
+      {
+        src: '/images/profile-predprinimatelskii-1.webp',
+        width: 1400,
+        height: 833,
+        alt: 'Занятие предпринимательского класса с ноутбуками и преподавателем',
+      },
+      {
+        src: '/images/profile-predprinimatelskii-2.webp',
+        width: 1400,
+        height: 1098,
+        alt: 'Ученики предпринимательского класса в школьной форме',
+      },
+      {
+        src: '/images/profile-predprinimatelskii-3.webp',
+        width: 910,
+        height: 673,
+        alt: 'Разбор организационной схемы на занятии',
+      },
+      {
+        src: '/images/profile-predprinimatelskii-4.webp',
+        width: 960,
+        height: 1280,
+        alt: 'Ученик предпринимательского класса в Государственной думе',
+      },
+    ],
   },
 ];

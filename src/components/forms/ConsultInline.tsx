@@ -15,6 +15,8 @@ type Props = {
    * высоту соседней колонки, а не висит короткой полосой сверху.
    */
   layout?: 'row' | 'stack';
+  /** Без верхней линейки и отступа: форма стоит в уже отбитой полосе. */
+  flush?: boolean;
 };
 
 /**
@@ -29,12 +31,15 @@ export function ConsultInline({
   title,
   action = 'Получить консультацию',
   layout = 'row',
+  flush = false,
 }: Props) {
   const [sent, setSent] = useState(false);
 
   return (
     <form
-      className={[s.form, layout === 'stack' ? s.stack : ''].filter(Boolean).join(' ')}
+      className={[s.form, layout === 'stack' ? s.stack : '', flush ? s.flush : '']
+        .filter(Boolean)
+        .join(' ')}
       onSubmit={(e) => {
         e.preventDefault();
         setSent(true);
