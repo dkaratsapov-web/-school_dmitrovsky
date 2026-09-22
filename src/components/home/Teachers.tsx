@@ -147,7 +147,7 @@ export function Teachers() {
         title={open?.name ?? ''}
         text={open?.role ?? ''}
         size="lg"
-        {...(open ? { media: open.photo } : {})}
+        {...(open ? { media: [open.photo] } : {})}
       >
         <InfoBody
           {...(open?.notes ? { text: open.notes } : {})}

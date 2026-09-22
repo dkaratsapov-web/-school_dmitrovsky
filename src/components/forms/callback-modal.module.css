@@ -204,3 +204,52 @@
     transform: none;
   }
 }
+
+/* ------------------------------------------------- ряд миниатюр снимков */
+.strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  gap: 6px;
+  padding: 10px;
+  background: linear-gradient(to top, rgba(0, 12, 28, 0.82), transparent);
+}
+
+.thumb {
+  flex: 1 1 0;
+  min-width: 0;
+  aspect-ratio: 3 / 2;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 2px;
+  background: none;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+}
+
+.thumb:hover,
+.thumb:focus-visible {
+  opacity: 0.9;
+}
+
+.thumbOn {
+  opacity: 1;
+  border-color: var(--c-wine-500);
+}
+
+.thumbShot {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumb {
+    transition: none;
+  }
+}

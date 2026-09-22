@@ -1,4 +1,5 @@
 import { CadetCorps } from '@/components/home/CadetCorps';
+import { Contacts } from '@/components/home/Contacts';
 import { ClubsEvents } from '@/components/home/ClubsEvents';
 import { NewsDeck } from '@/components/home/NewsDeck';
 import { QuoteLine } from '@/components/home/QuoteLine';
@@ -36,6 +37,8 @@ export default function HomePage() {
       <SectionSeam />
       <ClubsEvents />
       <Teachers />
+      <SectionSeam flip />
+      <Contacts />
     </>
   );
 }

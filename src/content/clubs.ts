@@ -32,6 +32,8 @@ export type Club = {
   /** Телефоны записи — как передала школа. */
   phones?: readonly string[];
   image?: { src: string; width: number; height: number; alt: string };
+  /** Снимки занятий, если школа их передала: листаются в окне за афишей. */
+  gallery?: readonly { src: string; width: number; height: number; alt: string }[];
   /** Материал ещё не передан: карточка-заготовка. */
   draft?: boolean;
 };
@@ -144,6 +146,38 @@ export const clubs: readonly Club[] = [
       height: 900,
       alt: 'Спортсменка в добке с чёрным поясом выполняет удар ногой',
     },
+    gallery: [
+      {
+        src: '/images/club-taekwondo-1.webp',
+        width: 1400,
+        height: 935,
+        alt: 'Ученик в шлеме и добке с надписью «Taekwon-do» в стойке',
+      },
+      {
+        src: '/images/club-taekwondo-2.webp',
+        width: 1400,
+        height: 935,
+        alt: 'Ученик в шлеме и перчатках закрывается от удара ногой',
+      },
+      {
+        src: '/images/club-taekwondo-3.webp',
+        width: 1400,
+        height: 935,
+        alt: 'Двое учеников в шлемах отрабатывают удар рукой в парах',
+      },
+      {
+        src: '/images/club-taekwondo-4.webp',
+        width: 1400,
+        height: 935,
+        alt: 'Ученик с жёлтым поясом наносит прямой удар рукой партнёру',
+      },
+      {
+        src: '/images/club-taekwondo-5.webp',
+        width: 1400,
+        height: 935,
+        alt: 'Ученик выполняет удар ногой в корпус партнёра на тренировке',
+      },
+    ],
   },
   {
     title: 'Самбо',

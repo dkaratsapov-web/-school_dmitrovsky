@@ -21,6 +21,8 @@ type Detail = {
   signup?: string;
   phones?: readonly string[];
   image?: { src: string; width: number; height: number; alt: string };
+  /** Снимки занятий: показываются в окне вслед за афишей. */
+  gallery?: readonly { src: string; width: number; height: number; alt: string }[];
   action: string;
 };
 
@@ -68,6 +70,7 @@ function clubTile(c: Club): Tile {
       ...(c.signup ? { signup: c.signup } : {}),
       ...(c.phones ? { phones: c.phones } : {}),
       ...(c.image ? { image: c.image } : {}),
+      ...(c.gallery ? { gallery: c.gallery } : {}),
       action: 'Записаться на занятия',
     },
   };
@@ -259,7 +262,7 @@ export function ClubsEvents() {
         title={open?.title ?? ''}
         text={open?.lead ?? ''}
         size="lg"
-        {...(open?.image ? { media: open.image } : {})}
+        {...(open?.image ? { media: [open.image, ...(open.gallery ?? [])] } : {})}
         foot={
           open?.signup || open?.phones?.length ? (
             <>

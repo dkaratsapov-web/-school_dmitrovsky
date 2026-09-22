@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ConsultInline } from './ConsultInline';
 import { asset } from '@/lib/asset';
 import s from './callback-modal.module.css';
@@ -25,11 +25,63 @@ type Props = {
   /** Полоса под содержимым: остаётся на месте, когда окно прокручивают. */
   foot?: React.ReactNode;
   /**
-   * Афиша материала. Занимает левую панель окна во всю высоту: школа рисует
+   * Снимки материала. Занимают левую панель окна во всю высоту: школа рисует
    * афиши сама, и уменьшать их до миниатюры рядом с текстом нет смысла.
+   * Если снимков несколько, под ними появляется ряд миниатюр.
    */
-  media?: { src: string; width: number; height: number; alt: string };
+  media?: readonly Shot[];
 };
+
+type Shot = { src: string; width: number; height: number; alt: string };
+
+/**
+ * Панель со снимками. Своё состояние и свой ключ: при смене материала
+ * панель пересобирается и показывает первый кадр, а не тот, что листали
+ * в прошлом окне.
+ */
+function Gallery({ shots }: { shots: readonly Shot[] }) {
+  const [at, setAt] = useState(0);
+  const shown = shots[at] ?? shots[0];
+  if (!shown) return null;
+
+  return (
+    <div className={s.media}>
+      <Image
+        className={s.shot}
+        src={asset(shown.src)}
+        alt={shown.alt}
+        width={shown.width}
+        height={shown.height}
+        sizes="(min-width: 760px) 380px, 100vw"
+      />
+
+      {shots.length > 1 ? (
+        <div className={s.strip} role="tablist" aria-label="Снимки">
+          {shots.map((sh, i) => (
+            <button
+              className={[s.thumb, i === at ? s.thumbOn : ''].filter(Boolean).join(' ')}
+              key={sh.src}
+              type="button"
+              role="tab"
+              aria-selected={i === at}
+              aria-label={`Снимок ${i + 1} из ${shots.length}`}
+              onClick={() => setAt(i)}
+            >
+              <Image
+                className={s.thumbShot}
+                src={asset(sh.src)}
+                alt=""
+                width={sh.width}
+                height={sh.height}
+                sizes="72px"
+              />
+            </button>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
 
 /**
  * Окно с формой заявки.
@@ -75,18 +127,7 @@ export function CallbackModal({
         <span className={s.closeBar} />
       </button>
 
-      {media ? (
-        <div className={s.media}>
-          <Image
-            className={s.shot}
-            src={asset(media.src)}
-            alt={media.alt}
-            width={media.width}
-            height={media.height}
-            sizes="(min-width: 760px) 380px, 100vw"
-          />
-        </div>
-      ) : null}
+      {media?.length ? <Gallery shots={media} key={media[0]?.src} /> : null}
 
       <div className={s.column}>
         <div className={s.inner}>

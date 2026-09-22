@@ -5,7 +5,9 @@
 .section {
   position: relative;
   padding-block: clamp(3rem, 6vw, 5rem);
-  background: var(--color-surface);
+  /* тот же светлый тон, что у соседних блоков: стык с «Контактами»
+     переходит куполом, и белая полоса здесь была бы видна */
+  background: var(--c-navy-50);
   color: var(--c-ink-800);
 }
 

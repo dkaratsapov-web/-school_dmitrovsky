@@ -144,7 +144,7 @@ export function ProfileCards() {
         title={open?.name ?? ''}
         text={profilesLead}
         size="lg"
-        {...(open?.image ? { media: open.image } : {})}
+        {...(open?.image ? { media: [open.image] } : {})}
       >
         <InfoBody
           {...(open

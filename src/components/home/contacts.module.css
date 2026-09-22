@@ -1,0 +1,219 @@
+/* =========================================================================
+   Контакты — последний блок перед подвалом
+   ========================================================================= */
+
+.section {
+  --sp: 0.5;
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(3rem, 6vw, 5.5rem);
+  background: var(--c-navy-950);
+  color: rgba(255, 255, 255, 0.82);
+}
+
+/* орбита за адресом: фоновый слой, идёт медленнее прокрутки */
+.orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(1400px, 130%);
+  height: 420px;
+  margin-left: -50%;
+  fill: none;
+  stroke: rgba(126, 31, 46, 0.34);
+  stroke-width: 1;
+  pointer-events: none;
+  transform: translate3d(0, calc(-50% + (var(--sp) - 0.5) * 70px), 0)
+    rotate(calc((var(--sp) - 0.5) * 6deg));
+}
+
+.inner {
+  position: relative;
+  display: grid;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+@media (min-width: 960px) {
+  .inner {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  }
+}
+
+/* ---------------------------------------------------------------- место */
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 1.3rem + 2.4vw, 3.25rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+
+.label {
+  display: block;
+  margin: 0 0 6px;
+  font-size: var(--fs-caption);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* адрес — главное в блоке: школа это прежде всего место */
+.address {
+  margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
+}
+
+.addressText {
+  display: block;
+  max-width: 18ch;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1rem + 2.2vw, 2.5rem);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: #fff;
+}
+
+.lines {
+  margin-top: clamp(1.25rem, 2.4vw, 1.75rem);
+}
+
+.line {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 38px;
+  padding-right: 4px;
+  color: rgba(255, 255, 255, 0.86);
+  text-decoration: none;
+  transition: color var(--t-fast) var(--ease);
+}
+
+.line + .line {
+  margin-left: clamp(1rem, 2.4vw, 2rem);
+}
+
+@media (max-width: 559px) {
+  .line {
+    display: flex;
+  }
+
+  .line + .line {
+    margin-left: 0;
+  }
+}
+
+.line :global(svg) {
+  flex: none;
+  color: var(--c-wine-500);
+}
+
+.lineText {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 0.94rem + 0.3vw, 1.1875rem);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.01em;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--t-fast) var(--ease);
+}
+
+.line:hover,
+.line:focus-visible {
+  color: #fff;
+}
+
+.line:hover .lineText,
+.line:focus-visible .lineText {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* -------------------------------------------------------------- соцсети */
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--r-pill);
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+}
+
+.social:hover,
+.social:focus-visible {
+  background: rgba(126, 31, 46, 0.55);
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* ---------------------------------------------------------------- форма */
+.form {
+  padding: clamp(1.25rem, 2.4vw, 1.75rem);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--r-xl);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.formTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.5rem);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.formText {
+  margin: 8px 0 0;
+  font-size: var(--fs-small);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit {
+    transform: translate3d(0, -50%, 0);
+  }
+
+  .line,
+  .lineText,
+  .social {
+    transition: none;
+  }
+
+  .social:hover {
+    transform: none;
+  }
+}
+
+/* на тёмной подложке знак-курсор белый */
+@media (hover: hover) and (pointer: fine) {
+  .section {
+    cursor: var(--cursor-dark);
+  }
+
+  .section a,
+  .section button,
+  .section label,
+  .section summary {
+    cursor: var(--cursor-dark-lg);
+  }
+
+  .section input,
+  .section textarea,
+  .section select {
+    cursor: auto;
+  }
+}

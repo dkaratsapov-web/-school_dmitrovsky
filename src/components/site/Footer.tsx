@@ -27,7 +27,7 @@ export function Footer({ contacts, legalLines }: Props) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className={s.footer} id="contacts">
+    <footer className={s.footer}>
       <Container>
         <div className={s.footerTop}>
           <div className={s.footerBrand}>
