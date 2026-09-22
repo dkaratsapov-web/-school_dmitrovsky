@@ -197,7 +197,7 @@
 .studyLink {
   display: inline-flex;
   align-items: center;
-  height: 28px;
+  height: 32px;
   padding-inline: 11px;
   border: 1px solid transparent;
   border-radius: var(--r-pill);
@@ -243,8 +243,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: var(--r-pill);
   color: rgba(255, 255, 255, 0.78);
   text-decoration: none;
@@ -960,5 +960,23 @@ button.chip {
   }
   .navAccent {
     transition: none;
+  }
+}
+
+/* На сенсорном экране верхний ряд шапки тоже нажимают пальцем:
+   чипы и знаки соцсетей увеличиваются до 40 px. */
+@media (hover: none) {
+  .chip,
+  .socials {
+    height: 44px;
+  }
+
+  .social {
+    width: 40px;
+    height: 40px;
+  }
+
+  .studyLink {
+    height: 36px;
   }
 }

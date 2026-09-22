@@ -404,6 +404,10 @@
 }
 
 .crumbs a {
+  display: inline-flex;
+  align-items: center;
+  /* строка крошек мелкая: на телефоне ссылке нужна своя область нажатия */
+  min-height: 40px;
   color: var(--color-text-muted);
   text-decoration: none;
 }

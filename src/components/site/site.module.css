@@ -505,8 +505,14 @@
   color: rgba(255, 255, 255, 0.72);
   text-decoration: none;
   transition: color var(--t-fast) var(--ease);
-  /* достаточная область нажатия на мобильном */
   min-height: 30px;
+}
+
+/* на сенсорном экране строка подвала — полноценная область нажатия */
+@media (hover: none), (max-width: 767px) {
+  .footerLink {
+    min-height: 40px;
+  }
 }
 
 .footerLink:hover {

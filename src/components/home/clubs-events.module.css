@@ -114,6 +114,14 @@
   background: #fff;
 }
 
+/* на сенсорном экране чипы крупнее: 36 px мало для пальца */
+@media (hover: none), (max-width: 767px) {
+  .group {
+    height: 44px;
+    padding-inline: 18px;
+  }
+}
+
 .groupOn {
   background: #fff;
   border-color: var(--c-navy-800);

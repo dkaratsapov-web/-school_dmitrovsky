@@ -7,6 +7,9 @@
   padding-block: clamp(2.25rem, 4.2vw, 3.75rem) clamp(2rem, 3.6vw, 3.25rem);
   background: var(--c-navy-950);
   color: #fff;
+  /* плитки въезжают со сдвигом по горизонтали: без обрезки по бокам
+     на узком экране во время появления возникала горизонтальная прокрутка */
+  overflow-x: clip;
 }
 
 .inner {
@@ -95,6 +98,9 @@
   padding: clamp(1.1rem, 2vw, 1.6rem);
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--r-xl);
+  /* свет под курсором и орбиты выходят за плитку: на узком экране они
+     расширяли страницу и появлялась горизонтальная прокрутка */
+  overflow: hidden;
   background:
     radial-gradient(120% 90% at 20% 0%, rgba(1, 51, 102, 0.55), transparent 62%),
     rgba(255, 255, 255, 0.035);

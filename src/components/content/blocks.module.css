@@ -17,6 +17,10 @@
 .prose :global(p),
 .prose :global(li) {
   color: var(--c-ink-700);
+  /* в перенесённом тексте попадаются длинные неразрывные строки
+     (расписания, адреса): без переноса они раздвигали узкий экран */
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .single {

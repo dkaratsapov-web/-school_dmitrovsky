@@ -206,8 +206,8 @@
 /* галочка согласия: без неё форма не отправляется */
 .check {
   flex: none;
-  width: 17px;
-  height: 17px;
+  width: 21px;
+  height: 21px;
   margin: 1px 0 0;
   accent-color: var(--c-wine-700);
   cursor: pointer;
