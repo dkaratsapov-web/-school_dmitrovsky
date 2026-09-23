@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { CallbackModal } from '../forms/CallbackModal';
+import { ConsultInline } from '../forms/ConsultInline';
 import { InfoBody } from '../ui/InfoBody';
 import { stages } from '@/content/stages';
 import type { Stage } from '@/content/stages';
@@ -175,6 +176,13 @@ export function StageGrid() {
         title={open?.title ?? ''}
         text={open?.lead ?? ''}
         size="md"
+        foot={
+          <ConsultInline
+            title="Записаться на консультацию"
+            action="Отправить заявку"
+            flush
+          />
+        }
       >
         <InfoBody {...(open?.points ? { points: open.points } : {})} />
       </CallbackModal>
