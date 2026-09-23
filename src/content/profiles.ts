@@ -130,8 +130,8 @@ export const profiles: readonly Profile[] = [
       },
       {
         src: '/images/profile-meditsinskii-2.webp',
-        width: 1400,
-        height: 933,
+        width: 933,
+        height: 1400,
         alt: 'Ученики рассматривают изображение на анатомическом столе',
       },
       {
