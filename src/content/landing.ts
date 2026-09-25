@@ -81,10 +81,11 @@ export type LandingItem = {
  * Меню шапки на лендинге.
  *
  * «Кадетский корпус» стоит первым и выделен: это отдельный платный проект
- * школы, ради которого приходят на главную чаще всего.
+ * школы, ради которого приходят на главную чаще всего. Ведёт на страницу
+ * проекта, а не на блок главной: у корпуса своя страница.
  */
 export const landingNav: readonly LandingItem[] = [
-  { label: 'Кадетский корпус', anchor: '/#cadets', accent: true },
+  { label: 'Кадетский корпус', anchor: '/kadetskii-korpus', accent: true },
   { label: 'О нас', info: aboutInfo },
   { label: 'Обучение', stages },
   { label: 'Педагоги', anchor: '/#teachers' },
@@ -100,7 +101,7 @@ export const landingFooterNav: readonly LandingItem[] = [
   { label: 'Педагоги', anchor: '/#teachers' },
   { label: 'Кружки', anchor: '/#clubs' },
   { label: 'Мероприятия', anchor: '/#events' },
-  { label: 'Кадетский корпус', anchor: '/#cadets' },
+  { label: 'Кадетский корпус', anchor: '/kadetskii-korpus' },
 ];
 
 /** Ступень обучения в виде справки для окна. */
