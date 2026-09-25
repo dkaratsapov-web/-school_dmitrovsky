@@ -100,14 +100,29 @@ export const cadetPageDescription =
   'для мальчиков и девочек с 5 класса.';
 
 /**
- * Фоновое видео первого экрана. Пока школа не передала файл, на подложке
- * стоит снимок кадетов на посту у мемориала: пустого места на экране
- * не остаётся, а подставить видео — это дописать сюда пути.
+ * Фоновое видео первого экрана: отрезок съёмки с принятия клятвы кадета
+ * 14 ноября 2025 года в Музее Победы, 18 секунд по кругу и без звука.
+ *
+ * По три версии на формат: телефону уходит 720 px и меньше мегабайта,
+ * ноутбуку — 1280, большому монитору — 1920. Версию выбирает сам браузер
+ * по ширине окна, лишний файл не скачивается.
  */
-export const cadetHeroVideo: { mp4: string; webm: string } | null = null;
+export const cadetHeroVideo = {
+  webm: {
+    large: '/video/cadets-1920.webm',
+    small: '/video/cadets-1280.webm',
+    phone: '/video/cadets-720.webm',
+  },
+  mp4: {
+    large: '/video/cadets-1920.mp4',
+    small: '/video/cadets-1280.mp4',
+    phone: '/video/cadets-720.mp4',
+  },
+};
 
+/** Первый кадр этого же отрезка: виден, пока видео не пошло. */
 export const cadetHeroPoster = {
-  src: '/images/cadets-memorial.webp',
-  width: 1100,
-  height: 1100,
+  src: '/video/cadets-poster.webp',
+  width: 1920,
+  height: 1080,
 };

@@ -8,6 +8,10 @@ import { asset } from '@/lib/asset';
 import { useScrollProgressVar } from '@/lib/motion';
 import s from './cadet-hero.module.css';
 
+/** Версию выбирает браузер по ширине окна: лишний файл не скачивается. */
+const LARGE_FROM = '(min-width: 1600px)';
+const SMALL_FROM = '(min-width: 768px)';
+
 /* Движение разрешено не всем: при выключенной анимации и режиме экономии
    трафика видео не подключается, остаётся кадр. Значение читается
    подпиской, а не состоянием в эффекте. */
@@ -54,7 +58,7 @@ export function CadetHero() {
   /* Видео — после того, как страница показалась: в гонку с ней
      оно не вступает. */
   useEffect(() => {
-    if (!allowVideo || !cadetHeroVideo) return;
+    if (!allowVideo) return;
 
     let timer = 0;
     type WithIdle = Window & {
@@ -127,25 +131,27 @@ export function CadetHero() {
           sizes="100vw"
         />
 
-        {cadetHeroVideo ? (
-          <video
-            ref={videoRef}
-            className={[s.plate, ready ? '' : s.plateHidden].filter(Boolean).join(' ')}
-            poster={poster}
-            muted
-            loop
-            playsInline
-            preload="none"
-            aria-hidden="true"
-          >
-            {armed ? (
-              <>
-                <source src={asset(cadetHeroVideo.webm)} type="video/webm" />
-                <source src={asset(cadetHeroVideo.mp4)} type="video/mp4" />
-              </>
-            ) : null}
-          </video>
-        ) : null}
+        <video
+          ref={videoRef}
+          className={[s.plate, ready ? '' : s.plateHidden].filter(Boolean).join(' ')}
+          poster={poster}
+          muted
+          loop
+          playsInline
+          preload="none"
+          aria-hidden="true"
+        >
+          {armed ? (
+            <>
+              <source src={asset(cadetHeroVideo.webm.large)} type="video/webm" media={LARGE_FROM} />
+              <source src={asset(cadetHeroVideo.webm.small)} type="video/webm" media={SMALL_FROM} />
+              <source src={asset(cadetHeroVideo.webm.phone)} type="video/webm" />
+              <source src={asset(cadetHeroVideo.mp4.large)} type="video/mp4" media={LARGE_FROM} />
+              <source src={asset(cadetHeroVideo.mp4.small)} type="video/mp4" media={SMALL_FROM} />
+              <source src={asset(cadetHeroVideo.mp4.phone)} type="video/mp4" />
+            </>
+          ) : null}
+        </video>
       </div>
 
       <div className={s.scrim} aria-hidden="true" />
