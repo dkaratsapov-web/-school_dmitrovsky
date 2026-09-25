@@ -74,37 +74,49 @@
   pointer-events: none;
 }
 
+/* Как на главной: содержимое по центру и прижато к низу — кадр
+   остаётся открытым, а форма стоит там же, где её ищут по привычке. */
 .inner {
   position: relative;
   z-index: 1;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
   width: min(100% - 2 * var(--gutter), var(--container));
   margin-inline: auto;
-  padding-block: clamp(6rem, 14vh, 9rem) clamp(1.5rem, 4vh, 3rem);
+  padding-block: clamp(6rem, 16vh, 10rem) clamp(1.25rem, 3vh, 2rem);
+  text-align: center;
 }
 
 /* ------------------------------------------------------------- заголовок */
 .words {
   display: flex;
-  gap: clamp(1rem, 2vw, 1.75rem);
-  /* заголовок — фраза целиком, поэтому колонка уже: строка не должна
-     тянуться через весь экран, её перестанут читать */
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.875rem, 1.8vh, 1.25rem);
+  /* фраза целиком, поэтому колонка уже: строка не должна тянуться
+     через весь экран, её перестанут читать */
   max-width: 46rem;
-  margin-bottom: clamp(1.75rem, 4vh, 3rem);
+  margin-bottom: clamp(2.25rem, 6vh, 4.5rem);
 }
 
-/* черта у заголовка — знак раздела, тот же приём, что у списков в окнах */
+/* черта над заголовком — знак раздела; та же бордовая отбивка,
+   что у списков в окнах, только развёрнутая по центру */
 .rule {
   flex: none;
-  width: 3px;
+  width: clamp(48px, 6vw, 72px);
+  height: 3px;
   border-radius: 2px;
-  background: linear-gradient(to bottom, var(--c-wine-600), rgba(126, 31, 46, 0));
-  transform-origin: top center;
+  background: var(--c-wine-600);
+  transform-origin: center;
   animation: ruleIn 700ms 120ms var(--ease) backwards;
 }
 
 @keyframes ruleIn {
   from {
-    transform: scaleY(0);
+    transform: scaleX(0);
   }
 }
 
@@ -127,6 +139,9 @@
   letter-spacing: -0.02em;
   line-height: 1.16;
   color: #fff;
+  max-width: 24ch;
+  margin-inline: auto;
+  text-wrap: balance;
   animation: lineIn 780ms 140ms cubic-bezier(0.16, 0.9, 0.24, 1) backwards;
 }
 
@@ -142,6 +157,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
+  justify-content: center;
   gap: 6px 14px;
   margin: clamp(1rem, 2.4vh, 1.75rem) 0 0;
   animation: lineIn 780ms 300ms cubic-bezier(0.16, 0.9, 0.24, 1) backwards;
@@ -172,6 +188,29 @@
 
   .priceNote {
     flex: 1 1 100%;
+  }
+}
+
+/* Низкий экран (старые телефоны в альбомной или маленькие в портретной):
+   отступы ужимаются, иначе форма уезжает за нижний край первого экрана. */
+@media (max-height: 700px) {
+  /* Экран ниже 620 px: не растягиваем первый экран на всю высоту —
+     заголовок в пять строк и форма в него всё равно не помещаются,
+     а лишняя пустота только отодвигает форму. */
+  .hero {
+    min-height: auto;
+  }
+
+  .inner {
+    padding-block: clamp(4.5rem, 11vh, 6rem) clamp(0.75rem, 2vh, 1.25rem);
+  }
+
+  .words {
+    margin-bottom: clamp(1rem, 3vh, 1.75rem);
+  }
+
+  .price {
+    margin-top: clamp(0.5rem, 1.6vh, 1rem);
   }
 }
 
