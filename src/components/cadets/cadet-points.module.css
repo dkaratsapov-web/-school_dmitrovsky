@@ -1,0 +1,137 @@
+/* =========================================================================
+   Что входит в проект
+
+   Перечень, а не стена плиток: строки с бордовой отбивкой, разделённые
+   волосяными линиями. Тот же приём, что у списков в окнах материалов
+   и у перечня педагогов — страница проекта говорит на языке сайта.
+   ========================================================================= */
+
+.section {
+  position: relative;
+  /* строки выезжают сбоку — обрезаем по краям */
+  overflow-x: clip;
+  padding-block: clamp(3rem, 6vw, 5rem);
+  background: var(--c-navy-50);
+  color: var(--c-ink-800);
+}
+
+.inner {
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+
+.title {
+  margin: 0 0 clamp(1.75rem, 4vw, 3rem);
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 1.3rem + 2.4vw, 3.25rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.03em;
+  color: var(--c-navy-900);
+}
+
+/* ---------------------------------------------------------------- список */
+/* Газетные колонки, а не сетка: в сетке высота ряда равна самому
+   длинному пункту, и между рядами зияли пустоты. */
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  column-gap: clamp(2rem, 4vw, 4rem);
+}
+
+@media (min-width: 720px) {
+  .list {
+    columns: 2;
+  }
+}
+
+@media (min-width: 1280px) {
+  .list {
+    columns: 3;
+  }
+}
+
+.point {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  padding: clamp(0.875rem, 1.6vw, 1.25rem) 0;
+  border-bottom: 1px solid var(--color-border);
+  /* пункт не разрывается между колонками */
+  break-inside: avoid;
+}
+
+/* верхняя линия — только у первого пункта каждой колонки */
+.point:first-child {
+  border-top: 1px solid var(--color-border);
+}
+
+@media (min-width: 720px) {
+  .point:nth-child(7) {
+    border-top: 1px solid var(--color-border);
+  }
+}
+
+@media (min-width: 1280px) {
+  .point:nth-child(7) {
+    border-top: 0;
+  }
+
+  .point:nth-child(5),
+  .point:nth-child(9) {
+    border-top: 1px solid var(--color-border);
+  }
+}
+
+/* отбивка: короткая бордовая черта, как в окнах материалов */
+.mark {
+  flex: none;
+  width: 3px;
+  height: 1.1em;
+  margin-top: 0.2em;
+  border-radius: 2px;
+  background: var(--c-wine-600);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.pointTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  color: var(--c-navy-900);
+}
+
+.pointText {
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: var(--c-ink-600);
+}
+
+/* ------------------------------------------------------------- движение */
+/* Строка выходит сбоку вслед за соседями по ряду: перечень собирается
+   слева направо, а не всплывает одинаковыми блоками снизу. */
+.point[data-in='true'] {
+  animation: pointIn 620ms cubic-bezier(0.16, 0.9, 0.24, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+@keyframes pointIn {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .point[data-in='true'] {
+    animation: none;
+  }
+}

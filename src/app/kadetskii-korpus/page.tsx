@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { CadetHero } from '@/components/cadets/CadetHero';
+import { CadetPoints } from '@/components/cadets/CadetPoints';
 import { cadetPageDescription, cadetPageTitle } from '@/content/cadets';
 
 /**
@@ -15,5 +16,10 @@ export const metadata: Metadata = {
 };
 
 export default function CadetCorpsPage() {
-  return <CadetHero />;
+  return (
+    <>
+      <CadetHero />
+      <CadetPoints />
+    </>
+  );
 }
