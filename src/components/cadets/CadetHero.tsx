@@ -3,13 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { ConsultBar } from '../forms/ConsultBar';
-import {
-  cadetHeroPoster,
-  cadetHeroVideo,
-  cadetLead,
-  cadetPageTitle,
-  cadetPrice,
-} from '@/content/cadets';
+import { cadetHeroPoster, cadetHeroTitle, cadetHeroVideo, cadetPrice } from '@/content/cadets';
 import { asset } from '@/lib/asset';
 import { useScrollProgressVar } from '@/lib/motion';
 import s from './cadet-hero.module.css';
@@ -163,12 +157,8 @@ export function CadetHero() {
           <div className={s.text}>
             <span className={s.mask}>
               <h1 className={s.title} id="cadets-title">
-                {cadetPageTitle}
+                {cadetHeroTitle}
               </h1>
-            </span>
-
-            <span className={s.mask}>
-              <p className={s.lead}>{cadetLead}</p>
             </span>
 
             <span className={s.mask}>
