@@ -1,0 +1,198 @@
+/* =========================================================================
+   Кадетский корпус — первый экран страницы проекта
+
+   Логика та же, что на главной: тёмный кадр во всё окно, текст и форма
+   поверх него. Разбор свой: заголовок отбит вертикальной чертой, рядом
+   строка со стоимостью — у проекта она главный вопрос родителя.
+   ========================================================================= */
+
+.hero {
+  --p: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  /* чуть ниже главной: это глава внутри сайта, а не его обложка */
+  min-height: 88svh;
+  overflow: clip;
+  background: #001b3a;
+  isolation: isolate;
+}
+
+.media {
+  position: absolute;
+  inset: -4% 0 0;
+  z-index: -2;
+  /* кадр продублирован фоном: если снимок или видео не отрисуются,
+     экран не останется пустой заливкой */
+  background-image: var(--poster);
+  background-size: cover;
+  background-position: 50% 32%;
+  background-repeat: no-repeat;
+  transform: translate3d(0, calc(var(--p) * -8%), 0) scale(calc(1 + var(--p) * 0.08));
+  transform-origin: 50% 35%;
+}
+
+.plate {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 32%;
+  transition: opacity 700ms var(--ease);
+}
+
+.plateHidden {
+  opacity: 0;
+}
+
+/* затемнение: плотное снизу под текстом, лёгкое сверху под шапкой */
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(to bottom, rgba(0, 12, 26, 0.72) 0%, rgba(0, 12, 26, 0.12) 34%, rgba(0, 12, 26, 0.86) 100%),
+    linear-gradient(to right, rgba(0, 12, 26, 0.8) 0%, rgba(0, 12, 26, 0.24) 46%, rgba(0, 12, 26, 0) 68%);
+  pointer-events: none;
+}
+
+/* нижний край растворяется в следующем блоке, стыка не видно */
+.hero::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(64px, 8vw, 120px);
+  z-index: 0;
+  background: linear-gradient(to bottom, rgba(0, 13, 27, 0) 0%, rgba(0, 13, 27, 0.7) 60%, var(--c-navy-950) 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 58%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 58%);
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+  padding-block: clamp(6rem, 14vh, 9rem) clamp(1.5rem, 4vh, 3rem);
+}
+
+/* ------------------------------------------------------------- заголовок */
+.words {
+  display: flex;
+  gap: clamp(1rem, 2vw, 1.75rem);
+  max-width: 54rem;
+  margin-bottom: clamp(1.75rem, 4vh, 3rem);
+}
+
+/* черта у заголовка — знак раздела, тот же приём, что у списков в окнах */
+.rule {
+  flex: none;
+  width: 3px;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, var(--c-wine-600), rgba(126, 31, 46, 0));
+  transform-origin: top center;
+  animation: ruleIn 700ms 120ms var(--ease) backwards;
+}
+
+@keyframes ruleIn {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+.text {
+  min-width: 0;
+}
+
+/* строки выходят из-под маски: движение одно на весь экран */
+.mask {
+  display: block;
+  overflow: hidden;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 1.4rem + 3.6vw, 4.5rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  color: #fff;
+  animation: lineIn 780ms 140ms cubic-bezier(0.16, 0.9, 0.24, 1) backwards;
+}
+
+.lead {
+  margin: clamp(0.75rem, 1.6vh, 1.125rem) 0 0;
+  font-size: clamp(1rem, 0.95rem + 0.4vw, 1.375rem);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.86);
+  animation: lineIn 780ms 260ms cubic-bezier(0.16, 0.9, 0.24, 1) backwards;
+}
+
+@keyframes lineIn {
+  from {
+    transform: translateY(105%);
+    opacity: 0;
+  }
+}
+
+/* --------------------------------------------------------------- стоимость */
+.price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 14px;
+  margin: clamp(1rem, 2.4vh, 1.75rem) 0 0;
+  animation: lineIn 780ms 380ms cubic-bezier(0.16, 0.9, 0.24, 1) backwards;
+}
+
+.priceLabel {
+  font-size: var(--fs-caption);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.priceValue {
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 1rem + 0.7vw, 1.625rem);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+
+.priceNote {
+  font-size: var(--fs-caption);
+  color: rgba(255, 255, 255, 0.55);
+}
+
+@media (max-width: 559px) {
+  .price {
+    gap: 4px 10px;
+  }
+
+  .priceNote {
+    flex: 1 1 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media {
+    transform: none;
+  }
+
+  .title,
+  .lead,
+  .price,
+  .rule {
+    animation: none;
+  }
+
+  .plate {
+    transition: none;
+  }
+}

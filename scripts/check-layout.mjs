@@ -14,7 +14,7 @@ const BASE = process.argv[2] ?? 'http://127.0.0.1:3300/-school_dmitrovsky';
 const CHROME = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 const WIDTHS = [390, 768, 1280, 1440];
 const PATHS = [
-  '/', '/o-nas/', '/5-8class/', '/10-11class/', '/teachers/', '/contacts/',
+  '/', '/o-nas/', '/5-8class/', '/10-11class/', '/teachers/', '/contacts/', '/kadetskii-korpus/',
   '/kadetskii-class/', '/documents/', '/merch/', '/vakansii/', '/kruzhki/', '/detskii-sad/',
 ];
 
