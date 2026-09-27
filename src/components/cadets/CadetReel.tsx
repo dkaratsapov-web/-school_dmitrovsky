@@ -10,15 +10,15 @@ import s from './cadet-reel.module.css';
 /* Геометрия колеса. Карточка меряется от сцены, всё остальное — от карточки,
    поэтому на узком экране колесо уменьшается целиком, а не болтается
    маленькой карточкой на огромном барабане. */
-const CARD_H = 0.38; // высота передней карточки, доля высоты сцены
-const CARD_MAX_W = 0.34; // но не шире этой доли ширины сцены
+const CARD_H = 0.5; // высота передней карточки, доля высоты сцены
+const CARD_MAX_W = 0.44; // но не шире этой доли ширины сцены
 const CARD_MAX_W_NARROW = 0.78; // на телефоне ограничение другое
 const NARROW = 900;
 const CARD_RATIO = 1.45; // ширина карточки к высоте
 const STEP = 40; // градусов между кадрами на барабане
 const DRUM = 2.22; // радиус барабана, в высотах карточки — и всё ниже тоже
 const LENS = 2.7; // расстояние до точки схода
-const RING_R = 0.9; // радиус кольца
+const RING_R = 0.78; // радиус кольца: кадры крупные, круг теснее
 const RING_R_NARROW = 0.7; // на телефоне кольцо теснее, иначе не влезает
 /* Барабан сам по себе вешает кадры на отвес. Это не отвес: лента уходит
    по дуге, центр которой смещён влево, поэтому кадр впереди стоит в ближней
@@ -26,11 +26,24 @@ const RING_R_NARROW = 0.7; // на телефоне кольцо теснее, �
    с подъёмом и спуском. BOW — радиус этой дуги. */
 const BOW = 1.82;
 /* Дальше этого кадр стоит ребром, а ещё дальше — сваливается в точку схода. */
-const CULL = 1.6;
+const CULL = 1.2;
+/* Окно, в котором дальние кадры растворяются: к середине раскрытия
+   от кольца остаются только передний и два соседних, иначе дальняя
+   сторона круга приходит по дуге и наезжает на передний кадр. */
+const FADE_FROM = 0.06;
+const FADE_TO = 0.34;
+/* Насколько кадр должен лежать плашмя, чтобы его было видно:
+   1 — строго к зрителю, 0 — ребром. */
+const EDGE_FROM = 0.25;
+const EDGE_SPAN = 0.35;
 
 /* Сколько экрана прокрутки уходит на раскрытие кольца и на один кадр. */
 const RING_VH = 0.5;
 const STEP_VH = 0.36;
+/* Запас в конце: колесо доворачивается раньше, чем липкая сцена
+   трогается с места. Без него последний кадр и отрыв сцены приходятся
+   на один и тот же пиксель прокрутки, и в стык виден рывок. */
+const HOLD_VH = 0.35;
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -159,7 +172,7 @@ export function CadetReel() {
       const t = scrolled <= ringPx ? scrolled / ringPx : 1 + (scrolled - ringPx) / stepPx;
 
       const m = clamp(t, 0, 1);
-      const pos = Math.max(0, t - 1);
+      const pos = clamp(t - 1, 0, last);
 
       /* барабан отодвинут назад, чтобы его передняя грань легла на плоскость
          картинки: без этого кольцо оказалось бы у дальней стенки перспективы */
@@ -171,7 +184,18 @@ export function CadetReel() {
         const card = cardRefs.current[i];
         if (card) {
           card.style.transform = place(d * (360 / count), d * STEP, ringR, drumR, bow, m);
-          card.style.opacity = m > 0.5 && Math.abs(d) > CULL ? '0' : '1';
+          /* гасим не по углу, а по расстоянию: на полном обороте дальняя
+             сторона разворачивается к нам и сваливается в точку схода */
+          const fade = clamp((m - FADE_FROM) / (FADE_TO - FADE_FROM), 0, 1);
+          const far = Math.abs(d) > CULL;
+          /* кадр гаснет, не доходя до ребра: иначе он мелькает светлой
+             полоской поперёк переднего. Угол берём уже приложенный —
+             в кольце он нулевой, и там видны все */
+          const flat = Math.abs(Math.cos(rad(m * d * STEP)));
+          const edge = clamp((flat - EDGE_FROM) / EDGE_SPAN, 0, 1);
+          const shown = Math.min(far ? 1 - fade : 1, edge);
+          card.style.opacity = shown.toFixed(3);
+          card.style.visibility = shown < 0.01 ? 'hidden' : 'visible';
           card.style.zIndex = String(Math.round(100 - Math.abs(d) * 2));
           const front = m > 0.9 && i === near;
           card.dataset.front = front ? 'true' : 'false';
@@ -236,7 +260,9 @@ export function CadetReel() {
       aria-labelledby="cadet-reel-title"
       style={
         live
-          ? ({ height: `calc(100svh * ${1 + RING_VH + last * STEP_VH})` } as React.CSSProperties)
+          ? ({
+              height: `calc(100svh * ${1 + RING_VH + last * STEP_VH + HOLD_VH})`,
+            } as React.CSSProperties)
           : undefined
       }
     >
