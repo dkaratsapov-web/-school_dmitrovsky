@@ -11,10 +11,14 @@ import { prefersReducedMotion } from './motion';
  * в CSS-переменные --mx и --my, само движение остаётся за стилями —
  * анимируется только transform.
  *
+ * Сдвиг намеренно небольшой: кнопка должна подаваться навстречу, а не
+ * уезжать из-под курсора и наползать на соседние.
+ *
  * @param pull доля расстояния до курсора, на которую сдвигается кнопка
  * @param reach насколько далеко от кнопки она начинает реагировать, px
+ * @param limit предел сдвига, px
  */
-export function useMagnetic<T extends HTMLElement>(pull = 0.28, reach = 90) {
+export function useMagnetic<T extends HTMLElement>(pull = 0.1, reach = 56, limit = 7) {
   const ref = useRef<T>(null);
 
   useEffect(() => {
@@ -41,8 +45,9 @@ export function useMagnetic<T extends HTMLElement>(pull = 0.28, reach = 90) {
       const dy = e.clientY - (r.top + r.height / 2);
       /* за пределами досягаемости кнопка стоит на месте */
       const near = Math.abs(dx) < r.width / 2 + reach && Math.abs(dy) < r.height / 2 + reach;
-      x = near ? dx * pull : 0;
-      y = near ? dy * pull * 0.6 : 0;
+      const cap = (v: number) => Math.max(-limit, Math.min(limit, v));
+      x = near ? cap(dx * pull) : 0;
+      y = near ? cap(dy * pull * 0.5) : 0;
       request();
     };
 
@@ -61,7 +66,7 @@ export function useMagnetic<T extends HTMLElement>(pull = 0.28, reach = 90) {
       window.removeEventListener('blur', onLeave);
       if (frame) window.cancelAnimationFrame(frame);
     };
-  }, [pull, reach]);
+  }, [pull, reach, limit]);
 
   return ref;
 }

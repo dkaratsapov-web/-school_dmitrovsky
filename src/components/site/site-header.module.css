@@ -945,10 +945,16 @@ button.chip {
     color var(--t-fast) var(--ease);
 }
 
-.navAccent:hover,
 .navAccent[data-active='true'] {
   background: rgba(126, 31, 46, 0.5);
   box-shadow: inset 0 0 0 1px var(--c-wine-500), 0 6px 18px rgba(126, 31, 46, 0.36);
+}
+
+/* под курсором подложка заметно ярче — в том числе на своей же странице,
+   где пункт и без того подсвечен */
+.navAccent:hover {
+  background: var(--c-wine-700);
+  box-shadow: inset 0 0 0 1px var(--c-wine-600), 0 8px 22px rgba(126, 31, 46, 0.5);
 }
 
 /* метка идёт по нижней кромке слева направо и уходит за край */

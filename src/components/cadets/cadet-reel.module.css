@@ -1,46 +1,66 @@
 /* =========================================================================
-   Кадры из жизни корпуса — лента
+   Кадры из жизни корпуса — колесо
 
-   Не карусель одинаковых плиток: у каждого кадра своя сторона, и стоят
-   они как на плёнке — кадр в рост, кадр поперёк, кадр квадратом. Рамка
-   подгоняется под снимок, поэтому ничего не обрезается.
+   В покое кадры стоят кольцом вокруг названия блока. Прокрутка раскрывает
+   кольцо в вертикальный барабан: кадр впереди лежит плашмя, соседние
+   уходят в перспективу и сбегают за верх и низ экрана.
 
-   Лента едет родной прокруткой с привязкой к кадру: без скрипта она
-   остаётся рабочей. Кадр у левой отбивки выходит на полный свет,
-   остальные отступают вглубь.
+   Размеры карточек и точку схода ставит скрипт (CadetReel.tsx). Пока их
+   нет — data-live="false", — блок остаётся обычной сеткой кадров: так
+   он выглядит без скрипта и при выключенной анимации.
    ========================================================================= */
 
 .section {
-  --p: 0.5;
-  --prog: 0;
-  /* отбивка ленты совпадает с краем колонки заголовка */
-  --edge: max(var(--gutter), calc((100% - var(--container)) / 2));
   position: relative;
-  overflow-x: clip;
-  padding-block: clamp(2.5rem, 5vw, 4.5rem);
-  /* темнее первого экрана: снимки на тёмном читаются как в зале */
   background: #00142c;
   color: #fff;
 }
 
-/* ------------------------------------------------------------- заголовок */
-.head,
-.foot {
+.sticky {
+  padding-block: clamp(2.5rem, 5vw, 4rem);
+}
+
+.stage {
+  position: relative;
   width: min(100% - 2 * var(--gutter), var(--container));
   margin-inline: auto;
 }
 
-.head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1rem 1.5rem;
-  margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
+/* ------------------------------------------------- состояние без скрипта */
+.wheel {
+  display: grid;
+  gap: clamp(0.75rem, 1.4vw, 1.25rem);
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
 }
 
-.title {
-  margin: 0;
+.card {
+  min-width: 0;
+}
+
+.face {
+  position: relative;
+  display: block;
+  overflow: clip;
+  border-radius: var(--r-lg);
+  background: #000d1e;
+}
+
+.shot {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.cardCaption {
+  display: block;
+  padding: 10px 2px 0;
+  font-size: var(--fs-caption);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.label {
+  max-width: 24rem;
+  margin: 0 0 clamp(1.25rem, 2.5vw, 2rem);
   font-family: var(--font-display);
   font-size: clamp(1.75rem, 1.2rem + 2.2vw, 3rem);
   font-weight: var(--fw-black);
@@ -48,141 +68,184 @@
   color: #fff;
 }
 
-.tools {
-  display: flex;
-  align-items: center;
-  gap: clamp(1rem, 2vw, 1.75rem);
-}
-
-.counter {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin: 0;
-  /* цифра меняется проворотом — лишнее за краем не видно */
-  overflow: clip;
-}
-
-.counter .roll {
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
-  font-weight: var(--fw-bold);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
-}
-
-.of {
-  font-size: var(--fs-caption);
-  color: rgba(255, 255, 255, 0.55);
-}
-
-.buttons {
-  display: flex;
-  gap: 8px;
-}
-
-.step {
-  display: grid;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-  padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 50%;
-  background: transparent;
-  color: #fff;
-  cursor: pointer;
-  transition: background-color var(--t-base) var(--ease), border-color var(--t-base) var(--ease),
-    transform var(--t-base) var(--ease);
-}
-
-.step:hover:not(:disabled) {
-  background: var(--c-wine-600);
-  border-color: var(--c-wine-600);
-  transform: scale(1.06);
-}
-
-.step:disabled {
-  opacity: 0.32;
-  cursor: default;
-}
-
-.step:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 3px;
-}
-
-/* ------------------------------------------------------------------ лента */
-.rail {
-  display: flex;
-  align-items: center;
-  gap: clamp(0.75rem, 1.4vw, 1.25rem);
-  padding-inline: var(--edge);
-  /* небольшой запас снизу и сверху: приподнятому кадру есть где стоять */
-  padding-block: 12px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x proximity;
-  scroll-padding-inline-start: var(--edge);
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-}
-
-.rail::-webkit-scrollbar {
+.front,
+.index {
   display: none;
 }
 
-.rail:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: -2px;
+/* ------------------------------------------------------------- колесо */
+.stage[data-live='true'] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  margin: 0;
 }
 
-.frame {
-  --k: 0;
-  position: relative;
-  flex: none;
-  /* виден край следующего кадра: понятно, что лента листается */
-  width: min(calc(100% - 2.75rem), 30rem);
-  aspect-ratio: var(--ar, 4 / 3);
+.section[data-live='true'] .sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  padding: 0;
   overflow: clip;
-  border-radius: var(--r-lg);
-  background: #000d1e;
-  scroll-snap-align: start;
-  /* кадр у отбивки — на полном свету, дальние отступают вглубь */
-  transform: scale(calc(1 - 0.05 * var(--k)));
-  transform-origin: 50% 55%;
-  opacity: calc(1 - 0.42 * var(--k));
 }
 
-@media (min-width: 640px) {
-  .frame {
-    /* сторону задаёт сам снимок: высота общая, ширина у каждого своя */
-    width: auto;
-    height: clamp(20rem, 54vh, 38rem);
+.stage[data-live='true'] .wheel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  gap: 0;
+  transform-style: preserve-3d;
+}
+
+.stage[data-live='true'] .card {
+  position: absolute;
+  backface-visibility: hidden;
+  /* ширину, высоту и вынос ставит скрипт: они меряются от сцены */
+}
+
+.stage[data-live='true'] .face {
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.45);
+}
+
+.stage[data-live='true'] .shot {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* рамка карточки подогнана под сторону снимка, поэтому cover
+     ничего не срезает */
+  object-fit: cover;
+}
+
+.stage[data-live='true'] .cardCaption {
+  display: none;
+}
+
+/* название блока в середине кольца — по ширине оно должно укладываться
+   внутрь круга, иначе кадры наезжают на строку */
+.stage[data-live='true'] .label {
+  position: absolute;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  max-width: none;
+  margin: 0;
+  /* строка укладывается внутрь круга: шире — и кадры наедут на неё */
+  padding-inline: max(var(--gutter), calc(50% - 11rem));
+  font-size: clamp(1.5rem, 1.1rem + 1.5vw, 2.5rem);
+  text-align: center;
+  text-wrap: balance;
+  pointer-events: none;
+}
+
+/* на телефоне внутрь кольца название не помещается — поднимаем его
+   над кругом */
+@media (max-width: 899px) {
+  .stage[data-live='true'] .label {
+    align-content: start;
+    padding-top: 12vh;
   }
 }
 
-.shot {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* снимок внутри рамки идёт со своей скоростью: запас на масштабе,
-     поэтому края не оголяются */
-  transform: translate3d(0, calc((var(--p) - 0.5) * -5%), 0) scale(1.09);
+/* подпись кадра, вставшего впереди */
+.stage[data-live='true'] .front {
+  position: absolute;
+  top: 50%;
+  left: clamp(1rem, 6%, 5rem);
+  z-index: 200;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  max-width: min(22rem, 42%);
+  opacity: 0;
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 
-.film {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: #000;
-  object-fit: contain;
+/* на узком экране подпись уходит вниз: у кадра там нет соседей,
+   а тёмная подложка держит её читаемой */
+@media (max-width: 899px) {
+  .stage[data-live='true'] .front {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-width: none;
+    justify-content: center;
+    padding: 4rem var(--gutter) clamp(1.25rem, 4vh, 2rem);
+    background: linear-gradient(to top, #00142c 30%, rgba(0, 20, 44, 0));
+    text-align: center;
+    transform: none;
+  }
 }
 
-/* --------------------------------------------------------------- фильм */
+.frontNum {
+  font-family: var(--font-display);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  color: var(--c-wine-500);
+  font-variant-numeric: tabular-nums;
+}
+
+.frontWord {
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 0.9rem + 0.9vw, 1.75rem);
+  font-weight: var(--fw-bold);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* список кадров справа — он же навигация */
+@media (min-width: 900px) {
+  .stage[data-live='true'] .index {
+    position: absolute;
+    top: 12%;
+    right: clamp(1rem, 3%, 3rem);
+    z-index: 200;
+    display: block;
+    max-width: 18rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: right;
+  }
+}
+
+.indexItem {
+  display: block;
+  width: 100%;
+  padding: 3px 0;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  font-family: var(--font-text);
+  font-size: var(--fs-caption);
+  line-height: 1.5;
+  text-align: right;
+  cursor: pointer;
+  transition: color var(--t-base) var(--ease);
+}
+
+.indexItem:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.indexOn {
+  color: #fff;
+  font-weight: var(--fw-semibold);
+}
+
+.indexItem:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------- фильм */
 .play {
   position: absolute;
   inset: 0;
@@ -190,20 +253,32 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  gap: 12px;
   width: 100%;
   padding: 0;
   border: 0;
-  background: linear-gradient(to bottom, rgba(0, 12, 26, 0.15), rgba(0, 12, 26, 0.62));
+  background: linear-gradient(to bottom, rgba(0, 12, 26, 0.12), rgba(0, 12, 26, 0.6));
   color: #fff;
   font: inherit;
   cursor: pointer;
 }
 
+/* на колесе кнопка работает только у кадра, вставшего впереди */
+.stage[data-live='true'] .play {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 320ms var(--ease);
+}
+
+.stage[data-live='true'] .card[data-front='true'] .play {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .playMark {
   position: relative;
-  width: clamp(58px, 7vw, 76px);
-  height: clamp(58px, 7vw, 76px);
+  width: clamp(54px, 6vw, 72px);
+  height: clamp(54px, 6vw, 72px);
   border-radius: 50%;
   background: var(--c-wine-600);
   transition: transform var(--t-base) var(--ease);
@@ -217,7 +292,7 @@
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 11px 0 11px 18px;
+  border-width: 10px 0 10px 17px;
   border-color: transparent transparent transparent #fff;
   transform: translate(-50%, -50%);
 }
@@ -234,73 +309,77 @@
 
 .playWord {
   font-family: var(--font-display);
-  font-size: var(--fs-body);
+  font-size: var(--fs-small);
   font-weight: var(--fw-bold);
   letter-spacing: -0.01em;
   text-align: center;
   padding-inline: 1rem;
 }
 
-/* --------------------------------------------------------- подпись и ход */
-.foot {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(0.875rem, 1.6vw, 1.25rem);
-  margin-top: clamp(1.25rem, 2.4vw, 2rem);
+/* ------------------------------------------------------- окно с фильмом */
+.window {
+  width: min(96vw, 64rem);
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-lg);
+  background: #000;
+  overflow: visible;
 }
 
-.caption {
-  margin: 0;
-  min-height: 1.5em;
-  overflow: clip;
-  font-size: var(--fs-body);
-  color: rgba(255, 255, 255, 0.82);
-}
-
-.roll {
-  display: inline-block;
-  animation: roll 420ms var(--ease) backwards;
-}
-
-@keyframes roll {
-  from {
-    transform: translateY(0.9em);
-    opacity: 0;
-  }
-}
-
-.bar {
+.window[open] {
   display: block;
+}
+
+.window::backdrop {
+  background: rgba(0, 12, 26, 0.82);
+}
+
+.windowClip {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--r-lg);
+}
+
+.windowClose {
+  position: absolute;
+  top: -48px;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.windowBar {
+  position: absolute;
+  width: 16px;
   height: 2px;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.16);
+  background: #fff;
 }
 
-.barFill {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--c-wine-600);
-  transform: scaleX(var(--prog));
-  transform-origin: left center;
+.windowBar:first-child {
+  transform: rotate(45deg);
+}
+
+.windowBar:last-child {
+  transform: rotate(-45deg);
+}
+
+.windowClose:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .frame {
-    transform: none;
-    opacity: 1;
-  }
-
-  .shot {
-    transform: none;
-  }
-
-  .roll {
-    animation: none;
-  }
-
-  .step:hover:not(:disabled),
+  .playMark,
   .play:hover .playMark {
+    transition: none;
     transform: none;
   }
 }
