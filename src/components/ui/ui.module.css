@@ -614,46 +614,53 @@
   }
 }
 
-/* ============================== Cookie ============================== */
+/* ============================== Cookie ==============================
+   Тонкая полоса во всю ширину внизу экрана: уведомление не закрывает
+   содержимое и не спорит с формами, как это делало окно в углу. */
 .cookie {
   position: fixed;
-  left: var(--s-4);
-  right: var(--s-4);
-  bottom: var(--s-4);
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: var(--z-toast);
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-4);
-  max-width: 420px;
-  margin-inline: auto 0;
-  padding: var(--s-5);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--r-lg);
-  box-shadow: var(--sh-3);
-  font-size: var(--fs-small);
+  padding-block: clamp(0.5rem, 1vw, 0.75rem);
+  background: rgba(0, 13, 27, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(10px);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: var(--fs-caption);
+  line-height: 1.45;
   animation: rise var(--t-slow) var(--ease);
 }
 
+.cookieInner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.625rem 1.5rem;
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+
 @media (min-width: 768px) {
-  .cookie {
+  .cookieInner {
     flex-direction: row;
     align-items: center;
-    max-width: 560px;
-    right: auto;
-    left: var(--s-6);
-    bottom: var(--s-6);
-    margin-inline: 0;
+    justify-content: space-between;
   }
 }
 
 .cookieText {
   margin: 0;
-  color: var(--color-text-muted);
+  min-width: 0;
+  color: inherit;
 }
 
 .cookieActions {
+  display: flex;
   flex: none;
+  align-items: center;
+  gap: clamp(0.875rem, 1.6vw, 1.25rem);
 }
 
 /* Ссылка в уведомлении о cookie, пока политика не вынесена на свою страницу. */
@@ -663,11 +670,11 @@
   border: 0;
   background: none;
   font: inherit;
-  color: var(--c-navy-700);
+  color: #fff;
   text-decoration: underline;
   cursor: pointer;
 }
 
 .cookiePolicy:hover {
-  color: var(--c-wine-700);
+  color: var(--c-wine-300);
 }

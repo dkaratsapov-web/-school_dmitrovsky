@@ -71,16 +71,19 @@ export function CookieNotice({ text, policyLabel, acceptLabel }: Props) {
 
   return (
     <div className={s.cookie} role="region" aria-label="Уведомление об использовании cookie">
-      <p className={s.cookieText}>
-        {text}{' '}
-        <button type="button" className={s.cookiePolicy} onClick={() => setPolicy(true)}>
-          {policyLabel}
-        </button>
-      </p>
-      <div className={s.cookieActions}>
-        <Button variant="primary" size="sm" onClick={accept}>
-          {acceptLabel}
-        </Button>
+      <div className={s.cookieInner}>
+        <p className={s.cookieText}>{text}</p>
+
+        {/* ссылка стоит рядом с кнопкой, а не в конце фразы: в строку
+            она вклинивалась в текст и читалась его продолжением */}
+        <div className={s.cookieActions}>
+          <button type="button" className={s.cookiePolicy} onClick={() => setPolicy(true)}>
+            {policyLabel}
+          </button>
+          <Button variant="primary" size="sm" onClick={accept}>
+            {acceptLabel}
+          </Button>
+        </div>
       </div>
 
       <CallbackModal
