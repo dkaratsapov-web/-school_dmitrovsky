@@ -12,8 +12,8 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  /* чуть ниже главной: это глава внутри сайта, а не его обложка */
-  min-height: 92svh;
+  /* во весь экран, как на главной: кадр — главное на этой странице */
+  min-height: 100svh;
   overflow: clip;
   background: #001b3a;
   isolation: isolate;
