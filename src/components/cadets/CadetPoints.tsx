@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
-import { Count } from '../ui/Count';
 import { cadetPointsFull, cadetPointsTitle } from '@/content/cadets';
 import { asset } from '@/lib/asset';
 import { prefersReducedMotion, useScrollProgressVar } from '@/lib/motion';
@@ -80,17 +79,9 @@ export function CadetPoints() {
   return (
     <section className={s.section} ref={sectionRef} aria-labelledby="cadet-points-title">
       <div className={s.inner}>
-        <div className={s.head}>
-          <h2 className={s.title} id="cadet-points-title">
-            {cadetPointsTitle}
-          </h2>
-          <p className={s.count}>
-            <span className={s.countValue}>
-              <Count to={cadetPointsFull.length} />
-            </span>
-            <span className={s.countWord}>направлений</span>
-          </p>
-        </div>
+        <h2 className={s.title} id="cadet-points-title">
+          {cadetPointsTitle}
+        </h2>
 
         <ul className={s.list} ref={listRef}>
           {cadetPointsFull.map((point, i) => {

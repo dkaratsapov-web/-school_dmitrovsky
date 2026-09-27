@@ -99,6 +99,9 @@
 .corner,
 .day {
   padding: 12px 14px;
+  /* по левому краю, как и ячейки: иначе день и его описание
+     стоят на разных вертикалях */
+  text-align: left;
   background: var(--c-navy-900);
   color: #fff;
   font-family: var(--font-display);
@@ -106,6 +109,15 @@
   font-weight: var(--fw-bold);
   letter-spacing: -0.01em;
   white-space: nowrap;
+}
+
+/* разделители между днями — только там, где у дней разное содержимое */
+.day + .day {
+  border-left: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.cell + .cell {
+  border-left: 1px solid var(--color-border);
 }
 
 .corner {
