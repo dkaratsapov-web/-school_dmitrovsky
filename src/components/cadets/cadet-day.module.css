@@ -93,15 +93,13 @@
   table-layout: fixed;
   font-size: var(--fs-caption);
   line-height: 1.4;
-  text-align: left;
+  text-align: center;
 }
 
 .corner,
 .day {
   padding: 12px 14px;
-  /* по левому краю, как и ячейки: иначе день и его описание
-     стоят на разных вертикалях */
-  text-align: left;
+  text-align: center;
   background: var(--c-navy-900);
   color: #fff;
   font-family: var(--font-display);
@@ -162,6 +160,9 @@
     text-align: left;
   }
 }
+
+/* ячейки по дням выравниваются по центру своей колонки — вместе
+   с названием дня над ними */
 
 .table tbody tr:nth-child(2n) .cell {
   background: rgba(1, 31, 63, 0.03);
