@@ -6,7 +6,7 @@
   --sp: 1;
   position: relative;
   height: clamp(64px, 6.5vw, 126px);
-  background: var(--c-navy-950);
+  background: var(--seam-dark, var(--c-navy-950));
   overflow: clip;
   isolation: isolate;
 }
@@ -19,7 +19,7 @@
   width: 160%;
   height: 100%;
   margin-left: -80%;
-  background: var(--c-navy-50);
+  background: var(--seam-light, var(--c-navy-50));
   border-radius: 50% 50% 0 0 / 100% 100% 0 0;
   transform: translate3d(0, calc((1 - var(--sp)) * 46%), 0) scaleY(calc(0.72 + var(--sp) * 0.28));
   transform-origin: 50% 100%;
@@ -81,13 +81,13 @@
    и висит на верхнем крае, иначе между ним и следующим блоком остаётся
    полоса чужого цвета. */
 .flip {
-  background: var(--c-navy-950);
+  background: var(--seam-dark, var(--c-navy-950));
 }
 
 .flip .dome {
   top: 0;
   bottom: auto;
-  background: var(--c-navy-50);
+  background: var(--seam-light, var(--c-navy-50));
   border-radius: 0 0 50% 50% / 0 0 100% 100%;
   transform: translate3d(0, calc((1 - var(--sp)) * -46%), 0) scaleY(calc(0.72 + var(--sp) * 0.28));
   transform-origin: 50% 0;

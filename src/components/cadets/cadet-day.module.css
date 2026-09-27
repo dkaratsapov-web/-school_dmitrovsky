@@ -1,0 +1,123 @@
+/* =========================================================================
+   Распорядок дня — панель, которая распрямляется по прокрутке
+
+   Панель наклонена назад и по мере подхода к экрану ложится прямо,
+   а заголовок в это время уходит вверх. Всё движение — один transform
+   от прокрутки; вёрстка не пересчитывается.
+   ========================================================================= */
+
+.section {
+  --p: 0;
+  /* сколько осталось от наклона: 1 — лежит от зрителя, 0 — стоит прямо */
+  --tilt: max(0, 1 - var(--p) * 1.75);
+  position: relative;
+  overflow-x: clip;
+  padding-block: clamp(3rem, 6vw, 5.5rem) clamp(3.5rem, 7vw, 6rem);
+  background: var(--c-navy-950);
+  color: #fff;
+}
+
+.inner {
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+
+/* ------------------------------------------------------------- заголовок */
+.head {
+  max-width: 46rem;
+  margin-inline: auto;
+  text-align: center;
+  transform: translate3d(0, calc(var(--tilt) * 48px), 0);
+}
+
+.title {
+  margin: 0 0 clamp(0.75rem, 1.6vw, 1.125rem);
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 1.3rem + 2.4vw, 3.25rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+
+.lead {
+  margin: 0;
+  font-size: clamp(1rem, 0.95rem + 0.35vw, 1.1875rem);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.76);
+  text-wrap: balance;
+}
+
+/* ----------------------------------------------------------------- панель */
+.stage {
+  perspective: 1200px;
+  margin-top: clamp(1.75rem, 3.5vw, 3rem);
+}
+
+.panel {
+  max-width: 62rem;
+  margin-inline: auto;
+  padding: clamp(0.5rem, 1.2vw, 1rem);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: clamp(18px, 2vw, 30px);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45), 0 90px 90px rgba(0, 0, 0, 0.22);
+  transform-origin: 50% 0;
+  transform: rotateX(calc(var(--tilt) * 20deg)) scale(calc(1 + var(--tilt) * 0.04));
+}
+
+.screen {
+  display: grid;
+  gap: clamp(1.25rem, 2.6vw, 2rem);
+  padding: clamp(1.5rem, 3.2vw, 2.75rem);
+  border-radius: clamp(12px, 1.4vw, 20px);
+  background: var(--c-navy-50);
+  color: var(--c-ink-800);
+}
+
+@media (min-width: 900px) {
+  .screen {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.text {
+  margin: 0;
+  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--c-ink-700);
+}
+
+/* ------------------------------------------------------------------ цифры */
+.facts {
+  display: grid;
+  gap: clamp(0.875rem, 1.8vw, 1.25rem);
+  margin: 0;
+}
+
+.fact {
+  padding-left: clamp(0.875rem, 1.6vw, 1.25rem);
+  border-left: 3px solid var(--c-wine-600);
+}
+
+.factValue {
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--c-navy-900);
+}
+
+.factLabel {
+  margin: 4px 0 0;
+  font-size: var(--fs-caption);
+  color: var(--c-ink-500);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .head,
+  .panel {
+    transform: none;
+  }
+}
