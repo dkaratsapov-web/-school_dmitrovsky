@@ -1,0 +1,87 @@
+/* =========================================================================
+   Узор тёмных полос: сетка точек по краям и знаки школы в ней
+   ========================================================================= */
+
+.field {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: clip;
+  pointer-events: none;
+  /* редкая сетка точек */
+  background-image: radial-gradient(rgba(255, 255, 255, 0.075) 1px, transparent 1px);
+  background-size: 34px 34px;
+  /* сетка живёт только по краям: середину занимает содержимое */
+  mask-image: linear-gradient(
+    to right,
+    #000 0,
+    #000 16%,
+    transparent 34%,
+    transparent 66%,
+    #000 84%,
+    #000 100%
+  );
+}
+
+.atom {
+  position: absolute;
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.11);
+  stroke-width: 0.5;
+  animation: turn linear infinite;
+}
+
+.core {
+  fill: rgba(178, 58, 76, 0.5);
+  stroke: none;
+}
+
+/* три знака разного размера: по краям и один внизу — там, где пусто */
+.one {
+  top: 6%;
+  left: -3%;
+  width: clamp(120px, 15vw, 260px);
+  height: clamp(120px, 15vw, 260px);
+  animation-duration: 96s;
+}
+
+.two {
+  right: -2%;
+  bottom: 8%;
+  width: clamp(90px, 11vw, 200px);
+  height: clamp(90px, 11vw, 200px);
+  animation-duration: 132s;
+  animation-direction: reverse;
+}
+
+.three {
+  left: 7%;
+  bottom: 5%;
+  width: clamp(60px, 7vw, 120px);
+  height: clamp(60px, 7vw, 120px);
+  animation-duration: 74s;
+  opacity: 0.7;
+}
+
+@keyframes turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* на узком экране по бокам места нет: остаётся только сетка */
+@media (max-width: 899px) {
+  .atom {
+    display: none;
+  }
+
+  .field {
+    mask-image: linear-gradient(to bottom, #000 0, transparent 22%, transparent 78%, #000 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atom {
+    animation: none;
+  }
+}

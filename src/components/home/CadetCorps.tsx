@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from '../ui/Icon';
+import { OrbitField } from '../ui/OrbitField';
 import { cadetLead, cadetPoints, cadetPrice, cadetShots, cadetText, cadetVideo } from '@/content/cadets';
 import { ConsultInline } from '../forms/ConsultInline';
 import { asset } from '@/lib/asset';
@@ -152,6 +153,8 @@ export function CadetCorps() {
 
   return (
     <section className={s.section} id="cadets" ref={ref} aria-labelledby="cadets-title">
+      <OrbitField quiet />
+
       <div className={s.inner}>
         <div className={s.top}>
           <div className={s.words}>

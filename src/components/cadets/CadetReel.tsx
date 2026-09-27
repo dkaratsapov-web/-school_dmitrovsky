@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { OrbitField } from '../ui/OrbitField';
 import { cadetReel, cadetReelTitle, cadetVideo } from '@/content/cadets';
 import { asset } from '@/lib/asset';
 import { prefersReducedMotion } from '@/lib/motion';
@@ -285,6 +286,8 @@ export function CadetReel() {
       }
     >
       <div className={s.sticky}>
+        <OrbitField />
+
         <div className={s.stage} ref={stageRef} data-live={live ? 'true' : 'false'}>
           <div className={s.wheel} ref={wheelRef}>
             {cadetReel.map((f, i) => (

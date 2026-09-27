@@ -1,16 +1,16 @@
 /* =========================================================================
-   Что входит в проект — карточки
+   Что входит в проект — неровная сетка
 
-   Двенадцать карточек на светлой полосе. Чтобы они не читались стеной
-   одинаковых плиток, работают две вещи: карточки выходят волной
-   по диагонали, а бордовая черта дорисовывается уже после того, как
-   карточка встала на место. Под курсором карточка приподнимается
-   и черта уходит во всю ширину.
+   Двенадцать направлений разным весом. Там, где у школы есть снимок,
+   плитка становится кадром с подписью поверх; длинные пункты занимают
+   две колонки; полный день выделен заливкой и полосой от 8:00 до 19.30.
+   Вес плитки отвечает весу пункта, а не его номеру в списке.
    ========================================================================= */
 
 .section {
+  --p: 0.5;
   position: relative;
-  /* карточки выходят снизу — обрезаем, чтобы не тянуть страницу */
+  /* плитки выходят снизу — обрезаем, чтобы не тянуть страницу */
   overflow-x: clip;
   padding-block: clamp(3rem, 6vw, 5rem);
   background: var(--c-navy-50);
@@ -29,6 +29,15 @@
   justify-content: space-between;
   gap: 0.5rem 1.5rem;
   margin-bottom: clamp(1.75rem, 4vw, 3rem);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 1.3rem + 2.4vw, 3.25rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.03em;
+  color: var(--c-navy-900);
 }
 
 .count {
@@ -53,57 +62,57 @@
   color: var(--c-ink-500);
 }
 
-.title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(1.875rem, 1.3rem + 2.4vw, 3.25rem);
-  font-weight: var(--fw-black);
-  letter-spacing: -0.03em;
-  color: var(--c-navy-900);
-}
-
 /* --------------------------------------------------------------- сетка */
 .list {
   display: grid;
-  gap: clamp(0.75rem, 1.4vw, 1.125rem);
-  grid-template-columns: 1fr;
   /* плитки разного веса: пустое место в ряду занимает следующая */
   grid-auto-flow: dense;
+  grid-template-columns: 1fr;
+  grid-auto-rows: minmax(8.5rem, auto);
+  gap: clamp(0.75rem, 1.4vw, 1.125rem);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 620px) {
   .list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-}
 
-@media (min-width: 1024px) {
-  .list {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .wide,
+  .shotWide {
+    grid-column: span 2;
+  }
+
+  .shotTall,
+  .shotWide {
+    grid-row: span 2;
   }
 }
 
-@media (min-width: 1600px) {
+@media (min-width: 900px) {
+  .list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: minmax(9rem, auto);
+  }
+}
+
+@media (min-width: 1280px) {
   .list {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
-@media (min-width: 640px) {
-  .wide {
-    grid-column: span 2;
-  }
-}
-
-/* ------------------------------------------------------------ карточка */
+/* ------------------------------------------------------------ плитка */
 .point {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  min-width: 0;
   padding: clamp(1.125rem, 1.8vw, 1.5rem);
+  overflow: clip;
   border: 1px solid var(--color-border);
   border-radius: var(--r-lg);
   background: #fff;
@@ -117,14 +126,107 @@
   box-shadow: 0 16px 34px rgba(0, 21, 45, 0.1);
 }
 
+/* черта: дорисовывается после того, как плитка встала */
+.mark {
+  width: 34px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--c-wine-600);
+  transform-origin: left center;
+  transition: transform var(--t-base) var(--ease);
+}
+
+.point:hover .mark {
+  transform: scaleX(1.9);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  /* подпись поверх кадра */
+  position: relative;
+  z-index: 1;
+}
+
+.pointTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  color: var(--c-navy-900);
+}
+
+.pointText {
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: var(--c-ink-600);
+}
+
 /* широкая плитка: заголовок крупнее — по кеглю видно вес пункта */
-@media (min-width: 640px) {
+@media (min-width: 620px) {
   .wide .pointTitle {
     font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.3125rem);
   }
 }
 
-/* полный день — единственная залитая плитка в блоке */
+/* ------------------------------------------------------- плитка-кадр */
+.shot {
+  justify-content: flex-end;
+  border-color: transparent;
+  background: var(--c-navy-900);
+}
+
+.photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* кадр идёт со своей скоростью по мере прокрутки блока */
+  transform: translate3d(0, calc((var(--p) - 0.5) * -4%), 0) scale(1.07);
+  transition: transform 600ms var(--ease);
+}
+
+.shot:hover .photo {
+  transform: translate3d(0, calc((var(--p) - 0.5) * -4%), 0) scale(1.12);
+}
+
+/* затемнение снизу: подпись читается на любом кадре */
+.veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 16, 34, 0.86) 0%,
+    rgba(0, 16, 34, 0.52) 42%,
+    rgba(0, 16, 34, 0.12) 100%
+  );
+}
+
+.shot .pointTitle {
+  color: #fff;
+}
+
+.shot .pointText {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.shot:hover {
+  border-color: transparent;
+  box-shadow: 0 20px 44px rgba(0, 21, 45, 0.24);
+}
+
+/* на узком экране кадру нужна своя высота: рядов сетки там нет */
+@media (max-width: 619px) {
+  .shot {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* ----------------------------------------------------- полный день */
 .accent {
   border-color: transparent;
   background: var(--c-navy-900);
@@ -147,45 +249,54 @@
   box-shadow: 0 18px 40px rgba(0, 21, 45, 0.28);
 }
 
-/* черта: дорисовывается после того, как карточка встала */
-.mark {
-  width: 34px;
-  height: 3px;
-  border-radius: 2px;
-  background: var(--c-wine-600);
-  transform-origin: left center;
-  transition: transform var(--t-base) var(--ease);
-}
-
-.point:hover .mark {
-  transform: scaleX(1.9);
-}
-
-.body {
+/* полоса школьного дня */
+.day {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  font-size: var(--fs-caption);
+  color: rgba(255, 255, 255, 0.6);
+  font-variant-numeric: tabular-nums;
+}
+
+.dayMark {
+  flex: none;
+}
+
+.dayRail {
+  position: relative;
+  flex: 1;
+  height: 2px;
   min-width: 0;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.18);
+  overflow: clip;
 }
 
-.pointTitle {
-  font-family: var(--font-display);
-  font-size: var(--fs-body);
-  font-weight: var(--fw-bold);
-  letter-spacing: -0.01em;
-  line-height: 1.25;
-  color: var(--c-navy-900);
+.dayFill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--c-wine-500);
+  transform: scaleX(0);
+  transform-origin: left center;
 }
 
-.pointText {
-  font-size: var(--fs-small);
-  line-height: 1.5;
-  color: var(--c-ink-600);
+.accent[data-in='true'] .dayFill {
+  animation: dayIn 1100ms 420ms cubic-bezier(0.16, 0.9, 0.24, 1) forwards;
+}
+
+@keyframes dayIn {
+  to {
+    transform: scaleX(1);
+  }
 }
 
 /* ------------------------------------------------------------- движение */
 /* Волна по диагонали: задержка складывается из номера столбца и ряда,
-   поэтому карточки выходят наискось, а не единым полотном. */
+   поэтому плитки выходят наискось, а не единым полотном. */
 .point[data-in='true'] {
   animation: cardIn 560ms cubic-bezier(0.16, 0.9, 0.24, 1) backwards;
   animation-delay: calc(var(--d, 0) * 60ms);
@@ -211,13 +322,24 @@
 
 @media (prefers-reduced-motion: reduce) {
   .point,
-  .mark {
+  .mark,
+  .photo {
     transition: none;
+  }
+
+  .photo,
+  .shot:hover .photo {
+    transform: none;
   }
 
   .point[data-in='true'],
   .point[data-in='true'] .mark {
     animation: none;
+  }
+
+  .accent[data-in='true'] .dayFill {
+    animation: none;
+    transform: scaleX(1);
   }
 
   .point:hover {

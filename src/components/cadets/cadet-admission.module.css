@@ -90,6 +90,20 @@
   color: var(--c-ink-500);
 }
 
+/* документ школы: открывается в просмотрщике Яндекс Документов */
+.docs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin: clamp(1rem, 2vw, 1.5rem) 0 0;
+}
+
+.docsNote {
+  font-size: var(--fs-caption);
+  color: var(--c-ink-500);
+}
+
 /* ----------------------------------------------------------------- этапы */
 .main {
   min-width: 0;

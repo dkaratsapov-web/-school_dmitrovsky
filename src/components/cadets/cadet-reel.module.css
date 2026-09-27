@@ -22,6 +22,8 @@
 
 .stage {
   position: relative;
+  /* поверх узора */
+  z-index: 1;
   width: min(100% - 2 * var(--gutter), var(--container));
   margin-inline: auto;
 }

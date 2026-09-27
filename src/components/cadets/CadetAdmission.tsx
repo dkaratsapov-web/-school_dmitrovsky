@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { Count } from '../ui/Count';
+import { ButtonLink } from '../ui/Button';
 import { cadetAdmission } from '@/content/cadets';
 import { prefersReducedMotion, useScrollProgressVar } from '@/lib/motion';
 import s from './cadet-admission.module.css';
@@ -70,6 +71,13 @@ export function CadetAdmission() {
               <Count to={cadetAdmission.steps.length} />
             </span>
             <span className={s.stageWord}>этапов приёмной комиссии</span>
+          </p>
+
+          <p className={s.docs}>
+            <ButtonLink href={cadetAdmission.documents.href} external variant="primary">
+              {cadetAdmission.documents.label}
+            </ButtonLink>
+            <span className={s.docsNote}>{cadetAdmission.documents.note}</span>
           </p>
         </div>
 
