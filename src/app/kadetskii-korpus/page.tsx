@@ -4,6 +4,7 @@ import { CadetPoints } from '@/components/cadets/CadetPoints';
 import { CadetReel } from '@/components/cadets/CadetReel';
 import { CadetAdmission } from '@/components/cadets/CadetAdmission';
 import { CadetDay } from '@/components/cadets/CadetDay';
+import { CadetFaq } from '@/components/cadets/CadetFaq';
 import { SectionSeam } from '@/components/site/SectionSeam';
 import { cadetPageDescription, cadetPageTitle } from '@/content/cadets';
 
@@ -11,8 +12,7 @@ import { cadetPageDescription, cadetPageTitle } from '@/content/cadets';
  * Страница проекта «Кадетский корпус».
  *
  * Собирается по блокам: первый экран, лента кадров, что входит
- * в проект, приём, распорядок дня. Остальное добавляется следующими
- * блоками. Старая страница /kadetskii-class остаётся
+ * в проект, приём, распорядок дня, вопросы родителей. Старая страница /kadetskii-class остаётся
  * на месте, пока эта не заменит её целиком (ТЗ §12).
  */
 export const metadata: Metadata = {
@@ -37,6 +37,13 @@ export default function CadetCorpsPage() {
       <SectionSeam flip style={{ '--seam-light': '#fff' } as React.CSSProperties} />
 
       <CadetDay />
+
+      {/* тёмный распорядок переходит в светлые вопросы, а те — в подвал */}
+      <SectionSeam />
+
+      <CadetFaq />
+
+      <SectionSeam flip />
     </>
   );
 }
