@@ -41,10 +41,11 @@
 
 .lead {
   margin: 0;
-  font-size: clamp(1rem, 0.95rem + 0.35vw, 1.1875rem);
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.76);
-  text-wrap: balance;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 0.95rem + 0.35vw, 1.25rem);
+  font-weight: var(--fw-semibold);
+  letter-spacing: -0.01em;
+  color: var(--c-wine-500);
 }
 
 /* ----------------------------------------------------------------- панель */
@@ -54,7 +55,7 @@
 }
 
 .panel {
-  max-width: 62rem;
+  max-width: 76rem;
   margin-inline: auto;
   padding: clamp(0.5rem, 1.2vw, 1rem);
   border: 1px solid rgba(255, 255, 255, 0.16);
@@ -67,42 +68,114 @@
 
 .screen {
   display: grid;
-  gap: clamp(1.25rem, 2.6vw, 2rem);
-  padding: clamp(1.5rem, 3.2vw, 2.75rem);
+  gap: clamp(1rem, 2.2vw, 1.75rem);
+  padding: clamp(0.875rem, 2vw, 1.75rem);
   border-radius: clamp(12px, 1.4vw, 20px);
   background: var(--c-navy-50);
   color: var(--c-ink-800);
 }
 
-@media (min-width: 900px) {
-  .screen {
-    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-    align-items: start;
+/* --------------------------------------------------------------- таблица */
+.sheet {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 1px 0 var(--color-border), 0 0 0 1px var(--color-border);
+}
+
+.table {
+  width: 100%;
+  min-width: 46rem;
+  border-collapse: collapse;
+  /* колонки дней одинаковой ширины: иначе объединённые строки
+     растягивают их вразнобой */
+  table-layout: fixed;
+  font-size: var(--fs-caption);
+  line-height: 1.4;
+  text-align: left;
+}
+
+.corner,
+.day {
+  padding: 12px 14px;
+  background: var(--c-navy-900);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.corner {
+  width: 8.5rem;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  border-right: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.time {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  padding: 12px 14px;
+  background: var(--c-navy-50);
+  border-right: 1px solid var(--color-border);
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  color: var(--c-wine-700);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.cell {
+  padding: 12px 14px;
+  border-top: 1px solid var(--color-border);
+  color: var(--c-ink-700);
+  vertical-align: top;
+}
+
+/* одно и то же во все дни — строка на всю ширину, по центру */
+.cellAll {
+  text-align: center;
+  color: var(--c-ink-600);
+}
+
+/* на телефоне таблица едет вбок: центрованная строка уезжала бы
+   за экран и ряд выглядел пустым — прижимаем её к колонке времени */
+@media (max-width: 899px) {
+  .cellAll {
+    text-align: left;
   }
 }
 
-.text {
-  margin: 0;
-  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
-  line-height: 1.6;
-  color: var(--c-ink-700);
+.table tbody tr:nth-child(2n) .cell {
+  background: rgba(1, 31, 63, 0.03);
+}
+
+.table tbody tr:hover .cell {
+  background: rgba(1, 31, 63, 0.06);
 }
 
 /* ------------------------------------------------------------------ цифры */
 .facts {
-  display: grid;
-  gap: clamp(0.875rem, 1.8vw, 1.25rem);
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.875rem, 2.4vw, 2.25rem);
   margin: 0;
+  padding-inline: clamp(0.25rem, 1vw, 0.75rem);
 }
 
 .fact {
-  padding-left: clamp(0.875rem, 1.6vw, 1.25rem);
+  padding-left: clamp(0.75rem, 1.4vw, 1rem);
   border-left: 3px solid var(--c-wine-600);
 }
 
 .factValue {
   font-family: var(--font-display);
-  font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
+  font-size: clamp(1rem, 0.95rem + 0.4vw, 1.25rem);
   font-weight: var(--fw-bold);
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -116,6 +189,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .table tbody tr:hover .cell {
+    background: none;
+  }
+
   .head,
   .panel {
     transform: none;
