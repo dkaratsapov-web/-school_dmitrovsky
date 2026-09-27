@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CallbackModal } from '../forms/CallbackModal';
 import { clubGroups, clubs, events } from '@/content/clubs';
 import type { Club, ClubGroup, EventItem } from '@/content/clubs';
@@ -150,6 +150,10 @@ export function ClubsEvents({
      на младших классах, остальные группы рядом. */
   const [group, setGroup] = useState<ClubGroup>(startGroup ?? clubGroups[0] ?? '');
   const [open, setOpen] = useState<Detail | null>(null);
+  const groupsRef = useRef<HTMLDivElement>(null);
+  /* Где сейчас стоит заливка выбранного класса: заливка переезжает
+     между чипами, а не перекрашивает их по очереди. */
+  const [mark, setMark] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
 
   /* Пункты меню ведут на #clubs и #events — раздел подстраивается под адрес.
      Проверка отложена на кадр, чтобы не менять состояние в теле эффекта. */
@@ -166,6 +170,27 @@ export function ClubsEvents({
       window.removeEventListener('hashchange', apply);
     };
   }, [bare]);
+
+  /* Мера снимается после отрисовки и заново при смене ширины окна:
+     чипы переносятся по строкам, и заливка должна ехать вместе с ними. */
+  useEffect(() => {
+    const box = groupsRef.current;
+    if (!box) return;
+
+    const measure = () => {
+      const on = box.querySelector<HTMLElement>('[aria-selected="true"]');
+      if (!on) return;
+      setMark({ x: on.offsetLeft, y: on.offsetTop, w: on.offsetWidth, h: on.offsetHeight });
+    };
+
+    const id = window.setTimeout(measure, 0);
+    const ro = new ResizeObserver(measure);
+    ro.observe(box);
+    return () => {
+      window.clearTimeout(id);
+      ro.disconnect();
+    };
+  }, [group, tab]);
 
   const tiles: Tile[] =
     tab === 'clubs'
@@ -211,7 +236,21 @@ export function ClubsEvents({
 
         {/* второй уровень: кружки разбиты по классам */}
         {tab === 'clubs' && !bare ? (
-          <div className={s.groups} role="tablist" aria-label="Классы">
+          <div className={s.groups} role="tablist" aria-label="Классы" ref={groupsRef}>
+            {mark ? (
+              <span
+                className={s.groupMark}
+                aria-hidden="true"
+                style={
+                  {
+                    '--x': `${mark.x}px`,
+                    '--y': `${mark.y}px`,
+                    '--w': `${mark.w}px`,
+                    '--h': `${mark.h}px`,
+                  } as React.CSSProperties
+                }
+              />
+            ) : null}
             {clubGroups.map((g) => (
               <button
                 key={g}

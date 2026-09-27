@@ -1,12 +1,17 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { Count } from '../ui/Count';
 import { cadetPointsFull, cadetPointsTitle } from '@/content/cadets';
 import { prefersReducedMotion } from '@/lib/motion';
 import s from './cadet-points.module.css';
 
 /**
- * Что входит в проект — двенадцать карточек.
+ * Что входит в проект — двенадцать направлений.
+ *
+ * Плитки разного веса, а не сетка одинаковых карточек: три длинных
+ * пункта занимают по две колонки, полный день выделен заливкой. Так
+ * по блоку видно, что в проекте главное, ещё до чтения.
  *
  * Карточки выходят волной по диагонали, а бордовая черта дорисовывается
  * уже после того, как карточка встала на место: так двенадцать плиток
@@ -15,6 +20,11 @@ import s from './cadet-points.module.css';
  * Появляются по мере попадания в окно. Без скрипта видны сразу —
  * ничего не прячется в ожидании наблюдателя.
  */
+/* Длинные пункты занимают по две колонки, полный день — заливкой:
+   вес плитки отвечает весу пункта, а не порядку в списке. */
+const WIDE = new Set([0, 6, 11]);
+const ACCENT = 1;
+
 export function CadetPoints() {
   const listRef = useRef<HTMLUListElement>(null);
 
@@ -54,14 +64,24 @@ export function CadetPoints() {
   return (
     <section className={s.section} aria-labelledby="cadet-points-title">
       <div className={s.inner}>
-        <h2 className={s.title} id="cadet-points-title">
-          {cadetPointsTitle}
-        </h2>
+        <div className={s.head}>
+          <h2 className={s.title} id="cadet-points-title">
+            {cadetPointsTitle}
+          </h2>
+          <p className={s.count}>
+            <span className={s.countValue}>
+              <Count to={cadetPointsFull.length} />
+            </span>
+            <span className={s.countWord}>направлений</span>
+          </p>
+        </div>
 
         <ul className={s.list} ref={listRef}>
           {cadetPointsFull.map((point, i) => (
             <li
-              className={s.point}
+              className={[s.point, WIDE.has(i) ? s.wide : '', i === ACCENT ? s.accent : '']
+                .filter(Boolean)
+                .join(' ')}
               key={point.title}
               data-point=""
               /* задержка = столбец + ряд: карточки выходят волной наискось */

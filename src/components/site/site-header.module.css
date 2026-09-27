@@ -595,6 +595,10 @@
 
 /* главное действие — единственная залитая капсула */
 .cta {
+  /* тянется к курсору: смещение приходит из useMagnetic */
+  transform: translate3d(var(--mx, 0px), var(--my, 0px), 0);
+  transition: transform 260ms var(--ease), box-shadow var(--t-base) var(--ease),
+    color var(--t-base) var(--ease);
   /* кнопка, а не ссылка: сбрасываем оформление кнопки браузера */
   font-family: var(--font-display);
   cursor: pointer;
@@ -634,7 +638,7 @@
 
 .cta:hover {
   color: #fff;
-  transform: translateY(-2px);
+  transform: translate3d(var(--mx, 0px), calc(var(--my, 0px) - 2px), 0);
   box-shadow: 0 10px 28px rgba(126, 31, 46, 0.5);
 }
 

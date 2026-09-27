@@ -14,6 +14,7 @@ import { MobileMenu } from './MobileMenu';
 import type { MenuEntry } from './MobileMenu';
 import { InfoBody } from '../ui/InfoBody';
 import { contacts, siteName } from '@/content/site';
+import { useMagnetic } from '@/lib/magnetic';
 import { accessInfo, landingAnchors, landingNav, stageInfo } from '@/content/landing';
 import type { LandingInfo } from '@/content/landing';
 import { stages } from '@/content/stages';
@@ -47,6 +48,8 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   /* «Заказать звонок» открывает окно с формой, а не ведёт по якорю. */
   const [callOpen, setCallOpen] = useState(false);
+  /* главная кнопка шапки тянется к курсору — на сенсорном экране нет */
+  const ctaRef = useMagnetic<HTMLButtonElement>();
   /* «Написать директору» — окно с расширенной формой. */
   const [letterOpen, setLetterOpen] = useState(false);
   const [openSub, setOpenSub] = useState<string | null>(null);
@@ -381,6 +384,7 @@ export function SiteHeader() {
           <button
             className={[s.capsule, s.cta].join(' ')}
             type="button"
+            ref={ctaRef}
             onClick={() => setCallOpen(true)}
           >
             <span className={s.ctaLabel}>Заказать звонок</span>

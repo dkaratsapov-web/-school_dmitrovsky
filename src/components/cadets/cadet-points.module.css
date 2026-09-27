@@ -22,8 +22,39 @@
   margin-inline: auto;
 }
 
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: clamp(1.75rem, 4vw, 3rem);
+}
+
+.count {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+}
+
+.countValue {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--c-wine-600);
+  font-variant-numeric: tabular-nums;
+}
+
+.countWord {
+  font-size: var(--fs-caption);
+  color: var(--c-ink-500);
+}
+
 .title {
-  margin: 0 0 clamp(1.75rem, 4vw, 3rem);
+  margin: 0;
   font-family: var(--font-display);
   font-size: clamp(1.875rem, 1.3rem + 2.4vw, 3.25rem);
   font-weight: var(--fw-black);
@@ -36,6 +67,8 @@
   display: grid;
   gap: clamp(0.75rem, 1.4vw, 1.125rem);
   grid-template-columns: 1fr;
+  /* плитки разного веса: пустое место в ряду занимает следующая */
+  grid-auto-flow: dense;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -59,6 +92,12 @@
   }
 }
 
+@media (min-width: 640px) {
+  .wide {
+    grid-column: span 2;
+  }
+}
+
 /* ------------------------------------------------------------ карточка */
 .point {
   display: flex;
@@ -76,6 +115,36 @@
   transform: translateY(-4px);
   border-color: var(--c-navy-300);
   box-shadow: 0 16px 34px rgba(0, 21, 45, 0.1);
+}
+
+/* широкая плитка: заголовок крупнее — по кеглю видно вес пункта */
+@media (min-width: 640px) {
+  .wide .pointTitle {
+    font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.3125rem);
+  }
+}
+
+/* полный день — единственная залитая плитка в блоке */
+.accent {
+  border-color: transparent;
+  background: var(--c-navy-900);
+}
+
+.accent .pointTitle {
+  color: #fff;
+}
+
+.accent .pointText {
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.accent .mark {
+  background: #fff;
+}
+
+.accent:hover {
+  border-color: transparent;
+  box-shadow: 0 18px 40px rgba(0, 21, 45, 0.28);
 }
 
 /* черта: дорисовывается после того, как карточка встала */
