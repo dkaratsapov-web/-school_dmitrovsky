@@ -46,7 +46,7 @@ const STEP_VH = 0.36;
 /* Запас в конце: колесо доворачивается раньше, чем липкая сцена
    трогается с места. Без него последний кадр и отрыв сцены приходятся
    на один и тот же пиксель прокрутки, и в стык виден рывок. */
-const HOLD_VH = 0.35;
+const HOLD_VH = 0.16;
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;

@@ -20,6 +20,12 @@ type Props = {
   /** Фон под формой: тёмная полоса или светлый блок. */
   tone?: 'dark' | 'light';
   /**
+   * Акцент: форма стоит в рамке, по которой расходится бордовая волна.
+   * Ставится там, где форма — главное действие блока, и не везде:
+   * если пульсируют все формы сразу, не пульсирует ни одна.
+   */
+  accent?: boolean;
+  /**
    * Телефон школы под формой: второй путь для тех, кто не хочет ждать
    * ответа на заявку. Заодно закрывает пустоту под полями.
    */
@@ -40,6 +46,7 @@ export function ConsultInline({
   layout = 'row',
   flush = false,
   tone = 'dark',
+  accent = false,
   callPhone,
 }: Props) {
   const [sent, setSent] = useState(false);
@@ -55,6 +62,7 @@ export function ConsultInline({
         layout === 'stack' ? s.stack : '',
         flush ? s.flush : '',
         tone === 'light' ? s.light : '',
+        accent ? s.accent : '',
       ]
         .filter(Boolean)
         .join(' ')}

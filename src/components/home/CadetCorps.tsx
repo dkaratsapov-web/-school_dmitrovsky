@@ -173,6 +173,7 @@ export function CadetCorps() {
             <ConsultInline
               title="Получить бесплатную консультацию"
               action="Получить консультацию"
+              accent
             />
           </div>
 
