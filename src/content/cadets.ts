@@ -245,7 +245,7 @@ export const cadetReel: readonly CadetFrame[] = [
     width: 1280,
     height: 1280,
     alt: 'Строй кадетов на площади у объёмной надписи «Победа» и флагов',
-    caption: 'Построение у надписи «Победа»',
+    caption: 'Построение в парадной форме',
   },
   {
     kind: 'photo',

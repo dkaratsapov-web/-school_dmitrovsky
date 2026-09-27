@@ -204,8 +204,9 @@
 @media (min-width: 900px) {
   .stage[data-live='true'] .index {
     position: absolute;
-    top: 12%;
+    top: 50%;
     right: clamp(1rem, 3%, 3rem);
+    transform: translateY(-50%);
     z-index: 200;
     display: block;
     max-width: 18rem;

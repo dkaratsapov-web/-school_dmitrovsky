@@ -36,6 +36,8 @@ const FADE_TO = 0.34;
    1 — строго к зрителю, 0 — ребром. */
 const EDGE_FROM = 0.25;
 const EDGE_SPAN = 0.35;
+/* С какого момента раскрытия кадры начинают расти до полного размера. */
+const GROW_FROM = 0.45;
 
 /* Сколько экрана прокрутки уходит на раскрытие кольца и на один кадр. */
 const RING_VH = 0.5;
@@ -193,7 +195,13 @@ export function CadetReel() {
              в кольце он нулевой, и там видны все */
           const flat = Math.abs(Math.cos(rad(m * d * STEP)));
           const edge = clamp((flat - EDGE_FROM) / EDGE_SPAN, 0, 1);
-          const shown = Math.min(far ? 1 - fade : 1, edge);
+          /* На раскрытии кольцо гаснет и собирается заново барабаном:
+             соседние кадры идут к своим местам мимо переднего, и без
+             этого они по дороге наезжают на него. К концу раскрытия
+             и в самом кольце они снова в полную силу. */
+          const dip =
+            Math.abs(d) < 0.5 ? 1 : 1 - 0.95 * clamp(Math.sin(Math.PI * m) * 1.7, 0, 1);
+          const shown = Math.min(far ? 1 - fade : 1, edge, dip);
           card.style.opacity = shown.toFixed(3);
           card.style.visibility = shown < 0.01 ? 'hidden' : 'visible';
           card.style.zIndex = String(Math.round(100 - Math.abs(d) * 2));
@@ -201,11 +209,21 @@ export function CadetReel() {
           card.dataset.front = front ? 'true' : 'false';
         }
         const face = card?.firstElementChild as HTMLElement | null;
-        if (face) face.style.transform = `scale(${lerp(ringScale, 1, m)})`;
+        /* кадры растут не сразу: пока кольцо сжимается, они держат
+           свой мелкий размер и не задевают друг друга, а в полную силу
+           выходят уже на барабане */
+        const grow = clamp((m - GROW_FROM) / (1 - GROW_FROM), 0, 1);
+        if (face) face.style.transform = `scale(${lerp(ringScale, 1, grow)})`;
       }
 
-      if (labelRef.current) labelRef.current.style.opacity = String(1 - m);
-      if (titleRef.current) titleRef.current.style.opacity = String(m);
+      /* название уходит раньше, чем передний кадр вырастает на его место:
+         иначе строка проступает сквозь снимок */
+      if (labelRef.current) {
+        labelRef.current.style.opacity = clamp(1 - m * 1.9, 0, 1).toFixed(3);
+      }
+      if (titleRef.current) {
+        titleRef.current.style.opacity = clamp((m - 0.6) / 0.4, 0, 1).toFixed(3);
+      }
       setActive((prev) => (prev === near ? prev : near));
     };
 
