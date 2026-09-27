@@ -3,6 +3,7 @@ import '@/styles/globals.css';
 import { SiteHeader } from '@/components/site/SiteHeader';
 import { Footer } from '@/components/site/Footer';
 import { SiteChrome } from '@/components/site/SiteChrome';
+import { ScrollTop } from '@/components/site/ScrollTop';
 import { CookieNotice } from '@/components/ui/CookieNotice';
 import { contacts, cookieNotice, siteName, siteUrl } from '@/content/site';
 
@@ -43,6 +44,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a className="skip-link" href="#main">
           Перейти к основному содержанию
         </a>
+
+        <ScrollTop />
 
         <SiteHeader />
 

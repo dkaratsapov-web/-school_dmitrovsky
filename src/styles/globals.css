@@ -204,3 +204,23 @@ hr {
     cursor: auto;
   }
 }
+
+/* Появление страницы после перехода: первый блок поднимается и
+   проявляется — переход читается как открытие, а не как подмена.
+   Класс снимается по окончании анимации (ScrollTop.tsx). */
+main.page-in {
+  animation: pageIn 460ms cubic-bezier(0.16, 0.9, 0.24, 1) both;
+}
+
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main.page-in {
+    animation: none;
+  }
+}

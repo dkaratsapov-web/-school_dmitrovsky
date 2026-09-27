@@ -1,0 +1,306 @@
+/* =========================================================================
+   Кадры из жизни корпуса — лента
+
+   Не карусель одинаковых плиток: у каждого кадра своя сторона, и стоят
+   они как на плёнке — кадр в рост, кадр поперёк, кадр квадратом. Рамка
+   подгоняется под снимок, поэтому ничего не обрезается.
+
+   Лента едет родной прокруткой с привязкой к кадру: без скрипта она
+   остаётся рабочей. Кадр у левой отбивки выходит на полный свет,
+   остальные отступают вглубь.
+   ========================================================================= */
+
+.section {
+  --p: 0.5;
+  --prog: 0;
+  /* отбивка ленты совпадает с краем колонки заголовка */
+  --edge: max(var(--gutter), calc((100% - var(--container)) / 2));
+  position: relative;
+  overflow-x: clip;
+  padding-block: clamp(2.5rem, 5vw, 4.5rem);
+  /* темнее первого экрана: снимки на тёмном читаются как в зале */
+  background: #00142c;
+  color: #fff;
+}
+
+/* ------------------------------------------------------------- заголовок */
+.head,
+.foot {
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 1.2rem + 2.2vw, 3rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+
+.tools {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2vw, 1.75rem);
+}
+
+.counter {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+  /* цифра меняется проворотом — лишнее за краем не видно */
+  overflow: clip;
+}
+
+.counter .roll {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
+  font-weight: var(--fw-bold);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.of {
+  font-size: var(--fs-caption);
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.step {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color var(--t-base) var(--ease), border-color var(--t-base) var(--ease),
+    transform var(--t-base) var(--ease);
+}
+
+.step:hover:not(:disabled) {
+  background: var(--c-wine-600);
+  border-color: var(--c-wine-600);
+  transform: scale(1.06);
+}
+
+.step:disabled {
+  opacity: 0.32;
+  cursor: default;
+}
+
+.step:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+/* ------------------------------------------------------------------ лента */
+.rail {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 1.4vw, 1.25rem);
+  padding-inline: var(--edge);
+  /* небольшой запас снизу и сверху: приподнятому кадру есть где стоять */
+  padding-block: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline-start: var(--edge);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.rail:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -2px;
+}
+
+.frame {
+  --k: 0;
+  position: relative;
+  flex: none;
+  /* виден край следующего кадра: понятно, что лента листается */
+  width: min(calc(100% - 2.75rem), 30rem);
+  aspect-ratio: var(--ar, 4 / 3);
+  overflow: clip;
+  border-radius: var(--r-lg);
+  background: #000d1e;
+  scroll-snap-align: start;
+  /* кадр у отбивки — на полном свету, дальние отступают вглубь */
+  transform: scale(calc(1 - 0.05 * var(--k)));
+  transform-origin: 50% 55%;
+  opacity: calc(1 - 0.42 * var(--k));
+}
+
+@media (min-width: 640px) {
+  .frame {
+    /* сторону задаёт сам снимок: высота общая, ширина у каждого своя */
+    width: auto;
+    height: clamp(20rem, 54vh, 38rem);
+  }
+}
+
+.shot {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* снимок внутри рамки идёт со своей скоростью: запас на масштабе,
+     поэтому края не оголяются */
+  transform: translate3d(0, calc((var(--p) - 0.5) * -5%), 0) scale(1.09);
+}
+
+.film {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  object-fit: contain;
+}
+
+/* --------------------------------------------------------------- фильм */
+.play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: linear-gradient(to bottom, rgba(0, 12, 26, 0.15), rgba(0, 12, 26, 0.62));
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.playMark {
+  position: relative;
+  width: clamp(58px, 7vw, 76px);
+  height: clamp(58px, 7vw, 76px);
+  border-radius: 50%;
+  background: var(--c-wine-600);
+  transition: transform var(--t-base) var(--ease);
+}
+
+.playMark::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 54%;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 11px 0 11px 18px;
+  border-color: transparent transparent transparent #fff;
+  transform: translate(-50%, -50%);
+}
+
+.play:hover .playMark,
+.play:focus-visible .playMark {
+  transform: scale(1.09);
+}
+
+.play:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -4px;
+}
+
+.playWord {
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.01em;
+  text-align: center;
+  padding-inline: 1rem;
+}
+
+/* --------------------------------------------------------- подпись и ход */
+.foot {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.875rem, 1.6vw, 1.25rem);
+  margin-top: clamp(1.25rem, 2.4vw, 2rem);
+}
+
+.caption {
+  margin: 0;
+  min-height: 1.5em;
+  overflow: clip;
+  font-size: var(--fs-body);
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.roll {
+  display: inline-block;
+  animation: roll 420ms var(--ease) backwards;
+}
+
+@keyframes roll {
+  from {
+    transform: translateY(0.9em);
+    opacity: 0;
+  }
+}
+
+.bar {
+  display: block;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--c-wine-600);
+  transform: scaleX(var(--prog));
+  transform-origin: left center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frame {
+    transform: none;
+    opacity: 1;
+  }
+
+  .shot {
+    transform: none;
+  }
+
+  .roll {
+    animation: none;
+  }
+
+  .step:hover:not(:disabled),
+  .play:hover .playMark {
+    transform: none;
+  }
+}
