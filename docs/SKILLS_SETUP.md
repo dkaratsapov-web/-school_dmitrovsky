@@ -16,19 +16,52 @@ Claude Code, чтобы он сам всё поставил и проверил.
 | `product-skills@claude-code-skills` | `alirezarezvani/claude-skills` | 2.11.1 |
 | `a11y-audit@claude-code-skills` | `alirezarezvani/claude-skills` | 2.9.0 |
 
-## Команды установки
+## Установка из терминала
 
-Выполнять по одной в окне Claude Code (это slash-команды, не терминал).
-Сначала все четыре источника, потом шесть наборов.
+Одним блоком — можно вставить целиком. Сначала четыре источника, потом
+шесть наборов. Проверено на Claude Code 2.1.283.
+
+```bash
+claude plugin marketplace add anthropics/skills
+claude plugin marketplace add obra/superpowers
+claude plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill
+claude plugin marketplace add alirezarezvani/claude-skills
+
+claude plugin install example-skills@anthropic-agent-skills -y
+claude plugin install superpowers@superpowers-dev -y
+claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill -y
+claude plugin install marketing-skills@claude-code-skills -y
+claude plugin install product-skills@claude-code-skills -y
+claude plugin install a11y-audit@claude-code-skills -y
+```
+
+Проверка:
+
+```bash
+claude plugin marketplace list
+claude plugin list
+```
+
+Должны быть четыре источника и шесть наборов со статусом enabled.
+Наборы подхватываются со следующего запуска Claude Code.
+
+Обновить всё позже:
+
+```bash
+claude plugin marketplace update
+claude plugin update example-skills@anthropic-agent-skills
+```
+
+### Те же команды из окна Claude Code
+
+Если удобнее не выходить в терминал — то же самое slash-командами:
 
 ```
 /plugin marketplace add anthropics/skills
 /plugin marketplace add obra/superpowers
 /plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill
 /plugin marketplace add alirezarezvani/claude-skills
-```
 
-```
 /plugin install example-skills@anthropic-agent-skills
 /plugin install superpowers@superpowers-dev
 /plugin install ui-ux-pro-max@ui-ux-pro-max-skill
@@ -36,14 +69,6 @@ Claude Code, чтобы он сам всё поставил и проверил.
 /plugin install product-skills@claude-code-skills
 /plugin install a11y-audit@claude-code-skills
 ```
-
-Проверка после установки:
-
-```
-/plugin
-```
-
-Список источников и наборов должен совпасть с таблицей выше.
 
 ## Что из этого чем пользоваться
 
@@ -80,25 +105,31 @@ Claude Code, чтобы он сам всё поставил и проверил.
 2. Не удаляй уже установленные наборы.
 3. Не переписывай существующий `CLAUDE.md` — дополни его после проверки.
 4. Без `sudo`. Токены, пароли и другие секреты не запрашивай.
-5. Если slash-команды из сессии выполнить нельзя — не делай вид, что
-   установка прошла. Покажи команды одним блоком и попроси выполнить их
+5. Если команды из сессии выполнить нельзя — не делай вид, что установка
+   прошла. Покажи команды одним блоком и попроси выполнить их
    самостоятельно, затем продолжи с проверки.
 
-Сначала посмотри, что уже стоит (`/plugin`), и не ставь повторно.
-Недостающее поставь этими командами:
+Сначала посмотри, что уже стоит, и не ставь повторно:
 
+```bash
+claude plugin marketplace list
+claude plugin list
 ```
-/plugin marketplace add anthropics/skills
-/plugin marketplace add obra/superpowers
-/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill
-/plugin marketplace add alirezarezvani/claude-skills
 
-/plugin install example-skills@anthropic-agent-skills
-/plugin install superpowers@superpowers-dev
-/plugin install ui-ux-pro-max@ui-ux-pro-max-skill
-/plugin install marketing-skills@claude-code-skills
-/plugin install product-skills@claude-code-skills
-/plugin install a11y-audit@claude-code-skills
+Недостающее поставь из терминала:
+
+```bash
+claude plugin marketplace add anthropics/skills
+claude plugin marketplace add obra/superpowers
+claude plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill
+claude plugin marketplace add alirezarezvani/claude-skills
+
+claude plugin install example-skills@anthropic-agent-skills -y
+claude plugin install superpowers@superpowers-dev -y
+claude plugin install ui-ux-pro-max@ui-ux-pro-max-skill -y
+claude plugin install marketing-skills@claude-code-skills -y
+claude plugin install product-skills@claude-code-skills -y
+claude plugin install a11y-audit@claude-code-skills -y
 ```
 
 После установки:
