@@ -1,0 +1,179 @@
+/* =========================================================================
+   Медиакласс — первый экран
+
+   Кадр во всё окно, заголовок у левого края и взят в уголки видоискателя:
+   так первый экран профиля не повторяет кадетский, где текст стоит
+   по центру.
+   ========================================================================= */
+
+.hero {
+  --p: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 100svh;
+  overflow: clip;
+  background: #06121f;
+  isolation: isolate;
+}
+
+.media {
+  position: absolute;
+  /* запас снизу больше хода параллакса: иначе слой уезжает вверх
+     и под ним открывается пустая заливка блока */
+  inset: -6% 0 -10%;
+  z-index: -2;
+  transform: translate3d(0, calc(var(--p) * -8%), 0) scale(calc(1 + var(--p) * 0.08));
+  transform-origin: 50% 35%;
+}
+
+.plate {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+}
+
+/* затемнение: слева плотнее — там стоит текст */
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to bottom, rgba(4, 14, 24, 0.62) 0%, rgba(4, 14, 24, 0.24) 30%,
+      rgba(4, 14, 24, 0.5) 60%, rgba(4, 14, 24, 0.88) 90%, #06121f 100%),
+    linear-gradient(to right, rgba(4, 14, 24, 0.72) 0%, rgba(4, 14, 24, 0.24) 46%, transparent 72%);
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+  padding-block: clamp(6rem, 16vh, 10rem) clamp(1.25rem, 3.5vh, 2.25rem);
+}
+
+/* ------------------------------------------------------- уголки кадра */
+.frame {
+  position: relative;
+  max-width: 34rem;
+  margin-bottom: clamp(1.5rem, 4vh, 2.75rem);
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+}
+
+.corner {
+  position: absolute;
+  width: clamp(22px, 3vw, 38px);
+  height: clamp(22px, 3vw, 38px);
+  border: 2px solid var(--c-wine-500);
+}
+
+/* каждый уголок дочерчивается со своей стороны */
+.tl {
+  top: 0;
+  left: 0;
+  border-right: 0;
+  border-bottom: 0;
+  transform-origin: left top;
+  animation: cornerIn 620ms 160ms var(--ease) backwards;
+}
+
+.tr {
+  top: 0;
+  right: 0;
+  border-left: 0;
+  border-bottom: 0;
+  transform-origin: right top;
+  animation: cornerIn 620ms 280ms var(--ease) backwards;
+}
+
+.bl {
+  bottom: 0;
+  left: 0;
+  border-right: 0;
+  border-top: 0;
+  transform-origin: left bottom;
+  animation: cornerIn 620ms 400ms var(--ease) backwards;
+}
+
+.br {
+  bottom: 0;
+  right: 0;
+  border-left: 0;
+  border-top: 0;
+  transform-origin: right bottom;
+  animation: cornerIn 620ms 520ms var(--ease) backwards;
+}
+
+@keyframes cornerIn {
+  from {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+}
+
+/* --------------------------------------------------------------- слова */
+.mask {
+  display: block;
+  overflow: hidden;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 1.5rem + 3.6vw, 4.5rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  color: #fff;
+  animation: lineUp 780ms 140ms cubic-bezier(0.16, 0.9, 0.24, 1) backwards;
+}
+
+.lead {
+  margin: clamp(0.75rem, 1.8vh, 1.125rem) 0 0;
+  font-size: clamp(1rem, 0.95rem + 0.4vw, 1.25rem);
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.82);
+  animation: lineUp 780ms 300ms cubic-bezier(0.16, 0.9, 0.24, 1) backwards;
+}
+
+@keyframes lineUp {
+  from {
+    transform: translateY(105%);
+    opacity: 0;
+  }
+}
+
+/* Низкий экран: отступы ужимаются, иначе форма уезжает за нижний край. */
+@media (max-height: 700px) {
+  .hero {
+    min-height: auto;
+  }
+
+  .inner {
+    padding-block: clamp(4.5rem, 11vh, 6rem) clamp(0.75rem, 2vh, 1.25rem);
+  }
+
+  .frame {
+    margin-bottom: clamp(1rem, 3vh, 1.75rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .media {
+    transform: none;
+  }
+
+  .title,
+  .lead,
+  .corner {
+    animation: none;
+  }
+}
