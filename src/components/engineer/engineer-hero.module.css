@@ -114,6 +114,14 @@
 .scene {
   display: grid;
   place-items: center;
+  min-height: clamp(18rem, 42vw, 34rem);
+}
+
+/* запасная сцена: знак школы в объёме */
+.spare {
+  display: grid;
+  place-items: center;
+  width: 100%;
   perspective: 900px;
   perspective-origin: 50% 46%;
 }
