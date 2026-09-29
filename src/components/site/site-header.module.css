@@ -392,7 +392,11 @@
   transition: height var(--t-slow) var(--ease);
 }
 
-@media (min-width: 1200px) {
+/* Меню появляется с 1400 px. Раньше было с 1200, но с пунктом
+   «Профильные 10-11 классы» ряд переставал помещаться: название школы
+   уходило под меню, а «Контакты» срезались краем капсулы. Ниже 1400
+   работает кнопка меню. */
+@media (min-width: 1400px) {
   .nav {
     display: inline-flex;
   }
@@ -726,7 +730,7 @@
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1400px) {
   .burger {
     display: none;
   }
@@ -865,7 +869,7 @@
 }
 
 /* самый узкий десктоп: пункты меню ещё плотнее, иначе выходят за капсулу */
-@media (max-width: 1319px) {
+@media (max-width: 1559px) {
   .navLink {
     padding-inline: 6px;
     font-size: 13.5px;

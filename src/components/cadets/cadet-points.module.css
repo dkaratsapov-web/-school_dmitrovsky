@@ -154,6 +154,9 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* лица почти всегда в верхней половине кадра:
+     на узком экране обрезаем снизу, а не по макушкам */
+  object-position: 50% 28%;
   /* кадр идёт со своей скоростью по мере прокрутки блока */
   transform: translate3d(0, calc((var(--p) - 0.5) * -4%), 0) scale(1.07);
   transition: transform 600ms var(--ease);
