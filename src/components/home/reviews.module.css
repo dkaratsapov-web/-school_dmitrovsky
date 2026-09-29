@@ -107,8 +107,12 @@
 .wall {
   /* На телефоне раскрытый ролик стоит вертикальным кадром, а закрытые
      сжимаются в тонкие полосы: долями раскрытый выходил низким
-     и широким, хотя ролики сняты вертикально. */
-  --open: min(128vw, 30rem);
+     и широким, хотя ролики сняты вертикально.
+
+     Высота считается от ширины полосы по кадру 9:16 — в него сняты
+     ролики. При другой высоте проигрыватель оставлял по бокам чёрные
+     поля, и они читались пятном на ролике. */
+  --open: min(calc((100vw - 2 * var(--gutter)) * 16 / 9), 40rem);
   --closed: 3.25rem;
   display: grid;
   gap: clamp(0.375rem, 0.8vw, 0.75rem);
@@ -323,127 +327,89 @@
   background: #fff;
 }
 
-/* --------------------------------------------------------- окно ролика */
-.clip {
-  width: min(430px, 92vw);
-  max-height: 92dvh;
-  padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: var(--r-xl);
-  background: #000;
-  overflow: hidden;
-}
+/* ----------------------------------------------------- заставка полосы
 
-.clip::backdrop {
-  background: rgba(0, 12, 28, 0.84);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-
-.clipInner {
-  position: relative;
-}
-
-.clipFrame {
+   В закрытой полосе проигрыватель не подключён: восемь плееров сразу —
+   это восемь чужих фреймов на странице. Вместо кадра стоит плита со знаком
+   школы: обрезанное лицо в полосе шириной с палец всё равно не читается.
+   ------------------------------------------------------------------- */
+.splash {
+  position: absolute;
+  inset: 0;
   display: block;
-  width: 100%;
-  aspect-ratio: 9 / 16;
-  max-height: 78dvh;
-  border: 0;
-  background: #000;
+  overflow: hidden;
+  background:
+    radial-gradient(130% 150% at 50% 0%, rgba(10, 86, 155, 0.34), transparent 64%),
+    linear-gradient(200deg, var(--c-navy-800) 0%, var(--c-navy-950) 100%);
 }
 
-/* знак школы вместо кадра, пока его не передали */
+/* блик идёт вдоль полосы: она живая, но не мигает */
+.sweep {
+  position: absolute;
+  inset: -25%;
+  background: linear-gradient(
+    74deg,
+    transparent 42%,
+    rgba(157, 187, 215, 0.16) 50%,
+    transparent 58%
+  );
+  animation: sheen 7.5s linear infinite;
+}
+
+@keyframes sheen {
+  from {
+    transform: translate3d(-38%, 0, 0);
+  }
+  to {
+    transform: translate3d(38%, 0, 0);
+  }
+}
+
+/* знак школы по центру полосы. Размер задан в ремах, а не в процентах:
+   полоса бывает и низкой широкой (телефон), и узкой высокой (монитор),
+   и доля от любой из сторон в одном из этих положений вылезает за край. */
 .mark {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 62%;
+  inset: 0;
+  width: clamp(1.5rem, 4.5vw, 2.5rem);
   height: auto;
-  margin: -31% 0 0 -31%;
+  margin: auto;
   fill: none;
-  stroke: rgba(255, 255, 255, 0.18);
-  stroke-width: 1.2;
+  stroke: rgba(157, 187, 215, 0.42);
+  stroke-width: 1.4;
 }
 
-.markCore {
-  fill: rgba(126, 31, 46, 0.75);
+.orbit {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: spin 26s linear infinite;
+}
+
+.orbit:nth-of-type(2) {
+  animation-duration: 38s;
+  animation-direction: reverse;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.core {
+  fill: var(--c-wine-600);
   stroke: none;
 }
 
-.clipWho {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin: 0;
-  padding: var(--s-4) var(--s-5) var(--s-5);
-  background: var(--c-navy-900);
-}
-
-.clipName {
-  font-family: var(--font-display);
-  font-size: var(--fs-body);
-  font-weight: var(--fw-bold);
-  color: #fff;
-}
-
-.clipRole {
-  font-size: var(--fs-caption);
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.clipSource {
-  margin-top: 8px;
-  font-size: var(--fs-caption);
-  color: rgba(255, 255, 255, 0.72);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  align-self: flex-start;
-}
-
-.clipSource:hover,
-.clipSource:focus-visible {
-  color: #fff;
-  border-color: #fff;
-}
-
-.clipClose {
+/* знак того, что за плитой ролик, а не картинка */
+.play {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: var(--r-pill);
-  background: rgba(0, 12, 28, 0.6);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  cursor: pointer;
-}
-
-.clipClose:hover,
-.clipClose:focus-visible {
-  background: var(--c-wine-700);
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-.clipBar {
-  position: absolute;
-  width: 16px;
-  height: 1.6px;
-  border-radius: 1px;
-  background: #fff;
-}
-
-.clipBar:first-of-type {
-  transform: rotate(45deg);
-}
-
-.clipBar:last-of-type {
-  transform: rotate(-45deg);
+  bottom: clamp(0.5rem, 1.4vw, 0.875rem);
+  left: clamp(0.5rem, 1.4vw, 0.875rem);
+  width: 0.625rem;
+  height: 0.75rem;
+  background: rgba(255, 255, 255, 0.72);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -451,11 +417,7 @@
   .card::after,
   .who,
   .player,
-  .sweep,
-  .orbit,
   .wall,
-  .play,
-  .rule,
   .mapsLink,
   .slider,
   .tab {

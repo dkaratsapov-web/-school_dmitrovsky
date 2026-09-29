@@ -5,6 +5,7 @@ import { Footer } from '@/components/site/Footer';
 import { SiteChrome } from '@/components/site/SiteChrome';
 import { ScrollTop } from '@/components/site/ScrollTop';
 import { CookieNotice } from '@/components/ui/CookieNotice';
+import { CallButton } from '@/components/site/CallButton';
 import { contacts, cookieNotice, siteName, siteUrl } from '@/content/site';
 
 /**
@@ -53,6 +54,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <SiteChrome>
           <Footer contacts={contacts} />
+        </SiteChrome>
+
+        {/* Звонок на телефоне вынесен из шапки отдельной кнопкой:
+            в шапке остаются знак школы и меню. */}
+        <SiteChrome>
+          <CallButton />
         </SiteChrome>
 
         <SiteChrome>

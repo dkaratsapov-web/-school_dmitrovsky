@@ -71,6 +71,23 @@
   .fill {
     display: none;
   }
+
+  /* Окно без формы под текстом — это карточка педагога: один вертикальный
+     портрет. Низкой полосой от человека остаётся полоска лица, поэтому
+     здесь поле выше, снимок показывается целиком, а поля по сторонам
+     закрывает он сам, размытый. */
+  .dialog:not(:has(.foot form)) .media {
+    height: 30vh;
+  }
+
+  .dialog:not(:has(.foot form)) .shot {
+    object-fit: contain;
+    object-position: 50% 50%;
+  }
+
+  .dialog:not(:has(.foot form)) .fill {
+    display: block;
+  }
 }
 
 .column {

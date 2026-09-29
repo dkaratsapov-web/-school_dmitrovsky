@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { useScrollY } from '@/lib/motion';
 import { CallbackModal } from '../forms/CallbackModal';
 import { InfoBody } from './InfoBody';
@@ -57,6 +57,31 @@ export function CookieNotice({ text, policyLabel, acceptLabel }: Props) {
      поэтому вместо перехода по несуществующему адресу открывается справка. */
   const [policy, setPolicy] = useState(false);
 
+  /* Высота полосы уходит в переменную страницы: постоянная кнопка звонка
+     стоит у нижнего края и поднимается над уведомлением, пока оно висит. */
+  const barRef = useRef<HTMLDivElement>(null);
+  const shown = !accepted && y >= SHOW_AFTER;
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const el = barRef.current;
+    if (!shown || !el) {
+      root.style.removeProperty('--cookie-h');
+      return;
+    }
+
+    const set = () => root.style.setProperty('--cookie-h', `${el.offsetHeight}px`);
+    set();
+
+    if (typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(set);
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      root.style.removeProperty('--cookie-h');
+    };
+  }, [shown]);
+
   const accept = useCallback(() => {
     sessionAccepted = true;
     try {
@@ -67,10 +92,10 @@ export function CookieNotice({ text, policyLabel, acceptLabel }: Props) {
     listeners.forEach((l) => l());
   }, []);
 
-  if (accepted || y < SHOW_AFTER) return null;
+  if (!shown) return null;
 
   return (
-    <div className={s.cookie} role="region" aria-label="Уведомление об использовании cookie">
+    <div className={s.cookie} ref={barRef} role="region" aria-label="Уведомление об использовании cookie">
       <div className={s.cookieInner}>
         <p className={s.cookieText}>{text}</p>
 
