@@ -1,0 +1,182 @@
+/* =========================================================================
+   Что даёт проект
+
+   Пункты длинные, поэтому идут колонкой, а слева — крупный счётчик:
+   он показывает, на каком пункте глаз и сколько всего. Условия приёма
+   вынесены отдельной картой: это требование, а не возможность.
+   ========================================================================= */
+
+.section {
+  position: relative;
+  overflow-x: clip;
+  padding-block: clamp(3rem, 6vw, 5.5rem);
+  background: #fff;
+  color: var(--c-ink-800);
+}
+
+.inner {
+  display: grid;
+  gap: clamp(2rem, 4vw, 4rem);
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+
+@media (min-width: 1024px) {
+  .inner {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  }
+
+  .side {
+    position: sticky;
+    top: calc(var(--header-h, 72px) + clamp(1.5rem, 4vh, 3rem));
+    align-self: start;
+  }
+}
+
+.title {
+  margin: 0 0 clamp(0.875rem, 1.8vw, 1.25rem);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.375rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.03em;
+  line-height: 1.16;
+  color: var(--c-navy-900);
+  text-wrap: balance;
+}
+
+.lead {
+  margin: 0;
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--c-ink-600);
+}
+
+/* ------------------------------------------------------------- счётчик */
+.counter {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
+  padding-top: clamp(1rem, 2vw, 1.5rem);
+  border-top: 1px solid var(--color-border);
+  overflow: clip;
+}
+
+.counterNum {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 1.6rem + 3.4vw, 4.5rem);
+  font-weight: var(--fw-black);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--c-wine-600);
+  font-variant-numeric: tabular-nums;
+  animation: rollUp 420ms var(--ease) backwards;
+}
+
+@keyframes rollUp {
+  from {
+    transform: translateY(0.7em);
+    opacity: 0;
+  }
+}
+
+.counterAll {
+  font-size: var(--fs-caption);
+  color: var(--c-ink-500);
+  font-variant-numeric: tabular-nums;
+}
+
+/* -------------------------------------------------------------- пункты */
+.points {
+  display: grid;
+  gap: clamp(1.25rem, 2.6vw, 2rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.point {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(0.875rem, 1.8vw, 1.5rem);
+  padding-bottom: clamp(1.25rem, 2.6vw, 2rem);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.point:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.num {
+  font-family: var(--font-display);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  line-height: 1.7;
+  color: var(--c-ink-400, var(--c-ink-500));
+  font-variant-numeric: tabular-nums;
+  transition: color var(--t-base) var(--ease);
+}
+
+/* пункт, на котором сейчас глаз */
+.pointNear .num {
+  color: var(--c-wine-600);
+}
+
+.text {
+  margin: 0;
+  max-width: 64ch;
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.0625rem);
+  line-height: 1.6;
+  color: var(--c-ink-700);
+  transition: color var(--t-base) var(--ease);
+}
+
+.pointNear .text {
+  color: var(--c-ink-800);
+}
+
+.point[data-in='true'] {
+  animation: pointIn 540ms cubic-bezier(0.16, 0.9, 0.24, 1) backwards;
+}
+
+@keyframes pointIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+/* ------------------------------------------------------ условия приёма */
+.admission {
+  margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+  padding: clamp(1.25rem, 2.6vw, 2rem) clamp(1.25rem, 2.6vw, 2.25rem);
+  border-radius: var(--r-lg);
+  background: var(--c-navy-50);
+  border-left: 4px solid var(--c-navy-900);
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--c-ink-700);
+}
+
+@media (min-width: 1024px) {
+  .admission {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .counterNum {
+    animation: none;
+  }
+
+  .point[data-in='true'] {
+    animation: none;
+  }
+
+  .num,
+  .text {
+    transition: none;
+  }
+}

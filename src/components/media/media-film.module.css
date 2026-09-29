@@ -1,0 +1,167 @@
+/* =========================================================================
+   Фильм о медиаклассе
+
+   Кадр закрыт двумя шторками, как окно проектора: по мере подхода блока
+   к экрану они расходятся и открывают кадр. Движение связано с прокруткой,
+   анимируются только transform.
+   ========================================================================= */
+
+.section {
+  --p: 0;
+  /* сколько осталось от закрытого состояния: 1 — шторки сомкнуты */
+  --shut: max(0, 1 - var(--p) * 2.1);
+  position: relative;
+  overflow-x: clip;
+  padding-block: clamp(3rem, 6vw, 5rem);
+  background: #06121f;
+  color: #fff;
+}
+
+.inner {
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 1.2rem + 2.2vw, 3rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+
+.length {
+  margin: 0;
+  font-size: var(--fs-caption);
+  color: rgba(255, 255, 255, 0.55);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------ окно */
+.gate {
+  position: relative;
+  max-width: 68rem;
+  margin-inline: auto;
+  overflow: clip;
+  border-radius: var(--r-lg);
+  isolation: isolate;
+}
+
+.shutter {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  height: 52%;
+  background: #06121f;
+  pointer-events: none;
+}
+
+.shutterTop {
+  top: 0;
+  transform: translate3d(0, calc((var(--shut) - 1) * 100%), 0);
+}
+
+.shutterBottom {
+  bottom: 0;
+  transform: translate3d(0, calc((1 - var(--shut)) * 100%), 0);
+}
+
+.frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: clip;
+  border-radius: var(--r-lg);
+  background: #000;
+}
+
+.poster,
+.video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --------------------------------------------------------------- кнопка */
+.play {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: linear-gradient(to bottom, rgba(3, 10, 18, 0.15), rgba(3, 10, 18, 0.6));
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.playMark {
+  position: relative;
+  width: clamp(58px, 7vw, 82px);
+  height: clamp(58px, 7vw, 82px);
+  border-radius: 50%;
+  background: var(--c-wine-700);
+  transition: transform var(--t-base) var(--ease);
+}
+
+.playMark::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 54%;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 12px 0 12px 19px;
+  border-color: transparent transparent transparent #fff;
+  transform: translate(-50%, -50%);
+}
+
+.play:hover .playMark,
+.play:focus-visible .playMark {
+  transform: scale(1.08);
+}
+
+.play:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -4px;
+}
+
+.playWord {
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.01em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shutterTop,
+  .shutterBottom {
+    display: none;
+  }
+
+  .playMark,
+  .play:hover .playMark {
+    transition: none;
+    transform: none;
+  }
+}

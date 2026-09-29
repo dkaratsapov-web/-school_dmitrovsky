@@ -1,0 +1,214 @@
+/* =========================================================================
+   Углублённое изучение — кадры плёнки
+
+   Предметы стоят кадрами на ленте: перфорация сверху и снизу едет вместе
+   с прокруткой, как плёнка в проекторе. Движется только перфорация —
+   декоративный слой; текст стоит на месте.
+   ========================================================================= */
+
+.section {
+  --p: 0.5;
+  position: relative;
+  overflow-x: clip;
+  padding-block: clamp(3rem, 6vw, 5rem);
+  background: var(--c-navy-50);
+  color: var(--c-ink-800);
+}
+
+.inner {
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+
+.head {
+  max-width: 54rem;
+  margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+.title {
+  margin: 0 0 clamp(0.75rem, 1.6vw, 1.125rem);
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 1.3rem + 2.4vw, 3.25rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.03em;
+  color: var(--c-navy-900);
+}
+
+.lead {
+  margin: 0;
+  font-size: clamp(1rem, 0.95rem + 0.35vw, 1.1875rem);
+  line-height: 1.5;
+  color: var(--c-ink-600);
+}
+
+/* ---------------------------------------------------------------- плёнка */
+.film {
+  position: relative;
+  padding-block: clamp(14px, 1.6vw, 22px);
+  background: var(--c-navy-950);
+}
+
+/* перфорация: ряд отверстий, который едет по мере прокрутки */
+.holes {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  height: clamp(14px, 1.6vw, 22px);
+  background-image: radial-gradient(
+    closest-side,
+    var(--c-navy-50) 0 68%,
+    transparent 70%
+  );
+  background-size: clamp(30px, 3.4vw, 46px) 100%;
+  background-repeat: repeat-x;
+  background-position: 0 50%;
+  transform: translate3d(calc((var(--p) - 0.5) * 90px), 0, 0);
+}
+
+.holesTop {
+  top: 0;
+}
+
+.holesBottom {
+  bottom: 0;
+}
+
+.strip {
+  display: flex;
+  gap: 2px;
+  width: max-content;
+  min-width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.strip::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .strip {
+    width: 100%;
+    overflow: visible;
+  }
+}
+
+/* --------------------------------------------------------------- кадр */
+.frame {
+  position: relative;
+  display: flex;
+  flex: 1 0 min(17rem, 72vw);
+  flex-direction: column;
+  gap: clamp(0.75rem, 1.6vw, 1.125rem);
+  min-width: 0;
+  padding: clamp(1.25rem, 2.4vw, 2rem) clamp(1rem, 2vw, 1.5rem);
+  background: #fff;
+  transition: transform var(--t-base) var(--ease), background-color var(--t-base) var(--ease);
+}
+
+.frame:hover {
+  transform: translateY(-4px);
+  background: #fff;
+}
+
+.num {
+  font-family: var(--font-display);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  color: var(--c-wine-600);
+  font-variant-numeric: tabular-nums;
+}
+
+.subject {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 0.95rem + 0.4vw, 1.25rem);
+  font-weight: var(--fw-bold);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: var(--c-navy-900);
+  text-wrap: balance;
+}
+
+/* кадры выходят по очереди, как лента проходит через окно */
+.frame[data-in='true'] {
+  animation: frameIn 560ms cubic-bezier(0.16, 0.9, 0.24, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+
+@keyframes frameIn {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+}
+
+/* ------------------------------------------------------------- колледж */
+.college {
+  display: grid;
+  gap: clamp(1rem, 2.2vw, 1.75rem);
+  margin-top: clamp(2rem, 4.5vw, 3.5rem);
+  padding: clamp(1.5rem, 3.2vw, 2.5rem);
+  border-radius: var(--r-lg);
+  background: var(--c-navy-900);
+  color: #fff;
+}
+
+@media (min-width: 900px) {
+  .college {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    align-items: center;
+  }
+}
+
+.collegeLead {
+  margin: 0;
+  max-width: 34ch;
+  font-family: var(--font-display);
+  font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.375rem);
+  font-weight: var(--fw-bold);
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+}
+
+.professions {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 560px) {
+  .professions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.profession {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.07);
+  border-left: 3px solid var(--c-wine-500);
+  font-size: var(--fs-small);
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .holes {
+    transform: none;
+  }
+
+  .frame,
+  .frame:hover {
+    transition: none;
+    transform: none;
+  }
+
+  .frame[data-in='true'] {
+    animation: none;
+  }
+}
