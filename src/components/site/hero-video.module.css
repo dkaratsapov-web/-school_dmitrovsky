@@ -75,9 +75,9 @@
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(to top, rgba(0, 17, 38, 0.76) 0%, rgba(0, 17, 38, 0.52) 34%,
-      rgba(0, 17, 38, 0.2) 66%, rgba(0, 17, 38, 0.32) 100%),
-    linear-gradient(to right, rgba(1, 51, 102, 0.2) 0%, rgba(1, 51, 102, 0.03) 65%);
+    linear-gradient(to top, rgba(0, 17, 38, 0.76) 0%, rgba(0, 17, 38, 0.374) 34%,
+      rgba(0, 17, 38, 0.144) 66%, rgba(0, 17, 38, 0.23) 100%),
+    linear-gradient(to right, rgba(1, 51, 102, 0.144) 0%, rgba(1, 51, 102, 0.022) 65%);
 }
 
 .inner {
