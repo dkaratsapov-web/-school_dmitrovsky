@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
+import { OrbitField } from '../ui/OrbitField';
 import { mediaFilm } from '@/content/media';
 import { asset } from '@/lib/asset';
 import { useScrollProgressVar } from '@/lib/motion';
@@ -58,6 +59,16 @@ export function MediaFilm() {
 
   return (
     <section className={s.section} ref={ref} aria-labelledby="media-film-title">
+      {/* фон: знаки школы в сетке точек, разметка киноплёнки и луч
+          проектора — все слои декоративные и едут от прокрутки */}
+      <OrbitField />
+
+      <span className={s.backdrop} aria-hidden="true">
+        <span className={s.grid} />
+        <span className={s.beam} />
+        <span className={s.dust} />
+      </span>
+
       <div className={s.inner}>
         <div className={s.head}>
           <h2 className={s.title} id="media-film-title">

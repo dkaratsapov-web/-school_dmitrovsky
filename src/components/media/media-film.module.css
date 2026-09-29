@@ -11,13 +11,77 @@
   /* сколько осталось от закрытого состояния: 1 — шторки сомкнуты */
   --shut: max(0, 1 - var(--p) * 2.1);
   position: relative;
-  overflow-x: clip;
+  overflow: clip;
   padding-block: clamp(3rem, 6vw, 5rem);
   background: #06121f;
   color: #fff;
 }
 
+/* ------------------------------------------------------------------ фон */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: clip;
+  pointer-events: none;
+  user-select: none;
+}
+
+.backdrop > * {
+  position: absolute;
+  display: block;
+}
+
+/* разметка монтажного стола */
+.grid {
+  inset: -14%;
+  background-image:
+    repeating-linear-gradient(to right, rgba(157, 187, 215, 0.09) 0 1px, transparent 1px 92px),
+    repeating-linear-gradient(to bottom, rgba(157, 187, 215, 0.09) 0 1px, transparent 1px 92px);
+  mask-image: radial-gradient(120% 90% at 50% 40%, transparent 0 34%, #000 86%);
+  transform: translate3d(calc((var(--p) - 0.5) * -44px), calc((var(--p) - 0.5) * -66px), 0);
+}
+
+/* луч проектора: идёт из-за плеча зрителя и ведёт к кадру */
+.beam {
+  top: -30%;
+  left: -12%;
+  width: min(80rem, 110vw);
+  height: 150%;
+  background: conic-gradient(
+    from 118deg at 12% 18%,
+    transparent 0deg,
+    rgba(157, 187, 215, 0.1) 6deg,
+    rgba(178, 58, 76, 0.07) 13deg,
+    transparent 21deg
+  );
+  filter: blur(6px);
+  transform: rotate(calc((var(--p) - 0.5) * 5deg));
+  transform-origin: 12% 18%;
+}
+
+/* пылинки в луче: медленно всплывают, пока страница открыта */
+.dust {
+  inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.5) 0 1px, transparent 1.6px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.32) 0 1px, transparent 1.6px);
+  background-size: 190px 240px, 310px 360px;
+  background-position: 0 0, 90px 120px;
+  opacity: 0.5;
+  mask-image: radial-gradient(70% 60% at 26% 30%, #000 0 20%, transparent 78%);
+  animation: drift 26s linear infinite;
+}
+
+@keyframes drift {
+  to {
+    transform: translate3d(38px, -240px, 0);
+  }
+}
+
 .inner {
+  position: relative;
+  z-index: 1;
   width: min(100% - 2 * var(--gutter), var(--container));
   margin-inline: auto;
 }
@@ -157,6 +221,15 @@
   .shutterTop,
   .shutterBottom {
     display: none;
+  }
+
+  .grid,
+  .beam {
+    transform: none;
+  }
+
+  .dust {
+    animation: none;
   }
 
   .playMark,

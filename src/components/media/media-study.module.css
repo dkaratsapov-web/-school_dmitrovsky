@@ -11,6 +11,8 @@
 
 .section {
   --p: 0.5;
+  /* сторона клетки: на широком экране крупнее, на телефоне мельче */
+  --cell: clamp(17px, 1.9vw, 26px);
   position: relative;
   overflow: clip;
   padding-block: clamp(3rem, 6vw, 5.5rem);
@@ -18,10 +20,17 @@
   color: var(--c-ink-800);
 }
 
-/* ------------------------------------------------------------------ фон */
+/* ------------------------------------------------------------------ фон
+
+   Страница в клетку. Клетка неподвижна — это бумага; движется свет по ней:
+   широкий перелив ходит по странице сам, второй слой едет от прокрутки,
+   а отдельные клетки загораются по очереди. Поле слева дочерчивается
+   по мере прокрутки, как будто страницу только что разлиновали.
+   ------------------------------------------------------------------- */
 .backdrop {
   position: absolute;
   inset: 0;
+  overflow: clip;
   pointer-events: none;
   user-select: none;
 }
@@ -31,40 +40,107 @@
   display: block;
 }
 
-/* сетка аппаратной */
-.grid {
-  inset: -12%;
+/* клетка */
+.paper {
+  inset: 0;
+  /* верх клетки растворяется: выше идёт стык с тёмным блоком, и линии
+     не должны начинаться ровной чертой */
+  mask-image: linear-gradient(to bottom, transparent 0, #000 7%);
   background-image:
-    repeating-linear-gradient(to right, var(--c-navy-100) 0 1px, transparent 1px 78px),
-    repeating-linear-gradient(to bottom, var(--c-navy-100) 0 1px, transparent 1px 78px);
-  opacity: 0.8;
-  mask-image: radial-gradient(130% 100% at 50% 45%, #000 0 30%, rgba(0, 0, 0, 0.3) 100%);
-  transform: translate3d(calc((var(--p) - 0.5) * -36px), calc((var(--p) - 0.5) * -58px), 0);
+    repeating-linear-gradient(
+      to right,
+      rgba(1, 67, 132, 0.13) 0 1px,
+      transparent 1px var(--cell)
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(1, 67, 132, 0.13) 0 1px,
+      transparent 1px var(--cell)
+    );
 }
 
-/* точечное поле: только по краям, под текст не лезет */
-.dots {
-  inset: -14%;
-  background-image: radial-gradient(circle, var(--c-navy-300) 0 1.4px, transparent 1.8px);
-  background-size: 26px 26px;
-  opacity: 0.55;
-  mask-image: radial-gradient(112% 80% at 50% 45%, transparent 0 46%, #000 88%);
-  transform: translate3d(calc((var(--p) - 0.5) * 54px), calc((var(--p) - 0.5) * 34px), 0);
+/* перелив: три мягких пятна ходят по странице */
+.wash {
+  inset: -22%;
+  background:
+    radial-gradient(38% 44% at 24% 28%, rgba(1, 67, 132, 0.16), transparent 72%),
+    radial-gradient(32% 38% at 76% 58%, rgba(126, 31, 46, 0.11), transparent 72%),
+    radial-gradient(48% 50% at 48% 92%, rgba(10, 86, 155, 0.13), transparent 74%);
+  animation: wash 38s ease-in-out infinite alternate;
 }
 
-/* засветка со стороны студийного света */
-.glow {
-  top: -34%;
-  right: -18%;
-  width: min(68rem, 92vw);
-  aspect-ratio: 1;
-  background: radial-gradient(
-    circle,
-    rgba(1, 67, 132, 0.12) 0 34%,
-    rgba(126, 31, 46, 0.06) 54%,
-    transparent 72%
+@keyframes wash {
+  to {
+    transform: translate3d(5%, -4%, 0) scale(1.1);
+  }
+}
+
+/* второй перелив — от прокрутки, поперёк первому */
+.sheen {
+  inset: -10% -25%;
+  background: linear-gradient(
+    102deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.55) 46%,
+    rgba(157, 187, 215, 0.22) 54%,
+    transparent 70%
   );
-  transform: translate3d(0, calc((var(--p) - 0.5) * -90px), 0);
+  transform: translate3d(calc((var(--p) - 0.5) * 38%), 0, 0);
+}
+
+/* подсвеченные клетки */
+.marks {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: min(100% - 2 * var(--gutter), var(--container));
+  transform: translateX(-50%);
+}
+
+.cell {
+  position: absolute;
+  top: calc(var(--y) * var(--cell) + 1px);
+  left: calc(var(--x) * var(--cell) + 1px);
+  width: calc(var(--cell) - 1px);
+  height: calc(var(--cell) - 1px);
+  background: rgba(1, 67, 132, 0.14);
+  opacity: 0;
+  animation: blink 13s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes blink {
+  0%,
+  72%,
+  100% {
+    opacity: 0;
+  }
+  10%,
+  30% {
+    opacity: 1;
+  }
+}
+
+/* поле: красная черта в двух клетках от края */
+.rule {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: min(100% - 2 * var(--gutter), var(--container));
+  transform: translateX(-50%);
+}
+
+.rule::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(2 * var(--cell));
+  width: 2px;
+  background: var(--c-wine-500);
+  opacity: 0.4;
+  transform-origin: top center;
+  transform: scaleY(min(1, calc(var(--p) * 2.4)));
 }
 
 .inner {
@@ -368,7 +444,7 @@
 
 @media (min-width: 900px) {
   .college {
-    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    grid-template-columns: minmax(0, 0.58fr) minmax(0, 1.42fr);
     align-items: start;
   }
 }
@@ -390,11 +466,11 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: start;
-  --badge-gap: clamp(0.75rem, 1.6vw, 1.25rem);
+  --badge-gap: clamp(0.875rem, 1.8vw, 1.75rem);
   column-gap: var(--badge-gap);
-  row-gap: clamp(1.5rem, 3.4vw, 2rem);
+  row-gap: clamp(2rem, 4vw, 2.75rem);
   margin: 0;
-  padding-top: clamp(0.875rem, 1.6vw, 1.25rem);
+  padding-top: clamp(1rem, 1.8vw, 1.5rem);
   list-style: none;
 }
 
@@ -420,21 +496,22 @@
   top: 0;
   left: calc(-0.5 * var(--badge-gap) - 1px);
   right: calc(-0.5 * var(--badge-gap) - 1px);
-  height: 2px;
-  background: var(--c-navy-300);
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, var(--c-navy-600), var(--c-navy-800));
 }
 
 .slot:first-child::before {
   left: 0;
-  border-radius: 2px 0 0 2px;
+  border-radius: 3px 0 0 3px;
 }
 
 .slot:last-child::before {
   right: 0;
-  border-radius: 0 2px 2px 0;
+  border-radius: 0 3px 3px 0;
 }
 
-/* качается вся подвеска: ремешок вместе с бейджем */
+/* качается вся подвеска: лента, зажим и бейдж */
 .hang {
   display: flex;
   flex-direction: column;
@@ -451,56 +528,123 @@
 
 @keyframes swing {
   from {
-    transform: rotate(-1.7deg);
+    transform: rotate(-2deg);
   }
   to {
-    transform: rotate(1.7deg);
+    transform: rotate(2deg);
   }
 }
 
+/* лента: тканая, с косым бликом */
 .strap {
-  width: 9px;
-  height: clamp(16px, 2.6vw, 30px);
-  background: linear-gradient(to bottom, var(--c-navy-600), var(--c-navy-800));
+  width: 14px;
+  height: clamp(22px, 3.4vw, 42px);
+  background:
+    repeating-linear-gradient(
+      -62deg,
+      rgba(255, 255, 255, 0.16) 0 2px,
+      transparent 2px 6px
+    ),
+    linear-gradient(to bottom, var(--c-navy-600), var(--c-navy-800));
 }
 
+/* металлический зажим между лентой и бейджем */
+.clip {
+  width: 30px;
+  height: 11px;
+  margin-top: -2px;
+  border-radius: 3px;
+  background: linear-gradient(
+    to bottom,
+    #dfe6ee 0%,
+    #a9b6c6 42%,
+    #7d8b9c 56%,
+    #cdd8e4 100%
+  );
+  box-shadow: 0 1px 2px rgba(0, 13, 27, 0.35);
+}
+
+/* -------------------------------------------------------------- карточка */
 .badge {
   position: relative;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.625rem, 1.2vw, 0.875rem);
   width: 100%;
-  padding: clamp(1.375rem, 2.2vw, 1.625rem) clamp(0.75rem, 1.4vw, 1rem)
-    clamp(0.875rem, 1.4vw, 1.125rem);
-  border-radius: 10px;
-  background: #fff;
-  box-shadow: 0 12px 26px rgba(1, 31, 63, 0.16);
-  transition: transform var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease);
+  min-height: clamp(9.5rem, 15vw, 12.5rem);
+  margin-top: -4px;
+  padding: clamp(1.5rem, 2.6vw, 2rem) clamp(0.875rem, 1.6vw, 1.25rem)
+    clamp(1.125rem, 1.8vw, 1.5rem);
+  border-radius: 14px;
+  background:
+    linear-gradient(200deg, rgba(1, 67, 132, 0.06) 0%, transparent 46%),
+    linear-gradient(to bottom, #ffffff 0%, #f4f7fb 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(1, 31, 63, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 2px 4px rgba(1, 31, 63, 0.08),
+    0 18px 34px rgba(1, 31, 63, 0.18);
+  transition:
+    transform var(--t-base) var(--ease),
+    box-shadow var(--t-base) var(--ease);
 }
 
 .slot:hover .badge {
-  transform: translateY(-3px);
-  box-shadow: 0 18px 34px rgba(1, 31, 63, 0.22);
+  transform: translateY(-4px);
+  box-shadow:
+    inset 0 0 0 1px rgba(1, 31, 63, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 4px 8px rgba(1, 31, 63, 0.1),
+    0 28px 48px rgba(1, 31, 63, 0.24);
 }
 
-/* пробитое отверстие под ремешок */
+/* пробитое отверстие под зажим */
 .punch {
   position: absolute;
-  top: clamp(9px, 1.1vw, 12px);
+  top: clamp(11px, 1.3vw, 14px);
   left: 50%;
-  width: 26px;
-  height: 5px;
+  width: 34px;
+  height: 6px;
   border-radius: 999px;
   background: var(--c-navy-50);
-  box-shadow: inset 0 1px 2px rgba(1, 31, 63, 0.4);
+  box-shadow:
+    inset 0 1px 2px rgba(1, 31, 63, 0.45),
+    0 1px 0 rgba(255, 255, 255, 0.8);
   transform: translateX(-50%);
+}
+
+/* школьный знак на бейдже */
+.crest {
+  display: grid;
+  place-items: center;
+  width: clamp(2.25rem, 3.4vw, 3rem);
+  height: clamp(2.25rem, 3.4vw, 3rem);
+  border-radius: 50%;
+  background: linear-gradient(150deg, var(--c-navy-800), var(--c-navy-950));
+  box-shadow: 0 4px 10px rgba(1, 31, 63, 0.3);
+}
+
+.crest svg {
+  width: 62%;
+  height: 62%;
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.85);
+  stroke-width: 0.9;
+}
+
+.crest svg circle {
+  fill: var(--c-wine-500);
+  stroke: none;
 }
 
 .badgeName {
   display: block;
   font-family: var(--font-display);
-  font-size: clamp(0.8125rem, 0.78rem + 0.2vw, 0.9375rem);
-  font-weight: var(--fw-semibold);
-  line-height: 1.32;
-  letter-spacing: -0.01em;
+  font-size: clamp(0.9375rem, 0.85rem + 0.42vw, 1.1875rem);
+  font-weight: var(--fw-bold);
+  line-height: 1.28;
+  letter-spacing: -0.02em;
   text-align: center;
   color: var(--c-navy-900);
   text-wrap: balance;
@@ -512,14 +656,33 @@
   text-transform: uppercase;
 }
 
+/* фирменная отбивка внизу карточки */
+.badgeRule {
+  width: clamp(1.75rem, 3vw, 2.5rem);
+  height: 3px;
+  margin-top: auto;
+  border-radius: 2px;
+  background: var(--c-wine-700);
+}
+
 /* ---------------------------------------------------- движение выключено */
 @media (prefers-reduced-motion: reduce) {
-  .grid,
-  .dots,
-  .glow,
-  .scan,
   .sheen,
+  .scan,
   .tickerHatch {
+    transform: none;
+  }
+
+  .wash {
+    animation: none;
+  }
+
+  .cell {
+    animation: none;
+    opacity: 0.55;
+  }
+
+  .rule::before {
     transform: none;
   }
 
@@ -543,6 +706,10 @@
   .badge,
   .bar {
     transition: none;
+  }
+
+  .slot:hover .badge {
+    transform: none;
   }
 
   .row[data-live='true'] .mark,

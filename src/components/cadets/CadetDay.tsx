@@ -209,6 +209,13 @@ export function CadetDay() {
               </dl>
             </div>
           </div>
+
+          {/* стойки: доска не висит в воздухе, а стоит на них */}
+          <div className={s.stand} aria-hidden="true">
+            <span className={[s.post, s.postLeft].join(' ')} />
+            <span className={[s.post, s.postRight].join(' ')} />
+            <span className={s.foot} />
+          </div>
         </div>
       </div>
     </section>

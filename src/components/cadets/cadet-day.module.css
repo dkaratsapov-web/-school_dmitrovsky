@@ -9,7 +9,7 @@
 .section {
   --p: 0;
   /* сколько осталось от наклона: 1 — лежит от зрителя, 0 — стоит прямо */
-  --tilt: max(0, 1 - var(--p) * 1.75);
+  --tilt: max(0, 1 - var(--p) * 1.55);
   position: relative;
   overflow-x: clip;
   padding-block: clamp(3rem, 6vw, 5.5rem) clamp(3.5rem, 7vw, 6rem);
@@ -50,7 +50,9 @@
 
 /* ----------------------------------------------------------------- панель */
 .stage {
-  perspective: 1200px;
+  /* точка схода ближе прежнего: доска уходит от зрителя круче */
+  perspective: clamp(720px, 58vw, 1080px);
+  perspective-origin: 50% 0;
   margin-top: clamp(1.75rem, 3.5vw, 3rem);
 }
 
@@ -63,7 +65,8 @@
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45), 0 90px 90px rgba(0, 0, 0, 0.22);
   transform-origin: 50% 0;
-  transform: rotateX(calc(var(--tilt) * 20deg)) scale(calc(1 + var(--tilt) * 0.04));
+  transform: translate3d(0, calc(var(--tilt) * 78px), 0)
+    rotateX(calc(var(--tilt) * 54deg)) scale(calc(1 + var(--tilt) * 0.07));
 }
 
 .screen {
@@ -313,6 +316,75 @@
   color: var(--c-ink-500);
 }
 
+/* --------------------------------------------------------------- стойки
+
+   Доска стоит на двух стойках: пока она лежит от зрителя, стоек нет,
+   а по мере подъёма они вырастают под ней. Рисуются отдельным слоем
+   под панелью — в поток не лезут и с экрана не читаются.
+   ------------------------------------------------------------------- */
+.stand {
+  position: relative;
+  max-width: 76rem;
+  height: clamp(44px, 6vw, 92px);
+  margin-inline: auto;
+}
+
+.post {
+  position: absolute;
+  top: 0;
+  bottom: 26%;
+  width: clamp(10px, 1vw, 16px);
+  border-radius: 0 0 3px 3px;
+  background: linear-gradient(
+    to right,
+    var(--c-navy-900) 0%,
+    var(--c-navy-600) 42%,
+    var(--c-navy-800) 100%
+  );
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45);
+  transform-origin: top center;
+  transform: scaleY(calc(1 - var(--tilt)));
+}
+
+.postLeft {
+  left: 13%;
+}
+
+.postRight {
+  right: 13%;
+}
+
+/* опорная планка под стойками */
+.foot {
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  bottom: 18%;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    var(--c-navy-800) 12%,
+    var(--c-navy-600) 50%,
+    var(--c-navy-800) 88%,
+    transparent 100%
+  );
+  transform: scaleX(calc(1 - var(--tilt)));
+}
+
+/* тень, которую доска кладёт на пол */
+.stand::after {
+  content: '';
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: 4%;
+  height: 34px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0.55) 0 40%, transparent 72%);
+  opacity: calc(1 - var(--tilt));
+}
+
 @media (prefers-reduced-motion: reduce) {
   .table tbody tr:hover .cell {
     background: none;
@@ -330,5 +402,23 @@
   .head,
   .panel {
     transform: none;
+  }
+
+  /* без скрипта и при выключенной анимации --p остаётся нулём:
+     обнуляем наклон, иначе доска так и лежит от зрителя */
+  .section {
+    --tilt: 0;
+  }
+
+  .post {
+    transform: scaleY(1);
+  }
+
+  .foot {
+    transform: scaleX(1);
+  }
+
+  .stand::after {
+    opacity: 1;
   }
 }

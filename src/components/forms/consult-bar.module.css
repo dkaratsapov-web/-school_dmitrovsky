@@ -5,12 +5,13 @@
 .bar {
   display: grid;
   /* панель не растягивается на всю ширину контейнера: на широком экране
-     поля становились неоправданно длинными */
+     поля становились неоправданно длинными. Полоса намеренно узкая
+     и невысокая — она сопровождает первый экран, а не спорит с ним. */
   width: 100%;
-  max-width: 1240px;
+  max-width: 58rem;
   margin-inline: auto;
-  gap: var(--s-5);
-  padding: clamp(1.1rem, 2.2vw, 1.6rem);
+  gap: var(--s-4);
+  padding: clamp(0.875rem, 1.6vw, 1.125rem);
   /* панель не закрывает видео: полупрозрачная заливка с размытием */
   background: rgba(3, 20, 42, 0.38);
   border: 1px solid rgba(255, 255, 255, 0.22);
@@ -38,16 +39,16 @@
        иначе строка согласия висит отдельной строкой во всю ширину */
     grid-template-columns: minmax(0, auto) minmax(0, 1fr);
     align-items: center;
-    column-gap: var(--s-8);
+    column-gap: var(--s-6);
     row-gap: var(--s-2);
-    padding: var(--s-5) var(--s-7);
+    padding: var(--s-4) var(--s-5);
   }
 
   .lead {
     grid-column: 1;
     grid-row: 1 / 3;
     align-self: center;
-    max-width: 22rem;
+    max-width: 16rem;
   }
 
   .fields {
@@ -73,21 +74,22 @@
 
 .leadTitle {
   font-family: var(--font-display);
-  font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.3125rem);
+  font-size: clamp(0.9375rem, 0.9rem + 0.28vw, 1.0625rem);
   font-weight: var(--fw-bold);
   letter-spacing: -0.015em;
   color: #fff;
 }
 
 .leadText {
-  font-size: var(--fs-small);
+  font-size: var(--fs-caption);
+  line-height: 1.35;
   color: rgba(255, 255, 255, 0.76);
 }
 
 /* ------------------------------------------------------------------ поля */
 .fields {
   display: grid;
-  gap: var(--s-3);
+  gap: var(--s-2);
   grid-template-columns: 1fr;
 }
 
@@ -104,13 +106,13 @@
 
 .input {
   width: 100%;
-  min-height: 52px;
-  padding: 0 var(--s-5);
+  min-height: 44px;
+  padding: 0 var(--s-4);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
-  font-size: var(--fs-body);
+  font-size: var(--fs-small);
   transition:
     background var(--t-fast) var(--ease),
     border-color var(--t-fast) var(--ease),
@@ -145,14 +147,14 @@
 /* ---------------------------------------------------------------- кнопка */
 .submit {
   position: relative;
-  min-height: 52px;
-  padding: 0 var(--s-8);
+  min-height: 44px;
+  padding: 0 var(--s-6);
   border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   background: var(--c-wine-700);
   color: #fff;
   font-family: var(--font-display);
-  font-size: var(--fs-small);
+  font-size: var(--fs-caption);
   font-weight: var(--fw-bold);
   cursor: pointer;
   overflow: hidden;

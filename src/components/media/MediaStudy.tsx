@@ -21,8 +21,33 @@ import s from './media-study.module.css';
  * на рейке и качаются, каждый в своей фазе.
  */
 
+/** Школьный знак на бейдже: атом с орбитами, как на гербе. */
+function Atom() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <ellipse cx="12" cy="12" rx="10.4" ry="4.5" transform="rotate(-28 12 12)" />
+      <ellipse cx="12" cy="12" rx="10.4" ry="4.5" transform="rotate(28 12 12)" />
+      <circle cx="12" cy="12" r="2.4" />
+    </svg>
+  );
+}
+
 /** Полос в индикаторе уровня. */
 const BARS = 9;
+
+/**
+ * Подсвеченные клетки: сколько клеток от левого края контейнера, сколько
+ * сверху и через сколько секунд загорается. Разброс подобран так, чтобы
+ * они не выстраивались в ряд и не попадали под длинные строки.
+ */
+const CELLS: readonly [number, number, number][] = [
+  [3, 6, 0],
+  [7, 14, 2.6],
+  [4, 21, 5.2],
+  [11, 3, 7.4],
+  [2, 27, 3.8],
+  [9, 24, 6.1],
+];
 
 /** Высоты полос в покое, доля от полной: ровная линия с лёгкой неровностью. */
 const REST = [0.16, 0.1, 0.2, 0.12, 0.24, 0.12, 0.18, 0.1, 0.14];
@@ -82,11 +107,25 @@ export function MediaStudy() {
 
   return (
     <section className={s.section} ref={ref} aria-labelledby="media-study-title">
-      {/* фон: сетка аппаратной, точечное поле по краям и мягкая засветка */}
+      {/* Фон — страница в клетку: сама клетка, поле на две клетки от края
+          и перелив, который медленно ходит по бумаге. Несколько клеток
+          подсвечиваются по очереди — бумага не стоит мёртвой. */}
       <span className={s.backdrop} aria-hidden="true">
-        <span className={s.grid} />
-        <span className={s.dots} />
-        <span className={s.glow} />
+        <span className={s.paper} />
+        <span className={s.wash} />
+        <span className={s.sheen} />
+
+        <span className={s.marks}>
+          {CELLS.map(([x, y, d], i) => (
+            <span
+              className={s.cell}
+              key={i}
+              style={{ '--x': x, '--y': y, '--d': `${d}s` } as React.CSSProperties}
+            />
+          ))}
+        </span>
+
+        <span className={s.rule} />
       </span>
 
       <div className={s.inner}>
@@ -150,9 +189,17 @@ export function MediaStudy() {
               <li className={s.slot} key={name} style={{ '--i': i } as React.CSSProperties}>
                 <span className={s.hang}>
                   <span className={s.strap} aria-hidden="true" />
+                  <span className={s.clip} aria-hidden="true" />
+
                   <span className={s.badge}>
                     <span className={s.punch} aria-hidden="true" />
+
+                    <span className={s.crest} aria-hidden="true">
+                      <Atom />
+                    </span>
+
                     <span className={s.badgeName}>{name}</span>
+                    <span className={s.badgeRule} aria-hidden="true" />
                   </span>
                 </span>
               </li>
