@@ -111,8 +111,6 @@ export const mediaStudy = {
 export const mediaFilm = {
   title: 'Фильм о медиаклассе',
   action: 'Смотреть фильм',
-  /** Длительность ролика — как есть. */
-  length: '2 минуты 35 секунд',
   large: '/video/media-film-1280.mp4',
   small: '/video/media-film-854.mp4',
   poster: '/video/media-film-poster.webp',

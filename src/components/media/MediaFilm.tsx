@@ -74,7 +74,6 @@ export function MediaFilm() {
           <h2 className={s.title} id="media-film-title">
             {mediaFilm.title}
           </h2>
-          <p className={s.length}>{mediaFilm.length}</p>
         </div>
 
         <div className={s.gate}>
