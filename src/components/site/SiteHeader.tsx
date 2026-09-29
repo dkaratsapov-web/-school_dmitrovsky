@@ -168,6 +168,8 @@ export function SiteHeader() {
           label: stage.title,
           onSelect: () => setInfo(stageInfo(stage)),
         }))
+      : item.links
+      ? item.links.map((link) => ({ label: link.label, href: link.href }))
       : [
           item.anchor
             ? { label: item.label, href: item.anchor }
@@ -321,6 +323,47 @@ export function SiteHeader() {
                           >
                             {stage.title}
                           </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </span>
+              );
+            }
+
+            if (item.links) {
+              const open = openSub === item.label;
+              return (
+                <span
+                  key={item.label}
+                  className={s.navItem}
+                  onMouseEnter={(e) => {
+                    moveMarker(e.currentTarget.firstElementChild as HTMLElement);
+                    setOpenSub(item.label);
+                  }}
+                >
+                  <button
+                    type="button"
+                    className={s.navLink}
+                    aria-expanded={open}
+                    aria-haspopup="true"
+                    onClick={() => setOpenSub(open ? null : item.label)}
+                  >
+                    {item.label}
+                    <Icon name="chevron-down" size={15} className={s.chev} />
+                  </button>
+
+                  <div className={s.sub} hidden={!open}>
+                    <ul className={s.subList}>
+                      {item.links.map((link, i) => (
+                        <li key={link.label} style={{ '--i': i } as React.CSSProperties}>
+                          <Link
+                            className={s.subLink}
+                            href={link.href}
+                            onClick={() => setOpenSub(null)}
+                          >
+                            {link.label}
+                          </Link>
                         </li>
                       ))}
                     </ul>

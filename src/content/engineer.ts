@@ -25,17 +25,22 @@ export const engineerPageDescription =
   'Набор в профильные 10-11 классы на конкурсной основе.';
 
 /**
- * Сцена Spline для первого экрана.
+ * Подложка первого экрана.
  *
- * Адрес берётся в редакторе Spline: «Export → Code», поле
- * «.splinecode URL». Чтобы поставить свою сцену — робота в школьной
- * форме со знаком школы, — её собирают в редакторе и подменяют
- * здесь одну строку, в коде править нечего.
- *
- * Сцена лежит на стороннем хранилище prod.spline.design и весит
- * несколько мегабайт: это внешняя зависимость сайта, добавлена
- * по указанию владельца (QUESTIONS.md, D-27). На узких экранах
- * и при выключенной анимации сцена не подключается — там остаётся
- * запасная сцена со знаком школы.
+ * Пока кадр: снимок инженерного класса, присланный школой. Когда придёт
+ * видео, его кладут в public/video тремя ступенями по ширине окна
+ * (как у кадетов и медиакласса) и подставляют в engineerHeroVideo —
+ * разметка первого экрана уже рассчитана на видео, кадр остаётся
+ * постером.
  */
-export const engineerScene = 'https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode';
+export const engineerHeroPoster = {
+  src: '/images/profile-inzhenernyi.webp',
+  width: 1200,
+  height: 800,
+  alt: '',
+};
+
+type HeroSources = { large: string; small: string; phone: string };
+
+/** Видео первого экрана. Пока его нет — на подложке стоит кадр. */
+export const engineerHeroVideo: { webm: HeroSources; mp4: HeroSources } | null = null;

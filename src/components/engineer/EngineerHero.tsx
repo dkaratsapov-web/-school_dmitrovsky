@@ -1,171 +1,156 @@
-"use client";
+'use client';
 
-import { useEffect, useRef } from "react";
-import { ConsultBar } from "../forms/ConsultBar";
-import { SplineScene } from "../ui/SplineScene";
+import Image from 'next/image';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { ConsultBar } from '../forms/ConsultBar';
 import {
   engineerHeroLead,
+  engineerHeroPoster,
   engineerHeroTitle,
-  engineerScene,
-} from "@/content/engineer";
-import { prefersReducedMotion } from "@/lib/motion";
-import s from "./engineer-hero.module.css";
+  engineerHeroVideo,
+} from '@/content/engineer';
+import { asset } from '@/lib/asset';
+import { useScrollProgressVar } from '@/lib/motion';
+import s from './engineer-hero.module.css';
+
+/** Версию выбирает браузер по ширине окна: лишний файл не скачивается. */
+const LARGE_FROM = '(min-width: 1280px)';
+const SMALL_FROM = '(min-width: 768px)';
+
+/* Движение разрешено не всем: при выключенной анимации видео
+   не подключается, остаётся кадр. */
+function subscribeMedia(onChange: () => void) {
+  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  mq.addEventListener('change', onChange);
+  return () => mq.removeEventListener('change', onChange);
+}
+
+function readMedia(): boolean {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+  return true;
+}
 
 /**
  * Первый экран инженерного класса.
  *
- * Справа стоит сцена Spline — она же следит за курсором. Пока сцена
- * грузится, и на узких экранах, и при выключенной анимации на её месте
- * стоит запасная: знак школы, собранный в объёме из атома с тремя
- * орбитами. Запасная сцена — обычная разметка, поэтому первый экран
- * не бывает пустым ни без скрипта, ни без сети.
+ * Подложка — кадр во всё окно, поверх чертёжная сетка: она едет от
+ * прокрутки и отличает этот экран от кадетского и медиакласса, где
+ * разбор свой. Под заголовком размерная линия — та, что ставят
+ * на чертеже.
  *
- * Чертёжная сетка и пятно света позади идут за курсором сами, каждый
- * слой со своей скоростью — сцена читается объёмной целиком.
- *
- * Положение курсора пишется в CSS-переменные одним проходом в кадре
- * отрисовки: React на движение мыши не перерисовывается, анимируются
- * только transform и opacity.
- *
- * Курсора может не быть вовсе — на телефоне сборка качается сама.
- * При выключенной анимации сцена стоит неподвижно и на курсор
- * не отзывается.
+ * Когда школа пришлёт видео, оно встанет на подложку тем же разбором,
+ * что у кадетов: три ступени по ширине окна, кадр остаётся постером.
  */
-
-/** Три орбиты: наклон по X, наклон по Y и время оборота спутника. */
-const RINGS: readonly [number, number, number][] = [
-  [68, 18, 14],
-  [-54, 32, 19],
-  [12, -70, 25],
-];
-
 export function EngineerHero() {
-  const stageRef = useRef<HTMLDivElement>(null);
+  const ref = useScrollProgressVar<HTMLElement>('--p');
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [ready, setReady] = useState(false);
+  const allowVideo = useSyncExternalStore(subscribeMedia, readMedia, () => false);
+  /* Источники ставим сразу: грузить наперёд нечего, у видео preload="none". */
+  const armed = allowVideo;
 
+  /* Шапка знает, что под ней тёмный первый экран. */
   useEffect(() => {
-    const el = stageRef.current;
-    if (!el || prefersReducedMotion()) return;
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches)
-      return;
-
-    let frame = 0;
-    let mx = 0;
-    let my = 0;
-
-    const paint = () => {
-      frame = 0;
-      el.style.setProperty("--mx", mx.toFixed(4));
-      el.style.setProperty("--my", my.toFixed(4));
-    };
-    const request = () => {
-      if (frame === 0) frame = window.requestAnimationFrame(paint);
-    };
-
-    const onMove = (e: PointerEvent) => {
-      const r = el.getBoundingClientRect();
-      /* от −1 до 1: середина сцены — ноль */
-      mx = Math.max(
-        -1,
-        Math.min(1, ((e.clientX - r.left) / r.width - 0.5) * 2),
-      );
-      my = Math.max(
-        -1,
-        Math.min(1, ((e.clientY - r.top) / r.height - 0.5) * 2),
-      );
-      request();
-    };
-    const onLeave = () => {
-      mx = 0;
-      my = 0;
-      request();
-    };
-
-    el.addEventListener("pointermove", onMove);
-    el.addEventListener("pointerleave", onLeave);
-    return () => {
-      el.removeEventListener("pointermove", onMove);
-      el.removeEventListener("pointerleave", onLeave);
-      if (frame) window.cancelAnimationFrame(frame);
-    };
+    document.body.classList.add('has-hero');
+    return () => document.body.classList.remove('has-hero');
   }, []);
 
+
+  /* Автозапуск разрешён только беззвучному видео. */
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v || !armed) return;
+
+    v.muted = true;
+    v.defaultMuted = true;
+
+    const start = () => {
+      v.play().catch(() => {
+        /* браузер отказал в автозапуске — ждём первого касания */
+      });
+    };
+    const shown = () => setReady(true);
+
+    if (v.networkState === HTMLMediaElement.NETWORK_EMPTY) v.load();
+    start();
+    v.addEventListener('canplay', start);
+    v.addEventListener('playing', shown);
+    v.addEventListener('timeupdate', shown, { once: true });
+
+    const onFirstTouch = () => {
+      if (v.paused) start();
+    };
+    window.addEventListener('pointerdown', onFirstTouch, { once: true });
+
+    return () => {
+      v.removeEventListener('canplay', start);
+      v.removeEventListener('playing', shown);
+      v.removeEventListener('timeupdate', shown);
+      window.removeEventListener('pointerdown', onFirstTouch);
+    };
+  }, [armed]);
+
   return (
-    <section className={s.hero} aria-labelledby="engineer-title">
-      <div className={s.stage} ref={stageRef}>
-        {/* чертёжная сетка позади: слой декоративный, идёт за курсором
-            медленнее самой сборки */}
-        <span className={s.grid} aria-hidden="true" />
-        <span className={s.glow} aria-hidden="true" />
+    <section className={s.hero} ref={ref} aria-labelledby="engineer-title">
+      <div
+        className={s.media}
+        style={{ '--poster': `url(${asset(engineerHeroPoster.src)})` } as React.CSSProperties}
+      >
+        <Image
+          className={[s.plate, ready ? s.plateHidden : ''].filter(Boolean).join(' ')}
+          src={asset(engineerHeroPoster.src)}
+          alt={engineerHeroPoster.alt}
+          width={engineerHeroPoster.width}
+          height={engineerHeroPoster.height}
+          priority
+          sizes="100vw"
+        />
 
-        <div className={s.inner}>
-          <div className={s.copy}>
-            <h1 className={s.title} id="engineer-title">
-              {engineerHeroTitle}
-            </h1>
-            <p className={s.lead}>{engineerHeroLead}</p>
-          </div>
-
-          <div className={s.scene} aria-hidden="true">
-            <SplineScene scene={engineerScene} fallback={<Atom />} />
-          </div>
-        </div>
+        {engineerHeroVideo ? (
+          <video
+            ref={videoRef}
+            className={[s.plate, ready ? '' : s.plateHidden].filter(Boolean).join(' ')}
+            poster={asset(engineerHeroPoster.src)}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="none"
+            aria-hidden="true"
+          >
+            {armed ? (
+              <>
+                <source src={asset(engineerHeroVideo.webm.large)} type="video/webm" media={LARGE_FROM} />
+                <source src={asset(engineerHeroVideo.webm.small)} type="video/webm" media={SMALL_FROM} />
+                <source src={asset(engineerHeroVideo.webm.phone)} type="video/webm" />
+                <source src={asset(engineerHeroVideo.mp4.large)} type="video/mp4" media={LARGE_FROM} />
+                <source src={asset(engineerHeroVideo.mp4.small)} type="video/mp4" media={SMALL_FROM} />
+                <source src={asset(engineerHeroVideo.mp4.phone)} type="video/mp4" />
+              </>
+            ) : null}
+          </video>
+        ) : null}
       </div>
 
-      <div className={s.bar}>
+      <span className={s.grid} aria-hidden="true" />
+      <span className={s.scrim} aria-hidden="true" />
+
+      <div className={s.inner}>
+        <div className={s.copy}>
+          <h1 className={s.title} id="engineer-title">
+            {engineerHeroTitle}
+          </h1>
+
+          {/* размерная линия, как на чертеже */}
+          <span className={s.dim} aria-hidden="true">
+            <span className={s.dimLine} />
+          </span>
+
+          <p className={s.lead}>{engineerHeroLead}</p>
+        </div>
+
         <ConsultBar />
       </div>
     </section>
-  );
-}
-
-/** Запасная сцена: знак школы в объёме. */
-function Atom() {
-  return (
-    <div className={s.spare}>
-      <div className={s.float}>
-        <div className={s.rig}>
-          {RINGS.map(([rx, ry, dur], i) => (
-            <span
-              className={s.ring}
-              key={i}
-              style={
-                {
-                  "--rx": `${rx}deg`,
-                  "--ry": `${ry}deg`,
-                  "--dur": `${dur}s`,
-                } as React.CSSProperties
-              }
-            >
-              <span className={s.spin}>
-                <span className={s.line} />
-                <span className={s.sat} />
-              </span>
-            </span>
-          ))}
-
-          <span className={s.core}>
-            <svg className={s.mark} viewBox="0 0 24 24" focusable="false">
-              <ellipse
-                cx="12"
-                cy="12"
-                rx="10.4"
-                ry="4.5"
-                transform="rotate(-28 12 12)"
-              />
-              <ellipse
-                cx="12"
-                cy="12"
-                rx="10.4"
-                ry="4.5"
-                transform="rotate(28 12 12)"
-              />
-              <circle cx="12" cy="12" r="2.4" />
-            </svg>
-          </span>
-
-          <span className={s.shadow} />
-        </div>
-      </div>
-    </div>
   );
 }

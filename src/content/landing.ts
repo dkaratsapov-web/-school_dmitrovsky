@@ -73,9 +73,27 @@ export type LandingItem = {
   info?: LandingInfo;
   /** Раскрывающийся список ступеней обучения. */
   stages?: readonly Stage[];
+  /** Раскрывающийся список ссылок на страницы. */
+  links?: readonly { label: string; href: string }[];
   /** Выделенный пункт: обводка в фирменном бордовом. */
   accent?: boolean;
 };
+
+/**
+ * Профильные 10-11 классы: четыре направления.
+ *
+ * Названия — как в описаниях профилей (profiles.ts). Медиакласс
+ * и инженерный класс ведут на свои страницы; у медицинского
+ * и предпринимательского своей страницы пока нет, поэтому они ведут
+ * в раздел профильных классов, где их описания и живут сейчас.
+ * Когда страницы появятся, здесь меняются два адреса.
+ */
+export const profileLinks: readonly { label: string; href: string }[] = [
+  { label: 'Медиакласс', href: '/mediaklass' },
+  { label: 'Инженерный класс', href: '/inzhenernyi-klass' },
+  { label: 'Медицинский класс', href: '/10-11class' },
+  { label: 'Предпринимательский класс', href: '/10-11class' },
+];
 
 /**
  * Меню шапки на лендинге.
@@ -88,6 +106,7 @@ export const landingNav: readonly LandingItem[] = [
   { label: 'Кадетский корпус', anchor: '/kadetskii-korpus', accent: true },
   { label: 'О нас', info: aboutInfo },
   { label: 'Обучение', stages },
+  { label: 'Профильные 10-11 классы', links: profileLinks },
   /* «Педагоги» из шапки убраны по указанию владельца (QUESTIONS.md, D-24).
      Сам блок на главной и ссылка в подвале остались на месте. */
   { label: 'Мероприятия', anchor: '/#events' },

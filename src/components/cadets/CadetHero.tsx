@@ -44,8 +44,12 @@ export function CadetHero() {
   const ref = useScrollProgressVar<HTMLElement>('--p');
   const videoRef = useRef<HTMLVideoElement>(null);
   const [ready, setReady] = useState(false);
-  const [armed, setArmed] = useState(false);
   const allowVideo = useSyncExternalStore(subscribeMedia, readMedia, () => false);
+  /* Источники ставим сразу, как только видео вообще разрешено. Раньше
+     они ждали события load и простоя браузера: на живом сайте это
+     ожидание могло не кончиться, и человек видел кадр вместо видео.
+     Грузить наперёд нечего — у видео preload="none". */
+  const armed = allowVideo;
   const poster = asset(cadetHeroPoster.src);
 
   /* Шапка знает, что под ней тёмный первый экран. */
@@ -54,38 +58,6 @@ export function CadetHero() {
     return () => document.body.classList.remove('has-hero');
   }, []);
 
-  /* Видео — после того, как страница показалась: в гонку с ней
-     оно не вступает. */
-  useEffect(() => {
-    if (!allowVideo) return;
-
-    let timer = 0;
-    let late = 0;
-    type WithIdle = Window & {
-      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
-    };
-    const idle = (window as WithIdle).requestIdleCallback;
-
-    const arm = () => {
-      if (typeof idle === 'function') idle(() => setArmed(true), { timeout: 2500 });
-      else timer = window.setTimeout(() => setArmed(true), 600);
-    };
-
-    if (document.readyState === 'complete') arm();
-    else {
-      window.addEventListener('load', arm, { once: true });
-      /* Событие load ждёт все до единого запроса страницы: счётчик,
-         встроенный ролик, расширение браузера. Если оно задержалось,
-         видео всё равно подключается — но позже картинки и шрифтов. */
-      late = window.setTimeout(arm, 1800);
-    }
-
-    return () => {
-      window.removeEventListener('load', arm);
-      if (timer) window.clearTimeout(timer);
-      if (late) window.clearTimeout(late);
-    };
-  }, [allowVideo]);
 
   /* Автозапуск разрешён только беззвучному видео, и свойство muted React
      в разметку не выносит — выставляем его сами. */
