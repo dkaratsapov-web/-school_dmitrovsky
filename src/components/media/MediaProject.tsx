@@ -88,39 +88,39 @@ export function MediaProject() {
             </span>
             <span className={s.counterAll}>из {String(total).padStart(2, '0')}</span>
           </p>
+
+          {/* Кадр к пункту, на котором сейчас глаз. Снимки лежат стопкой
+              и сменяют друг друга наплывом: место под них не прыгает,
+              а меняется только прозрачность и масштаб. */}
+          <div className={s.stage}>
+            {mediaProject.photos.map((photo, i) => (
+              <Image
+                className={s.shot}
+                key={photo.src}
+                data-on={i === near ? 'true' : 'false'}
+                src={asset(photo.src)}
+                alt={photo.alt}
+                width={photo.width}
+                height={photo.height}
+                sizes="(min-width: 1024px) 46vw, 92vw"
+              />
+            ))}
+          </div>
         </div>
 
         <ol className={s.points} ref={listRef}>
-          {mediaProject.points.map((point, i) => {
-            const photo = mediaProject.photos[i];
-            return (
-              <li
-                className={[s.point, i === near ? s.pointNear : ''].filter(Boolean).join(' ')}
-                key={point}
-                data-point=""
-              >
-                {photo ? (
-                  <span className={s.shot}>
-                    <Image
-                      className={s.img}
-                      src={asset(photo.src)}
-                      alt={photo.alt}
-                      width={photo.width}
-                      height={photo.height}
-                      sizes="(min-width: 1024px) 15rem, 40vw"
-                    />
-                  </span>
-                ) : null}
-
-                <div className={s.body}>
-                  <span className={s.num} aria-hidden="true">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <p className={s.text}>{point}</p>
-                </div>
-              </li>
-            );
-          })}
+          {mediaProject.points.map((point, i) => (
+            <li
+              className={[s.point, i === near ? s.pointNear : ''].filter(Boolean).join(' ')}
+              key={point}
+              data-point=""
+            >
+              <span className={s.num} aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <p className={s.text}>{point}</p>
+            </li>
+          ))}
         </ol>
       </div>
 

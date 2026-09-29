@@ -38,8 +38,7 @@ function subscribeMedia(onChange: () => void) {
 
 function readMedia(): boolean {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
-  const conn = (navigator as { connection?: { saveData?: boolean } }).connection;
-  return conn?.saveData !== true;
+  return true;
 }
 
 /**

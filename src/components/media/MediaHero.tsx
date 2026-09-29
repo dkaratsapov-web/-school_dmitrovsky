@@ -12,8 +12,15 @@ import s from './media-hero.module.css';
 const LARGE_FROM = '(min-width: 1280px)';
 const SMALL_FROM = '(min-width: 768px)';
 
-/* Движение разрешено не всем: при выключенной анимации и режиме экономии
-   трафика видео не подключается, остаётся кадр. */
+/* Движение разрешено не всем: при выключенной анимации видео
+   не подключается, остаётся кадр.
+
+   Режим экономии трафика раньше тоже отключал видео. Так и оказалось,
+   что у владельца на первом экране всегда стоял неподвижный кадр:
+   браузер сообщал об экономии, а страница молча отказывалась от видео.
+   Ролик первого экрана весит порядка полутора мегабайт и раздаётся
+   тремя ступенями по ширине окна — гасить его из-за этого флага
+   не за что. */
 function subscribeMedia(onChange: () => void) {
   const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
   mq.addEventListener('change', onChange);
@@ -22,8 +29,7 @@ function subscribeMedia(onChange: () => void) {
 
 function readMedia(): boolean {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
-  const conn = (navigator as { connection?: { saveData?: boolean } }).connection;
-  return conn?.saveData !== true;
+  return true;
 }
 
 /**
