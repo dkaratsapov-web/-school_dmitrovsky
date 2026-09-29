@@ -61,6 +61,7 @@ export function CadetHero() {
     if (!allowVideo) return;
 
     let timer = 0;
+    let late = 0;
     type WithIdle = Window & {
       requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
     };
@@ -72,11 +73,18 @@ export function CadetHero() {
     };
 
     if (document.readyState === 'complete') arm();
-    else window.addEventListener('load', arm, { once: true });
+    else {
+      window.addEventListener('load', arm, { once: true });
+      /* Событие load ждёт все до единого запроса страницы: счётчик,
+         встроенный ролик, расширение браузера. Если оно задержалось,
+         видео всё равно подключается — но позже картинки и шрифтов. */
+      late = window.setTimeout(arm, 1800);
+    }
 
     return () => {
       window.removeEventListener('load', arm);
       if (timer) window.clearTimeout(timer);
+      if (late) window.clearTimeout(late);
     };
   }, [allowVideo]);
 
@@ -107,6 +115,13 @@ export function CadetHero() {
       withFrame.requestVideoFrameCallback(() => setReady(true));
     }
 
+    /* Запасной путь: где кадрового обратного вызова нет, кадр уступает
+       место видео по первому же событию воспроизведения — иначе видео
+       играет, но остаётся невидимым под постером. */
+    const shown = () => setReady(true);
+    v.addEventListener('playing', shown);
+    v.addEventListener('timeupdate', shown, { once: true });
+
     const onFirstTouch = () => {
       if (v.paused) start();
     };
@@ -114,6 +129,8 @@ export function CadetHero() {
 
     return () => {
       v.removeEventListener('canplay', start);
+      v.removeEventListener('playing', shown);
+      v.removeEventListener('timeupdate', shown);
       window.removeEventListener('pointerdown', onFirstTouch);
     };
   }, [armed]);
@@ -135,6 +152,7 @@ export function CadetHero() {
           ref={videoRef}
           className={[s.plate, ready ? '' : s.plateHidden].filter(Boolean).join(' ')}
           poster={poster}
+          autoPlay
           muted
           loop
           playsInline
