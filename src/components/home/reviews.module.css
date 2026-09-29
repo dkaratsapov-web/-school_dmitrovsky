@@ -105,8 +105,6 @@
    а полоса его обрезает. Поэтому в узкой полосе виден живой кусок кадра.
    ------------------------------------------------------------------- */
 .wall {
-  --shot-w: clamp(16rem, 34vw, 32rem);
-  --shot-h: clamp(17rem, 58vw, 26rem);
   display: grid;
   gap: clamp(0.375rem, 0.8vw, 0.75rem);
   grid-template-columns: 1fr;
@@ -142,26 +140,15 @@
 }
 
 /* кадр держит свой размер и обрезается краем полосы */
+/* Проигрыватель стоит только в раскрытой полосе, поэтому рамка совпадает
+   с ней и ролик виден целиком: раньше кадр держал свой размер и обрезался
+   краем полосы — у плеера срезало название и кнопки. */
 .frame {
   position: absolute;
-  top: 50%;
-  left: 0;
+  inset: 0;
   display: block;
   width: 100%;
-  height: var(--shot-h);
-  /* кадр стоит серединой в середине полосы: в узкой полосе видно лицо,
-     а не край кадра */
-  transform: translateY(-50%);
-}
-
-@media (min-width: 768px) {
-  .frame {
-    top: 0;
-    left: 50%;
-    width: var(--shot-w);
-    height: 100%;
-    transform: translateX(-50%);
-  }
+  height: 100%;
 }
 
 .player {
@@ -505,14 +492,6 @@
 
 .bare .card::after {
   opacity: 0;
-}
-
-.bare .frame {
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  transform: none;
 }
 
 .bare .player {

@@ -48,53 +48,12 @@ export function MediaHero() {
   const ref = useScrollProgressVar<HTMLElement>('--p');
   const videoRef = useRef<HTMLVideoElement>(null);
   const [ready, setReady] = useState(false);
-  /* Проверка первого экрана: открывается адресом ?video-debug и больше
-     ничем. Обычный посетитель панели не видит. */
-  const [probe, setProbe] = useState(false);
-  const probeRef = useRef<HTMLPreElement>(null);
   const allowVideo = useSyncExternalStore(subscribeMedia, readMedia, () => false);
   /* Источники ставим сразу, как только видео вообще разрешено. Раньше
      они ждали события load и простоя браузера: на живом сайте это
      ожидание могло не кончиться, и человек видел кадр вместо видео.
      Грузить наперёд нечего — у видео preload="none". */
   const armed = allowVideo;
-
-  useEffect(() => {
-    const id = window.setTimeout(
-      () => setProbe(new URLSearchParams(window.location.search).has('video-debug')),
-      0,
-    );
-    return () => window.clearTimeout(id);
-  }, []);
-
-  useEffect(() => {
-    if (!probe) return;
-    const tick = () => {
-      const v = videoRef.current;
-      const box = probeRef.current;
-      if (!box) return;
-      const mq = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const conn = (navigator as { connection?: { saveData?: boolean } }).connection;
-      box.textContent = v
-        ? [
-            `файл:      ${(v.currentSrc || '—').split('/').pop()}`,
-            `играет:    ${v.paused ? 'нет' : 'да'}`,
-            `время:     ${v.currentTime.toFixed(1)} с`,
-            `готовность: ${v.readyState} / сеть ${v.networkState}`,
-            `ошибка:    ${v.error ? `${v.error.code} ${v.error.message}` : 'нет'}`,
-            `запуск:    ${v.dataset.play ?? 'ещё не пробовали'}`,
-            `кадр снят: ${ready ? 'да' : 'нет'}`,
-            `источников: ${v.querySelectorAll('source').length}`,
-            `анимации выключены: ${mq ? 'да' : 'нет'}`,
-            `экономия трафика:   ${conn?.saveData ? 'да' : 'нет'}`,
-            `ширина окна: ${window.innerWidth}`,
-          ].join('\n')
-        : 'видео нет в разметке';
-    };
-    tick();
-    const id = window.setInterval(tick, 500);
-    return () => window.clearInterval(id);
-  }, [probe, ready]);
 
   /* Шапка знает, что под ней тёмный первый экран. */
   useEffect(() => {
@@ -113,15 +72,9 @@ export function MediaHero() {
     v.defaultMuted = true;
 
     const start = () => {
-      v.play()
-        .then(() => {
-          v.dataset.play = 'ok';
-        })
-        .catch((e: unknown) => {
-          /* браузер отказал в автозапуске — ждём первого касания,
-             а причину оставляем для проверки через ?video-debug */
-          v.dataset.play = e instanceof Error ? `${e.name}: ${e.message}` : 'отказ';
-        });
+      v.play().catch(() => {
+        /* браузер отказал в автозапуске — ждём первого касания */
+      });
     };
 
     if (v.networkState === HTMLMediaElement.NETWORK_EMPTY) v.load();
@@ -197,8 +150,6 @@ export function MediaHero() {
       </div>
 
       <div className={s.scrim} aria-hidden="true" />
-
-      {probe ? <pre className={s.probe} ref={probeRef} /> : null}
 
       <div className={s.inner}>
         <div className={s.frame}>

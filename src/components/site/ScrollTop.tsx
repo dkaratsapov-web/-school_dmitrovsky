@@ -5,25 +5,24 @@ import { useEffect, useRef } from 'react';
 import { prefersReducedMotion } from '@/lib/motion';
 
 /**
- * Переход между страницами: уходим с верха и приходим на верх.
+ * Переход между страницами: новая страница открывается сверху.
  *
- * Раньше человек, нажавший логотип из середины страницы, ещё секунду
- * смотрел на прежнюю страницу, а потом оказывался неизвестно где:
- * адрес менялся до того, как приходила новая страница.
+ * Плавной прокрутки у всей страницы нет намеренно. С ней переход по меню
+ * выглядел так: сначала браузер пролистывал текущую страницу к началу,
+ * потом приходила новая и её тоже пролистывало, а если страницы разной
+ * высоты — прокрутка могла остановиться не на начале. Теперь переход
+ * мгновенный: прокрутка сбрасывается, а плавным остаётся появление
+ * первого блока.
  *
- * Теперь по нажатию текущая страница сама уезжает к началу — движение
- * начинается сразу, в ответ на нажатие. Когда новая страница встаёт
- * на место, прокрутка уже сброшена, и её первый блок проявляется
- * коротким подъёмом.
- *
- * Адреса с якорем не трогаем: «Педагоги» и «Кружки» в меню ведут
- * к своим разделам главной — прокрутка к ним их работа.
+ * Плавность оставлена там, где она по делу, — у ссылок с якорем внутри
+ * той же страницы: «Кружки» и «Мероприятия» в меню ведут к своим
+ * разделам главной, и туда страница едет, а не прыгает.
  */
 export function ScrollTop() {
   const pathname = usePathname();
   const first = useRef(true);
 
-  /* Нажатие на ссылку: страница уезжает вверх, не дожидаясь перехода. */
+  /* Ссылка с якорем на эту же страницу: ведём к разделу плавно. */
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
@@ -33,19 +32,26 @@ export function ScrollTop() {
       if (!(link instanceof HTMLAnchorElement)) return;
       if (link.target !== '' && link.target !== '_self') return;
       if (link.origin !== window.location.origin) return;
-      if (link.hash !== '') return;
-      if (link.pathname === window.location.pathname) return;
-      if (window.scrollY === 0) return;
+      if (link.hash === '' || link.pathname !== window.location.pathname) return;
 
-      window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+      const target = document.querySelector(link.hash);
+      if (!target) return;
+
+      e.preventDefault();
+      target.scrollIntoView({
+        behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+        block: 'start',
+      });
+      window.history.pushState(null, '', link.hash);
     };
 
+    /* перехват до маршрутизатора: иначе он уведёт по якорю прыжком,
+       не дожидаясь нашего плавного хода */
     document.addEventListener('click', onClick, true);
     return () => document.removeEventListener('click', onClick, true);
   }, []);
 
-  /* Новая страница: прокрутка на верх без анимации — плавным остаётся
-     появление первого блока, а не перелёт через всю прежнюю страницу. */
+  /* Новая страница: прокрутка на верх сразу, без перелёта. */
   useEffect(() => {
     if (first.current) {
       first.current = false;
@@ -53,11 +59,7 @@ export function ScrollTop() {
     }
     if (window.location.hash !== '') return;
 
-    const root = document.documentElement;
-    const keep = root.style.scrollBehavior;
-    root.style.scrollBehavior = 'auto';
     window.scrollTo(0, 0);
-    root.style.scrollBehavior = keep;
 
     const main = document.getElementById('main');
     if (!main || prefersReducedMotion()) return;
