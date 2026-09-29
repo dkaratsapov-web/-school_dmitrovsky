@@ -24,6 +24,12 @@
      и под ним открывается пустая заливка блока */
   inset: -6% 0 -10%;
   z-index: -2;
+  /* кадр продублирован фоном: если снимок или видео не отрисуются,
+     экран не останется пустой заливкой */
+  background-image: var(--poster);
+  background-size: cover;
+  background-position: 50% 40%;
+  background-repeat: no-repeat;
   transform: translate3d(0, calc(var(--p) * -8%), 0) scale(calc(1 + var(--p) * 0.08));
   transform-origin: 50% 35%;
 }
@@ -34,6 +40,11 @@
   height: 100%;
   object-fit: cover;
   object-position: 50% 40%;
+  transition: opacity 700ms var(--ease);
+}
+
+.plateHidden {
+  opacity: 0;
 }
 
 /* затемнение: слева плотнее — там стоит текст */
@@ -175,5 +186,9 @@
   .lead,
   .corner {
     animation: none;
+  }
+
+  .plate {
+    transition: none;
   }
 }

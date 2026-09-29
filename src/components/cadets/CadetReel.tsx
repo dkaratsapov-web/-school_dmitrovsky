@@ -17,7 +17,7 @@ const CARD_MAX_W_NARROW = 0.78; // на телефоне ограничение 
 const NARROW = 900;
 const CARD_RATIO = 1.45; // ширина карточки к высоте
 const STEP = 40; // градусов между кадрами на барабане
-const DRUM = 2.22; // радиус барабана, в высотах карточки — и всё ниже тоже
+const DRUM = 1.75; // радиус барабана, в высотах карточки — и всё ниже тоже
 const LENS = 2.7; // расстояние до точки схода
 const RING_R = 0.78; // радиус кольца: кадры крупные, круг теснее
 const RING_R_NARROW = 0.7; // на телефоне кольцо теснее, иначе не влезает
@@ -321,33 +321,33 @@ export function CadetReel() {
               </div>
             ))}
           </div>
-
-          {/* название блока стоит в середине кольца и уступает место
-              подписи кадра, когда кольцо раскрылось в барабан */}
-          <h2 className={s.label} id="cadet-reel-title" ref={labelRef}>
-            {cadetReelTitle}
-          </h2>
-
-          <div className={s.front} ref={titleRef} aria-hidden="true">
-            <span className={s.frontNum}>{String(active + 1).padStart(2, '0')}</span>
-            <span className={s.frontWord}>{cadetReel[active]?.caption}</span>
-          </div>
-
-          <ol className={s.index} aria-label="Кадры">
-            {cadetReel.map((f, i) => (
-              <li key={f.src}>
-                <button
-                  className={[s.indexItem, i === active ? s.indexOn : ''].filter(Boolean).join(' ')}
-                  type="button"
-                  onClick={() => to(i)}
-                  aria-current={i === active ? 'true' : undefined}
-                >
-                  {f.caption}
-                </button>
-              </li>
-            ))}
-          </ol>
         </div>
+
+        {/* Подписи и список стоят рядом со сценой, а не внутри неё:
+            маску, растворяющую кадры у края, получает только сцена. */}
+        <h2 className={s.label} id="cadet-reel-title" ref={labelRef}>
+          {cadetReelTitle}
+        </h2>
+
+        <div className={s.front} ref={titleRef} aria-hidden="true">
+          <span className={s.frontNum}>{String(active + 1).padStart(2, '0')}</span>
+          <span className={s.frontWord}>{cadetReel[active]?.caption}</span>
+        </div>
+
+        <ol className={s.index} aria-label="Кадры">
+          {cadetReel.map((f, i) => (
+            <li key={f.src}>
+              <button
+                className={[s.indexItem, i === active ? s.indexOn : ''].filter(Boolean).join(' ')}
+                type="button"
+                onClick={() => to(i)}
+                aria-current={i === active ? 'true' : undefined}
+              >
+                {f.caption}
+              </button>
+            </li>
+          ))}
+        </ol>
       </div>
 
       <dialog className={s.window} ref={filmRef} onClose={() => setFilm(false)} aria-label="Фильм о кадетском корпусе">

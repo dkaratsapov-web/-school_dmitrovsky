@@ -81,6 +81,10 @@
   inset: 0;
   width: 100%;
   margin: 0;
+  /* кадры растворяются у верхнего и нижнего края, а не срезаются в полосу:
+     соседние кадры барабана уходят из рамки, как на плёнке */
+  mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 84%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 84%, transparent 100%);
 }
 
 .section[data-live='true'] .sticky {
@@ -128,7 +132,7 @@
 
 /* название блока в середине кольца — по ширине оно должно укладываться
    внутрь круга, иначе кадры наезжают на строку */
-.stage[data-live='true'] .label {
+.section[data-live='true'] .label {
   position: absolute;
   inset: 0;
   z-index: 200;
@@ -147,14 +151,14 @@
 /* на телефоне внутрь кольца название не помещается — поднимаем его
    над кругом */
 @media (max-width: 899px) {
-  .stage[data-live='true'] .label {
+  .section[data-live='true'] .label {
     align-content: start;
     padding-top: 12vh;
   }
 }
 
 /* подпись кадра, вставшего впереди */
-.stage[data-live='true'] .front {
+.section[data-live='true'] .front {
   position: absolute;
   top: 50%;
   left: clamp(1rem, 6%, 5rem);
@@ -171,7 +175,7 @@
 /* на узком экране подпись уходит вниз: у кадра там нет соседей,
    а тёмная подложка держит её читаемой */
 @media (max-width: 899px) {
-  .stage[data-live='true'] .front {
+  .section[data-live='true'] .front {
     top: auto;
     bottom: 0;
     left: 0;
@@ -204,7 +208,7 @@
 
 /* список кадров справа — он же навигация */
 @media (min-width: 900px) {
-  .stage[data-live='true'] .index {
+  .section[data-live='true'] .index {
     position: absolute;
     top: 50%;
     right: clamp(1rem, 3%, 3rem);
