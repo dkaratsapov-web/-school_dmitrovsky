@@ -65,12 +65,23 @@ export const mediaHeroPoster = {
  * Приглашение и перечень профессий набраны здесь: в источнике они идут
  * одной фразой, а на странице читаются списком. Слова не менялись.
  */
+const studyParts = (mediaProfile?.subjects ?? '').split('; ').filter(Boolean);
+
+/**
+ * Последний пункт перечня — не предмет, а итог: «Комплексная подготовка
+ * к ЕГЭ по данным профильным предметам». Он выделен отдельным полем,
+ * потому что на странице читается как вывод под списком, а не как
+ * пятый предмет. Слова при этом не менялись.
+ */
+const STUDY_SUMMARY_MARK = 'Комплексная подготовка';
+
 export const mediaStudy = {
   title: 'Углублённое изучение',
   lead:
     'ГБОУ Школа «Дмитровский» им. Героя Советского Союза В.П. Кислякова ' +
     'приглашает учащихся в 10 класс на углубленное изучение:',
-  subjects: (mediaProfile?.subjects ?? '').split('; ').filter(Boolean),
+  subjects: studyParts.filter((part) => !part.startsWith(STUDY_SUMMARY_MARK)),
+  summary: studyParts.find((part) => part.startsWith(STUDY_SUMMARY_MARK)) ?? null,
   collegeLead:
     'При обучении в 10-11 классе учащийся осваивает программу ' +
     'профессионального обучения в колледже:',

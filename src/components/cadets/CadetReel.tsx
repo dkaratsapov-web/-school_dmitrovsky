@@ -171,8 +171,15 @@ export function CadetReel() {
       const vh = window.innerHeight;
       const ringPx = vh * RING_VH;
       const stepPx = vh * STEP_VH;
-      const scrolled = clamp(-rect.top, 0, ringPx + last * stepPx);
+      const raw = -rect.top;
+      const span = ringPx + last * stepPx;
+      const scrolled = clamp(raw, 0, span);
       const t = scrolled <= ringPx ? scrolled / ringPx : 1 + (scrolled - ringPx) / stepPx;
+      /* Запас в конце: колесо уже довернулось, а липкая сцена ещё стоит.
+         За это время соседние кадры уходят в ноль, и сцена трогается
+         с места с одним кадром. Иначе нижний сосед выезжает вместе
+         со сценой и на границе виден его срез — полоска снимка. */
+      const tail = clamp((raw - span) / (vh * HOLD_VH), 0, 1);
 
       const m = clamp(t, 0, 1);
       const pos = clamp(t - 1, 0, last);
@@ -202,7 +209,8 @@ export function CadetReel() {
              и в самом кольце они снова в полную силу. */
           const dip =
             Math.abs(d) < 0.5 ? 1 : 1 - 0.95 * clamp(Math.sin(Math.PI * m) * 1.7, 0, 1);
-          const shown = Math.min(far ? 1 - fade : 1, edge, dip);
+          const leave = Math.abs(d) < 0.5 ? 1 : 1 - tail;
+          const shown = Math.min(far ? 1 - fade : 1, edge, dip, leave);
           card.style.opacity = shown.toFixed(3);
           card.style.visibility = shown < 0.01 ? 'hidden' : 'visible';
           card.style.zIndex = String(Math.round(100 - Math.abs(d) * 2));
