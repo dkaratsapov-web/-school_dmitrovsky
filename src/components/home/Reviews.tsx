@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Icon } from '../ui/Icon';
 import {
   reviewsLead,
@@ -19,14 +19,13 @@ import s from './reviews.module.css';
  * к каждому ролику у нас нет, а рисовать заглушку вместо лица незачем.
  *
  * Ролики стоят гармошкой: тот, на который навели, раскрывается во всю
- * ширину, остальные сжимаются в узкие полосы кадра. Проигрыватель внутри
- * полосы не сжимается, а обрезается её краем — в полосе виден живой кусок
- * кадра, а не мятый плеер. Раскрытие ловит и мышь, и фокус с клавиатуры:
- * перешёл табом на ролик — он открылся.
+ * ширину, остальные сжимаются в узкие полосы. В закрытой полосе стоит
+ * не кадр из ролика, а заставка со знаком школы: обрезанное лицо
+ * в полосе шириной с палец не читается и выглядит случайным.
  *
- * Проигрыватели подключаются по мере появления в окне (loading="lazy"):
- * восемь плееров разом тормозили бы страницу у того, кто до отзывов
- * даже не дошёл.
+ * Проигрыватель подключается только к раскрытому ролику и с задержкой:
+ * если вести курсором вдоль полосы, восемь плееров не грузятся пачкой.
+ * Раскрытие ловит и мышь, и фокус с клавиатуры.
  *
  * Письменные отзывы не пересказываются своими словами и не копируются
  * в код: показывается официальный виджет Яндекс Карт. Отзывы остаются
@@ -45,14 +44,23 @@ type Props = {
 export function Reviews({ videos: videoReviews = allVideos, bare = false }: Props = {}) {
   const [tab, setTab] = useState<'video' | 'maps'>('video');
   const [active, setActive] = useState(0);
+  /* Проигрыватель подключается только к раскрытому ролику и не сразу:
+     если вести курсором вдоль полосы, плееры не грузятся пачкой. */
+  const [ready, setReady] = useState(0);
 
   /* Раскладка гармошки — одна строка на все доли: раскрытый ролик берёт
      пять долей, остальные по одной. Направление выбирает CSS: на широком
      экране это колонки, на телефоне строки. */
   const track = useMemo(
-    () => videoReviews.map((_, i) => (i === active ? '5fr' : '1fr')).join(' '),
+    () => videoReviews.map((_, i) => (i === active ? '4fr' : '1fr')).join(' '),
     [videoReviews, active],
   );
+
+  useEffect(() => {
+    if (ready === active) return;
+    const id = window.setTimeout(() => setReady(active), 220);
+    return () => window.clearTimeout(id);
+  }, [active, ready]);
 
   const hasVideo = videoReviews.length > 0;
   const hasMaps = yandexOrgId !== '';
@@ -116,16 +124,42 @@ export function Reviews({ videos: videoReviews = allVideos, bare = false }: Prop
                 onFocus={() => setActive(i)}
                 onClick={() => setActive(i)}
               >
-                <span className={s.frame}>
-                  <iframe
-                    className={s.player}
-                    src={rutubeEmbed(r.rutube)}
-                    title={r.name ?? 'Видеоотзыв о школе «Дмитровский»'}
-                    loading="lazy"
-                    allow="clipboard-write"
-                    allowFullScreen
-                  />
-                </span>
+                {i === active && ready === i ? (
+                  <span className={s.frame}>
+                    <iframe
+                      className={s.player}
+                      src={rutubeEmbed(r.rutube)}
+                      title={r.name ?? 'Видеоотзыв о школе «Дмитровский»'}
+                      loading="lazy"
+                      allow="clipboard-write"
+                      allowFullScreen
+                    />
+                  </span>
+                ) : (
+                  <span className={s.splash} aria-hidden="true">
+                    <span className={s.sweep} />
+                    <svg className={s.mark} viewBox="0 0 64 64" focusable="false">
+                      <ellipse
+                        className={s.orbit}
+                        cx="32"
+                        cy="32"
+                        rx="26"
+                        ry="10"
+                        transform="rotate(-28 32 32)"
+                      />
+                      <ellipse
+                        className={s.orbit}
+                        cx="32"
+                        cy="32"
+                        rx="26"
+                        ry="10"
+                        transform="rotate(28 32 32)"
+                      />
+                      <circle className={s.core} cx="32" cy="32" r="4.4" />
+                    </svg>
+                    <span className={s.play} />
+                  </span>
+                )}
 
                 {r.name ? (
                   <p className={s.who}>

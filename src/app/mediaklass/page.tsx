@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { MediaHero } from '@/components/media/MediaHero';
 import { MediaFilm } from '@/components/media/MediaFilm';
+import { MediaFaq } from '@/components/media/MediaFaq';
 import { MediaPartners } from '@/components/media/MediaPartners';
 import { MediaProject } from '@/components/media/MediaProject';
 import { MediaStudy } from '@/components/media/MediaStudy';
@@ -26,6 +27,7 @@ export default function MediaClassPage() {
       <MediaStudy />
       <MediaProject />
       <MediaPartners />
+      <MediaFaq />
     </>
   );
 }

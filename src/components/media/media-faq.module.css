@@ -1,0 +1,210 @@
+/* =========================================================================
+   Вопросы родителей
+
+   Слева список вопросов, справа окно с ответом. Открыт всегда один,
+   окно держит свою высоту — список под рукой не прыгает при переключении.
+   ========================================================================= */
+
+.section {
+  position: relative;
+  overflow-x: clip;
+  padding-block: clamp(3rem, 6vw, 5.5rem);
+  background: #fff;
+  color: var(--c-ink-800);
+}
+
+.inner {
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+
+.title {
+  margin: 0 0 clamp(1.75rem, 4vw, 3rem);
+  max-width: 24ch;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 1.25rem + 2.2vw, 3rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  color: var(--c-navy-900);
+  text-wrap: balance;
+}
+
+.board {
+  display: grid;
+  gap: clamp(1.25rem, 2.6vw, 2.5rem);
+}
+
+@media (min-width: 900px) {
+  .board {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    align-items: start;
+  }
+}
+
+/* ------------------------------------------------------------- вопросы */
+.list {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  border-top: 1px solid var(--color-border);
+}
+
+.item:last-child {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.q {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(0.75rem, 1.6vw, 1.25rem);
+  width: 100%;
+  padding: clamp(0.875rem, 1.8vw, 1.375rem) clamp(0.625rem, 1.4vw, 1.125rem);
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 360ms var(--ease);
+}
+
+.item[data-on='true'] .q {
+  background: var(--c-navy-50);
+}
+
+.q:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -3px;
+}
+
+/* рейка слева: у выбранного вопроса вырастает */
+.rail {
+  position: absolute;
+  top: clamp(0.75rem, 1.6vw, 1.25rem);
+  bottom: clamp(0.75rem, 1.6vw, 1.25rem);
+  left: 0;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--c-wine-700);
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition: transform 460ms cubic-bezier(0.16, 0.9, 0.24, 1);
+}
+
+.item[data-on='true'] .rail {
+  transform: scaleY(1);
+}
+
+.num {
+  font-family: var(--font-display);
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-bold);
+  line-height: 1.55;
+  color: var(--c-ink-300);
+  font-variant-numeric: tabular-nums;
+  transition: color 360ms var(--ease);
+}
+
+.item[data-on='true'] .num {
+  color: var(--c-wine-600);
+}
+
+.qText {
+  font-family: var(--font-display);
+  font-size: clamp(0.9375rem, 0.88rem + 0.34vw, 1.125rem);
+  font-weight: var(--fw-bold);
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  color: var(--c-ink-600, var(--c-ink-700));
+  text-wrap: balance;
+  transition: color 360ms var(--ease);
+}
+
+.item[data-on='true'] .qText,
+.q:hover .qText {
+  color: var(--c-navy-900);
+}
+
+/* --------------------------------------------------------- окно ответа */
+.panel {
+  position: relative;
+  /* все ответы лежат в одной ячейке сетки: окно берёт высоту самого
+     длинного из них и больше не меняет её при переключении */
+  display: grid;
+  min-height: clamp(8rem, 14vw, 11rem);
+  padding: clamp(1.25rem, 2.6vw, 2rem) clamp(1.25rem, 2.6vw, 2.25rem);
+  border-radius: var(--r-lg);
+  background: var(--c-navy-50);
+  box-shadow: inset 0 0 0 1px var(--c-navy-100);
+}
+
+/* фирменная отбивка слева у окна */
+.panel::before {
+  content: '';
+  position: absolute;
+  top: clamp(1.25rem, 2.6vw, 2rem);
+  bottom: clamp(1.25rem, 2.6vw, 2rem);
+  left: 0;
+  width: 4px;
+  border-radius: 0 2px 2px 0;
+  background: var(--c-navy-900);
+}
+
+@media (min-width: 900px) {
+  .panel {
+    position: sticky;
+    top: calc(var(--header-h, 72px) + clamp(1rem, 3vh, 2rem));
+  }
+}
+
+/* ответы лежат стопкой: окно не меняет высоту, меняется только текст */
+.a {
+  grid-area: 1 / 1;
+  margin: 0;
+  max-width: 62ch;
+  font-size: clamp(0.9375rem, 0.9rem + 0.28vw, 1.0625rem);
+  line-height: 1.62;
+  color: var(--c-ink-700);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition:
+    opacity 380ms var(--ease),
+    transform 480ms var(--ease),
+    visibility 0s linear 380ms;
+}
+
+.a[data-on='true'] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity 420ms var(--ease),
+    transform 520ms var(--ease),
+    visibility 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .q,
+  .rail,
+  .num,
+  .qText,
+  .a {
+    transition: none;
+  }
+
+  .rail {
+    transform: scaleY(1);
+  }
+
+  .a {
+    transform: none;
+  }
+}

@@ -111,28 +111,43 @@
 
 /* ------------------------------------------------------ место под знак */
 .plate {
+  position: relative;
   display: grid;
   place-items: center;
+  overflow: hidden;
   width: 100%;
   height: clamp(5.5rem, 9vw, 7.5rem);
   border-radius: var(--r-md);
-  background: rgba(255, 255, 255, 0.06);
-  box-shadow: inset 0 0 0 1px rgba(157, 187, 215, 0.14);
+  /* площадка светлая: фирменные цвета вузов рассчитаны на белый фон,
+     на тёмной подложке синий знак Косыгинского потерялся бы */
+  background: #fff;
+  box-shadow: inset 0 0 0 1px rgba(157, 187, 215, 0.22);
 }
 
-/* настоящий знак вуза, когда он появится */
+/* Знак вписывается в площадку целиком, какой бы формы он ни был.
+   Коробка задана отступами со всех сторон, а не высотой в процентах:
+   общее правило страницы держит у картинок height: auto, и круглый знак
+   ВШЭ иначе вылезал за площадку. */
 .logo {
+  --pad: clamp(0.75rem, 1.6vw, 1.25rem);
+  position: absolute;
+  top: 50%;
+  left: 50%;
   display: block;
   width: auto;
-  max-width: 78%;
   height: auto;
-  max-height: 72%;
+  /* размер держат только max-*: у картинки это единственное ограничение,
+     которое не перебивается общим для страницы height: auto */
+  max-width: calc(100% - 2 * var(--pad));
+  max-height: calc(100% - 2 * var(--pad));
   object-fit: contain;
+  transform: translate(-50%, -50%);
 }
 
 /* пока знака нет — знак школы */
 .ring {
   display: block;
+  place-self: center;
   width: clamp(3rem, 5vw, 4.25rem);
   height: clamp(3rem, 5vw, 4.25rem);
   overflow: visible;
@@ -145,13 +160,13 @@
 }
 
 .orbit {
-  stroke: rgba(157, 187, 215, 0.4);
+  stroke: rgba(1, 67, 132, 0.32);
   stroke-dasharray: 170;
   stroke-dashoffset: 0;
 }
 
 .arc {
-  stroke: rgba(157, 187, 215, 0.7);
+  stroke: rgba(1, 67, 132, 0.55);
 }
 
 .core {
@@ -159,7 +174,7 @@
 }
 
 .sat {
-  fill: #fff;
+  fill: var(--c-navy-800);
 }
 
 /* спутник и наклонная орбита обходят кольцо, каждый со своей скоростью */
