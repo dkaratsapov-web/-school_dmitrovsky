@@ -1,0 +1,264 @@
+/* =========================================================================
+   Инженерный класс — первый экран
+
+   Справа знак школы, собранный в объёме: атом с тремя орбитами и спутниками.
+   Сборка поворачивается вслед за курсором, вместе с ней смещаются пятно
+   света и чертёжная сетка — каждый слой со своей скоростью.
+
+   Все слои держатся на transform и opacity; положение курсора приходит
+   в --mx и --my, от −1 до 1.
+   ========================================================================= */
+
+.hero {
+  --mx: 0;
+  --my: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 100svh;
+  overflow: clip;
+  background: radial-gradient(120% 90% at 78% 30%, #062944 0%, #02101f 52%, #010a14 100%);
+  color: #fff;
+  isolation: isolate;
+}
+
+.stage {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  padding-block: calc(var(--header-h, 72px) + clamp(1.5rem, 5vh, 3.5rem))
+    clamp(1rem, 3vh, 2rem);
+}
+
+/* ------------------------------------------------------------ чертёжная сетка */
+.grid {
+  position: absolute;
+  inset: -8%;
+  z-index: -2;
+  background-image:
+    repeating-linear-gradient(to right, rgba(157, 187, 215, 0.1) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(to bottom, rgba(157, 187, 215, 0.1) 0 1px, transparent 1px 64px);
+  mask-image: radial-gradient(90% 80% at 72% 45%, #000 0 34%, transparent 86%);
+  transform: translate3d(calc(var(--mx) * -16px), calc(var(--my) * -16px), 0);
+  transition: transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  pointer-events: none;
+}
+
+/* пятно света: идёт за курсором быстрее сетки */
+.glow {
+  position: absolute;
+  top: 50%;
+  left: 72%;
+  z-index: -1;
+  width: min(60rem, 92vw);
+  aspect-ratio: 1;
+  background: radial-gradient(
+    circle,
+    rgba(10, 86, 155, 0.36) 0 26%,
+    rgba(126, 31, 46, 0.16) 48%,
+    transparent 70%
+  );
+  transform: translate3d(calc(-50% + var(--mx) * 46px), calc(-50% + var(--my) * 46px), 0);
+  transition: transform 520ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  pointer-events: none;
+}
+
+.inner {
+  display: grid;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+
+@media (min-width: 900px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+/* ---------------------------------------------------------------- текст */
+.copy {
+  max-width: 34rem;
+}
+
+.title {
+  margin: 0 0 clamp(0.75rem, 1.6vw, 1.25rem);
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 1.4rem + 3.6vw, 4.5rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: #fff;
+  animation: rise 720ms cubic-bezier(0.16, 0.9, 0.24, 1) backwards;
+}
+
+.lead {
+  margin: 0;
+  font-size: clamp(1rem, 0.95rem + 0.4vw, 1.25rem);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.78);
+  animation: rise 720ms 120ms cubic-bezier(0.16, 0.9, 0.24, 1) backwards;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+/* ---------------------------------------------------------------- сцена */
+.scene {
+  display: grid;
+  place-items: center;
+  perspective: 900px;
+  perspective-origin: 50% 46%;
+}
+
+/* сборка качается сама — движение есть и без курсора */
+.float {
+  animation: float 9s ease-in-out infinite alternate;
+  transform-style: preserve-3d;
+}
+
+@keyframes float {
+  from {
+    transform: translate3d(0, -10px, 0);
+  }
+  to {
+    transform: translate3d(0, 10px, 0);
+  }
+}
+
+/* поворот вслед за курсором */
+.rig {
+  position: relative;
+  width: clamp(15rem, 30vw, 27rem);
+  aspect-ratio: 1;
+  transform-style: preserve-3d;
+  transform: rotateX(calc(var(--my) * -13deg)) rotateY(calc(var(--mx) * 18deg));
+  transition: transform 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* --------------------------------------------------------------- орбиты */
+.ring {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+}
+
+.spin {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  animation: turn var(--dur) linear infinite;
+}
+
+@keyframes turn {
+  to {
+    transform: rotateZ(360deg);
+  }
+}
+
+.line {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(157, 187, 215, 0.42);
+  border-radius: 50%;
+  box-shadow: inset 0 0 34px rgba(10, 86, 155, 0.25);
+}
+
+/* спутник на орбите */
+.sat {
+  position: absolute;
+  top: 50%;
+  left: -7px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 0 0 4px rgba(255, 255, 255, 0.1),
+    0 0 22px 4px rgba(157, 187, 215, 0.7);
+  transform: translateY(-50%);
+}
+
+.ring:nth-child(2) .sat {
+  background: var(--c-wine-500);
+  box-shadow:
+    0 0 0 4px rgba(178, 58, 76, 0.16),
+    0 0 22px 4px rgba(178, 58, 76, 0.6);
+}
+
+/* ---------------------------------------------------------------- ядро */
+.core {
+  position: absolute;
+  inset: 31%;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #0f5c9e 0%, #013366 46%, #001528 100%);
+  box-shadow:
+    inset 0 0 40px rgba(0, 0, 0, 0.6),
+    0 0 60px rgba(10, 86, 155, 0.45);
+  transform: translateZ(1px);
+}
+
+.mark {
+  width: 58%;
+  height: 58%;
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.92);
+  stroke-width: 0.9;
+}
+
+.mark circle {
+  fill: var(--c-wine-500);
+  stroke: none;
+}
+
+/* тень под сборкой: она же держит сцену на земле */
+.shadow {
+  position: absolute;
+  right: 12%;
+  bottom: -14%;
+  left: 12%;
+  height: 8%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0.6) 0 40%, transparent 72%);
+  transform: translate3d(calc(var(--mx) * 18px), 0, -60px);
+  transition: transform 420ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* ----------------------------------------------------------- форма внизу */
+.bar {
+  position: relative;
+  z-index: 1;
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+  padding-bottom: clamp(1.5rem, 4vh, 3rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grid,
+  .glow,
+  .rig,
+  .shadow {
+    transform: none;
+    transition: none;
+  }
+
+  .glow {
+    transform: translate(-50%, -50%);
+  }
+
+  .float,
+  .spin,
+  .title,
+  .lead {
+    animation: none;
+  }
+}
