@@ -1,0 +1,250 @@
+/* =========================================================================
+   Сотрудничество с партнерами
+
+   Знак школы — атом с орбитами, и здесь мотив работает по делу: вуз стоит
+   на своей орбите вокруг школы. Кольцо дочерчивается при появлении строки,
+   спутник обходит его со своей скоростью, под названием раскрывается линия.
+   ========================================================================= */
+
+.section {
+  --p: 0.5;
+  position: relative;
+  overflow: clip;
+  padding-block: clamp(3rem, 6vw, 5.5rem);
+  background: linear-gradient(170deg, var(--c-navy-900) 0%, var(--c-navy-950) 62%);
+  color: #fff;
+}
+
+/* ------------------------------------------------------------------ фон */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.sky {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(130%, 90rem);
+  height: 130%;
+  fill: none;
+  stroke: rgba(157, 187, 215, 0.14);
+  stroke-width: 1;
+  transform: translate3d(-50%, -50%, 0) rotate(calc((var(--p) - 0.5) * 7deg));
+}
+
+.glow {
+  position: absolute;
+  top: -20%;
+  left: 8%;
+  width: min(52rem, 80vw);
+  aspect-ratio: 1;
+  background: radial-gradient(
+    circle,
+    rgba(10, 86, 155, 0.24) 0 34%,
+    rgba(126, 31, 46, 0.12) 56%,
+    transparent 74%
+  );
+  transform: translate3d(0, calc((var(--p) - 0.5) * -70px), 0);
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
+}
+
+.title {
+  margin: 0 0 clamp(1.75rem, 4vw, 3rem);
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 1.3rem + 2.4vw, 3.25rem);
+  font-weight: var(--fw-black);
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  color: #fff;
+  text-wrap: balance;
+}
+
+/* ------------------------------------------------------------- строки */
+.list {
+  display: grid;
+  gap: clamp(1.25rem, 2.6vw, 2.25rem);
+  max-width: 68rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1rem, 2.4vw, 2rem);
+  padding-bottom: clamp(1.25rem, 2.6vw, 2.25rem);
+}
+
+/* --------------------------------------------------------------- кольцо */
+.mark {
+  display: block;
+  width: clamp(3.25rem, 6vw, 4.75rem);
+  height: clamp(3.25rem, 6vw, 4.75rem);
+}
+
+.ring {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.orbit,
+.arc {
+  fill: none;
+  stroke-width: 1.2;
+}
+
+.orbit {
+  stroke: rgba(157, 187, 215, 0.4);
+  stroke-dasharray: 170;
+  stroke-dashoffset: 0;
+}
+
+.arc {
+  stroke: rgba(157, 187, 215, 0.7);
+}
+
+.core {
+  fill: var(--c-wine-600);
+}
+
+.sat {
+  fill: #fff;
+}
+
+/* спутник и наклонная орбита обходят кольцо, каждый со своей скоростью */
+.spin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: turn linear infinite;
+  animation-duration: calc(16s + var(--i, 0) * 7s);
+}
+
+.row:nth-child(2n) .spin {
+  animation-direction: reverse;
+}
+
+.row:hover .spin {
+  animation-duration: calc(5s + var(--i, 0) * 1.5s);
+}
+
+@keyframes turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* -------------------------------------------------------------- название */
+.name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 0.88rem + 0.64vw, 1.5rem);
+  font-weight: var(--fw-bold);
+  line-height: 1.32;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.9);
+  text-wrap: balance;
+  transition: color var(--t-base) var(--ease);
+}
+
+.row:hover .name {
+  color: #fff;
+}
+
+/* линия под строкой */
+.rule {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    var(--c-wine-600) 0,
+    rgba(157, 187, 215, 0.35) 34%,
+    transparent 100%
+  );
+  transform-origin: left center;
+}
+
+.row:last-child {
+  padding-bottom: 0;
+}
+
+.row:last-child .rule {
+  display: none;
+}
+
+/* ------------------------------------------------------- появление строки */
+.row[data-in='true'] .orbit {
+  animation: draw 760ms cubic-bezier(0.22, 0.75, 0.2, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 140ms);
+}
+
+.row[data-in='true'] .name {
+  animation: show 620ms var(--ease) backwards;
+  animation-delay: calc(var(--i, 0) * 140ms + 160ms);
+}
+
+.row[data-in='true'] .rule {
+  animation: lineIn 720ms var(--ease) backwards;
+  animation-delay: calc(var(--i, 0) * 140ms + 120ms);
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 170;
+  }
+}
+
+@keyframes show {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes lineIn {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+/* ---------------------------------------------------- движение выключено */
+@media (prefers-reduced-motion: reduce) {
+  .sky,
+  .glow {
+    transform: translate3d(-50%, -50%, 0);
+  }
+
+  .glow {
+    transform: none;
+  }
+
+  .spin,
+  .row:hover .spin {
+    animation: none;
+  }
+
+  .row[data-in='true'] .orbit,
+  .row[data-in='true'] .name,
+  .row[data-in='true'] .rule {
+    animation: none;
+  }
+
+  .name {
+    transition: none;
+  }
+}
