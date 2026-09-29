@@ -17,7 +17,6 @@ import { contacts, siteName } from '@/content/site';
 import { useMagnetic } from '@/lib/magnetic';
 import { accessInfo, landingAnchors, landingNav, stageInfo } from '@/content/landing';
 import type { LandingInfo } from '@/content/landing';
-import { stages } from '@/content/stages';
 import { useScrollY } from '@/lib/motion';
 import s from './site-header.module.css';
 
@@ -192,31 +191,6 @@ export function SiteHeader() {
           <Icon name="eye" size={15} />
           <span className={s.chipText}>Версия для слабовидящих</span>
         </button>
-
-        <span className={s.gap} />
-
-        {/* Ступени обучения вынесены в верхний ряд: на первом экране видно
-            всё меню целиком, при прокрутке ряд схлопывается и они
-            возвращаются в выпадающий список «Обучение». */}
-        <nav
-          className={[s.capsule, s.studyNav].join(' ')}
-          aria-label="Ступени обучения"
-          style={{ '--d': '110ms' } as React.CSSProperties}
-        >
-          <span className={s.studyLabel}>Обучение</span>
-          {stages.map((stage, i) => (
-            <button
-              key={stage.href}
-              type="button"
-              className={s.studyLink}
-              style={{ '--i': i } as React.CSSProperties}
-              tabIndex={compact ? -1 : undefined}
-              onClick={() => setInfo(stageInfo(stage))}
-            >
-              {stage.title}
-            </button>
-          ))}
-        </nav>
 
         <span className={s.gap} />
 
