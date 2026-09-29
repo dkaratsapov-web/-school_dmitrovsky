@@ -88,7 +88,8 @@ export const landingNav: readonly LandingItem[] = [
   { label: 'Кадетский корпус', anchor: '/kadetskii-korpus', accent: true },
   { label: 'О нас', info: aboutInfo },
   { label: 'Обучение', stages },
-  { label: 'Педагоги', anchor: '/#teachers' },
+  /* «Педагоги» из шапки убраны по указанию владельца (QUESTIONS.md, D-24).
+     Сам блок на главной и ссылка в подвале остались на месте. */
   { label: 'Мероприятия', anchor: '/#events' },
   { label: 'Кружки', anchor: '/#clubs' },
   { label: 'Контакты', anchor: '/#contacts' },

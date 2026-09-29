@@ -1,45 +1,69 @@
 /* =========================================================================
    Что даёт проект
 
-   Пункты длинные, поэтому идут колонкой, а слева — крупный счётчик:
-   он показывает, на каком пункте глаз и сколько всего. Условия приёма
-   вынесены отдельной картой: это требование, а не возможность.
+   Блок удерживается на экране, пока идёт прокрутка: меняются только номер,
+   кадр и подсветка пункта справа. Всё собрано под один экран, поэтому
+   размеры считаются и от высоты окна тоже.
    ========================================================================= */
 
 .section {
   position: relative;
-  overflow-x: clip;
-  padding-block: clamp(3rem, 6vw, 5.5rem);
   background: #fff;
   color: var(--c-ink-800);
 }
 
+/* На широком экране блок удерживается: высота секции — несколько экранов,
+   а внутри липкая обвязка ростом в один. На телефоне удержание выключено:
+   пять длинных пунктов и кадр в один экран телефона не влезают. */
+.sticky {
+  padding-block: clamp(2rem, 4.5vh, 3.5rem);
+}
+
+@media (min-width: 1024px) {
+  .section {
+    height: calc(100svh * var(--screens, 3));
+  }
+
+  .sticky {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    height: 100svh;
+    padding-block: calc(var(--header-h, 72px) + clamp(1rem, 2.5vh, 2rem))
+      clamp(1rem, 2.5vh, 2rem);
+  }
+}
+
 .inner {
   display: grid;
-  gap: clamp(2rem, 4vw, 4rem);
+  gap: clamp(1.5rem, 3vw, 3.5rem);
   width: min(100% - 2 * var(--gutter), var(--container));
+  height: 100%;
   margin-inline: auto;
 }
 
 @media (min-width: 1024px) {
   .inner {
-    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  }
-
-  .side {
-    position: sticky;
-    top: calc(var(--header-h, 72px) + clamp(1.5rem, 4vh, 3rem));
-    align-self: start;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: stretch;
   }
 }
 
+/* ------------------------------------------------------------ левая часть */
+.side {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
 .title {
-  margin: 0 0 clamp(0.875rem, 1.8vw, 1.25rem);
+  margin: 0 0 clamp(0.5rem, 1.2vh, 1rem);
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.375rem);
+  font-size: clamp(1.375rem, 1rem + 1.4vw, 2.25rem);
   font-weight: var(--fw-black);
   letter-spacing: -0.03em;
-  line-height: 1.16;
+  line-height: 1.14;
   color: var(--c-navy-900);
   text-wrap: balance;
 }
@@ -47,58 +71,29 @@
 .lead {
   margin: 0;
   font-size: var(--fs-small);
-  line-height: 1.6;
-  color: var(--c-ink-600);
+  line-height: 1.5;
+  color: var(--c-ink-600, var(--c-ink-700));
 }
 
-/* ------------------------------------------------------------- счётчик */
-.counter {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
-  padding-top: clamp(1rem, 2vw, 1.5rem);
-  border-top: 1px solid var(--color-border);
-  overflow: clip;
-}
-
-.counterNum {
-  font-family: var(--font-display);
-  font-size: clamp(2.5rem, 1.6rem + 3.4vw, 4.5rem);
-  font-weight: var(--fw-black);
-  line-height: 0.9;
-  letter-spacing: -0.04em;
-  color: var(--c-wine-600);
-  font-variant-numeric: tabular-nums;
-  animation: rollUp 420ms var(--ease) backwards;
-}
-
-@keyframes rollUp {
-  from {
-    transform: translateY(0.7em);
-    opacity: 0;
-  }
-}
-
-.counterAll {
-  font-size: var(--fs-caption);
-  color: var(--c-ink-500);
-  font-variant-numeric: tabular-nums;
-}
-
-/* ------------------------------------------------------------ снимок
-
-   Кадры лежат стопкой в одном окне и сменяют друг друга наплывом:
-   место под них не прыгает, меняются только прозрачность и масштаб.
-   ------------------------------------------------------------------- */
+/* ---------------------------------------------------------------- кадр */
 .stage {
   position: relative;
   overflow: hidden;
   aspect-ratio: 4 / 3;
-  margin-top: clamp(1rem, 2.2vw, 1.75rem);
+  margin-top: clamp(0.875rem, 2vh, 1.5rem);
   border-radius: var(--r-lg);
   background: var(--c-navy-100);
   box-shadow: 0 18px 40px rgba(1, 31, 63, 0.14);
+}
+
+/* в удерживаемом экране кадр занимает всё, что осталось от колонки:
+   так блок гарантированно укладывается в высоту окна */
+@media (min-width: 1024px) {
+  .stage {
+    flex: 1;
+    aspect-ratio: auto;
+    min-height: 0;
+  }
 }
 
 .shot {
@@ -131,73 +126,134 @@
   background: var(--c-wine-700);
 }
 
+/* притенение под счётчиком: цифра читается на любом кадре */
+.scrim {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 46%;
+  background: linear-gradient(to top, rgba(0, 13, 27, 0.72), transparent);
+  pointer-events: none;
+}
+
+/* ---------------------------------------------- счётчик в углу кадра */
+.counter {
+  position: absolute;
+  z-index: 1;
+  bottom: clamp(0.625rem, 1.2vw, 1rem);
+  left: clamp(0.875rem, 1.6vw, 1.5rem);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  overflow: clip;
+}
+
+.counterNum {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 1.5rem + 2.6vw, 3.75rem);
+  font-weight: var(--fw-black);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 2px 12px rgba(0, 13, 27, 0.55);
+  animation: rollUp 420ms var(--ease) backwards;
+}
+
+@keyframes rollUp {
+  from {
+    transform: translateY(0.7em);
+    opacity: 0;
+  }
+}
+
+.counterAll {
+  font-size: var(--fs-caption);
+  color: rgba(255, 255, 255, 0.82);
+  font-variant-numeric: tabular-nums;
+}
+
 /* -------------------------------------------------------------- пункты */
 .points {
   display: grid;
-  gap: clamp(1.25rem, 2.6vw, 2rem);
+  align-content: center;
+  gap: clamp(0.5rem, 1.4vh, 1.125rem);
   margin: 0;
   padding: 0;
   list-style: none;
-  counter-reset: none;
 }
 
 .point {
+  position: relative;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: start;
-  gap: clamp(0.875rem, 1.8vw, 1.5rem);
-  padding-bottom: clamp(1.25rem, 2.6vw, 2rem);
-  border-bottom: 1px solid var(--color-border);
+  gap: clamp(0.625rem, 1.4vw, 1.125rem);
+  padding: clamp(0.5rem, 1.2vh, 1rem) clamp(0.625rem, 1.2vw, 1.125rem);
+  border-radius: var(--r-md);
+  transition: background-color 420ms var(--ease);
 }
 
-.point:last-child {
-  padding-bottom: 0;
-  border-bottom: 0;
+.point[data-on='true'] {
+  background: var(--c-navy-50);
+}
+
+/* рейка слева: у пункта, к которому относится кадр, она вырастает */
+.rail {
+  position: absolute;
+  top: clamp(0.5rem, 1.2vh, 1rem);
+  bottom: clamp(0.5rem, 1.2vh, 1rem);
+  left: 0;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--c-wine-700);
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition: transform 460ms cubic-bezier(0.16, 0.9, 0.24, 1);
+}
+
+.point[data-on='true'] .rail {
+  transform: scaleY(1);
 }
 
 .num {
   font-family: var(--font-display);
   font-size: var(--fs-caption);
   font-weight: var(--fw-bold);
-  line-height: 1.7;
-  color: var(--c-ink-400, var(--c-ink-500));
+  line-height: 1.6;
+  color: var(--c-ink-300);
   font-variant-numeric: tabular-nums;
-  transition: color var(--t-base) var(--ease);
+  transition: color 420ms var(--ease);
 }
 
-/* пункт, на котором сейчас глаз */
-.pointNear .num {
+.point[data-on='true'] .num {
   color: var(--c-wine-600);
 }
 
 .text {
   margin: 0;
-  max-width: 64ch;
-  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.0625rem);
-  line-height: 1.6;
-  color: var(--c-ink-700);
-  transition: color var(--t-base) var(--ease);
+  max-width: 62ch;
+  font-size: clamp(0.8125rem, 0.72rem + 0.36vw, 1rem);
+  line-height: 1.5;
+  color: var(--c-ink-500);
+  transition: color 420ms var(--ease);
 }
 
-.pointNear .text {
+.point[data-on='true'] .text {
   color: var(--c-ink-800);
 }
 
-.point[data-in='true'] {
-  animation: pointIn 540ms cubic-bezier(0.16, 0.9, 0.24, 1) backwards;
-}
-
-@keyframes pointIn {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-}
-
-
 /* ------------------------------------------------------ условия приёма */
+.tail {
+  background: #fff;
+  padding-block: 0 clamp(2.5rem, 5vw, 4rem);
+}
+
 .admission {
-  margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+  width: min(100% - 2 * var(--gutter), var(--container));
+  margin-inline: auto;
   padding: clamp(1.25rem, 2.6vw, 2rem) clamp(1.25rem, 2.6vw, 2.25rem);
   border-radius: var(--r-lg);
   background: var(--c-navy-50);
@@ -207,28 +263,24 @@
   color: var(--c-ink-700);
 }
 
-@media (min-width: 1024px) {
-  .admission {
-    grid-column: 1 / -1;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .counterNum {
     animation: none;
   }
 
-  .point[data-in='true'] {
-    animation: none;
-  }
-
+  .shot,
+  .point,
+  .rail,
   .num,
   .text {
     transition: none;
   }
 
   .shot {
-    transition: none;
     transform: none;
+  }
+
+  .rail {
+    transform: scaleY(1);
   }
 }

@@ -4,7 +4,6 @@ import { MediaFilm } from '@/components/media/MediaFilm';
 import { MediaPartners } from '@/components/media/MediaPartners';
 import { MediaProject } from '@/components/media/MediaProject';
 import { MediaStudy } from '@/components/media/MediaStudy';
-import { SectionDefocus } from '@/components/site/SectionDefocus';
 import { mediaPageDescription, mediaPageTitle } from '@/content/media';
 
 /**
@@ -24,10 +23,6 @@ export default function MediaClassPage() {
     <>
       <MediaHero />
       <MediaFilm />
-
-      {/* тёмный блок фильма уходит в светлый расфокусом, а не срезом */}
-      <SectionDefocus style={{ '--from': '#06121f' } as React.CSSProperties} />
-
       <MediaStudy />
       <MediaProject />
       <MediaPartners />
