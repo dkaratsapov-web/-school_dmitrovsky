@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { ConsultInline } from '../forms/ConsultInline';
+import { useMemo, useState } from 'react';
 import { Icon } from '../ui/Icon';
 import {
   reviewsLead,
@@ -10,7 +9,6 @@ import {
   yandexLink,
   yandexOrgId,
 } from '@/content/reviews';
-import { contacts } from '@/content/site';
 import s from './reviews.module.css';
 
 /**
@@ -19,6 +17,12 @@ import s from './reviews.module.css';
  * Ролики лежат на Rutube и выводятся его же проигрывателем: он сам
  * показывает кадр из видео, название и кнопку запуска. Своего кадра
  * к каждому ролику у нас нет, а рисовать заглушку вместо лица незачем.
+ *
+ * Ролики стоят гармошкой: тот, на который навели, раскрывается во всю
+ * ширину, остальные сжимаются в узкие полосы кадра. Проигрыватель внутри
+ * полосы не сжимается, а обрезается её краем — в полосе виден живой кусок
+ * кадра, а не мятый плеер. Раскрытие ловит и мышь, и фокус с клавиатуры:
+ * перешёл табом на ролик — он открылся.
  *
  * Проигрыватели подключаются по мере появления в окне (loading="lazy"):
  * восемь плееров разом тормозили бы страницу у того, кто до отзывов
@@ -40,6 +44,15 @@ type Props = {
 
 export function Reviews({ videos: videoReviews = allVideos, bare = false }: Props = {}) {
   const [tab, setTab] = useState<'video' | 'maps'>('video');
+  const [active, setActive] = useState(0);
+
+  /* Раскладка гармошки — одна строка на все доли: раскрытый ролик берёт
+     пять долей, остальные по одной. Направление выбирает CSS: на широком
+     экране это колонки, на телефоне строки. */
+  const track = useMemo(
+    () => videoReviews.map((_, i) => (i === active ? '5fr' : '1fr')).join(' '),
+    [videoReviews, active],
+  );
 
   const hasVideo = videoReviews.length > 0;
   const hasMaps = yandexOrgId !== '';
@@ -89,32 +102,31 @@ export function Reviews({ videos: videoReviews = allVideos, bare = false }: Prop
             </div>
           ) : null}
 
-          {bare ? null : (
-            <div className={s.ask}>
-              <ConsultInline
-                title="Записаться на бесплатную консультацию"
-                action="Записаться"
-                layout="stack"
-                tone="light"
-                flush
-                {...(contacts.phones[0] ? { callPhone: contacts.phones[0] } : {})}
-              />
-            </div>
-          )}
         </div>
 
         {hasVideo && (!hasMaps || tab === 'video') ? (
-          <ul className={s.wall}>
-            {videoReviews.map((r) => (
-              <li className={s.card} key={r.rutube}>
-                <iframe
-                  className={s.player}
-                  src={rutubeEmbed(r.rutube)}
-                  title={r.name ?? 'Видеоотзыв о школе «Дмитровский»'}
-                  loading="lazy"
-                  allow="clipboard-write"
-                  allowFullScreen
-                />
+          <ul className={s.wall} style={{ '--track': track } as React.CSSProperties}>
+            {videoReviews.map((r, i) => (
+              <li
+                className={s.card}
+                key={r.rutube}
+                data-open={i === active ? 'true' : 'false'}
+                tabIndex={0}
+                onMouseEnter={() => setActive(i)}
+                onFocus={() => setActive(i)}
+                onClick={() => setActive(i)}
+              >
+                <span className={s.frame}>
+                  <iframe
+                    className={s.player}
+                    src={rutubeEmbed(r.rutube)}
+                    title={r.name ?? 'Видеоотзыв о школе «Дмитровский»'}
+                    loading="lazy"
+                    allow="clipboard-write"
+                    allowFullScreen
+                  />
+                </span>
+
                 {r.name ? (
                   <p className={s.who}>
                     <span className={s.name}>{r.name}</span>
