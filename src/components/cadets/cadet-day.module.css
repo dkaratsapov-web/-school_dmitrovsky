@@ -50,6 +50,7 @@
 
 /* ----------------------------------------------------------------- панель */
 .stage {
+  position: relative;
   /* точка схода ближе прежнего: доска уходит от зрителя круче */
   perspective: clamp(720px, 58vw, 1080px);
   perspective-origin: 50% 0;
@@ -57,6 +58,10 @@
 }
 
 .panel {
+  position: relative;
+  /* доска всегда поверх стоек: наклонённая, она выходит за свой
+     габарит вниз и иначе накрывалась бы ими */
+  z-index: 1;
   max-width: 76rem;
   margin-inline: auto;
   padding: clamp(0.5rem, 1.2vw, 1rem);
@@ -324,9 +329,14 @@
    ------------------------------------------------------------------- */
 .stand {
   position: relative;
+  z-index: 0;
   max-width: 76rem;
   height: clamp(44px, 6vw, 92px);
   margin-inline: auto;
+  /* пока доска лежит, стоек не видно: они появляются вместе с тем,
+     как она встаёт, и едут вниз следом за её нижним краем */
+  opacity: calc(1 - var(--tilt));
+  transform: translate3d(0, calc(var(--tilt) * 96px), 0);
 }
 
 .post {
@@ -408,6 +418,11 @@
      обнуляем наклон, иначе доска так и лежит от зрителя */
   .section {
     --tilt: 0;
+  }
+
+  .stand {
+    opacity: 1;
+    transform: none;
   }
 
   .post {

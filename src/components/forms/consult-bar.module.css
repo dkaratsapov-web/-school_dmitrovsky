@@ -12,9 +12,10 @@
   margin-inline: auto;
   gap: var(--s-4);
   padding: clamp(0.875rem, 1.6vw, 1.125rem);
+  position: relative;
   /* панель не закрывает видео: полупрозрачная заливка с размытием */
   background: rgba(3, 20, 42, 0.38);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(178, 58, 76, 0.75);
   border-radius: var(--r-xl);
   box-shadow:
     0 22px 54px rgba(0, 14, 32, 0.42),
@@ -54,6 +55,38 @@
   .fields {
     grid-column: 2;
     grid-row: 1;
+  }
+}
+
+/* Фирменная обводка слегка дышит — полоса живая, но не мигает:
+   отдельный слой, чтобы анимировать только opacity и transform. */
+.bar::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border: 1px solid var(--c-wine-500);
+  border-radius: calc(var(--r-xl) + 3px);
+  pointer-events: none;
+  animation: pulseRing 3.2s ease-in-out infinite;
+}
+
+@keyframes pulseRing {
+  0%,
+  100% {
+    opacity: 0.18;
+    transform: scale(0.996);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar::before {
+    animation: none;
+    opacity: 0.6;
+    transform: none;
   }
 }
 

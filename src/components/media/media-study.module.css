@@ -43,9 +43,6 @@
 /* клетка */
 .paper {
   inset: 0;
-  /* верх клетки растворяется: выше идёт стык с тёмным блоком, и линии
-     не должны начинаться ровной чертой */
-  mask-image: linear-gradient(to bottom, transparent 0, #000 7%);
   background-image:
     repeating-linear-gradient(
       to right,

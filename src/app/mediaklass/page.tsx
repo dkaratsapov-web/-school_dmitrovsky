@@ -3,7 +3,6 @@ import { MediaHero } from '@/components/media/MediaHero';
 import { MediaFilm } from '@/components/media/MediaFilm';
 import { MediaProject } from '@/components/media/MediaProject';
 import { MediaStudy } from '@/components/media/MediaStudy';
-import { SectionDissolve } from '@/components/site/SectionDissolve';
 import { mediaPageDescription, mediaPageTitle } from '@/content/media';
 
 /**
@@ -23,10 +22,6 @@ export default function MediaClassPage() {
     <>
       <MediaHero />
       <MediaFilm />
-
-      {/* тёмный блок фильма уходит в светлый растворением, а не срезом */}
-      <SectionDissolve style={{ '--from': '#06121f' } as React.CSSProperties} />
-
       <MediaStudy />
       <MediaProject />
     </>
