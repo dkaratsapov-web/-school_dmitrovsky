@@ -18,8 +18,9 @@ import s from './teachers.module.css';
  * список коллектива: строка на человека, имя крупно, должность справа.
  *
  * На широком экране слева стоит крупный портрет того, на кого наведён курсор
- * или переведён фокус, с должностью и достижениями: в блоке про людей лицо
- * важнее перечня фамилий. Список идёт справа в две колонки — так между
+ * или переведён фокус. Должность и достижения лежат на самом снимке: так
+ * портрет остаётся карточкой и не растит блок вниз, а в блоке про людей
+ * лицо важнее перечня фамилий. Список идёт справа в две колонки — так между
  * именем и должностью не остаётся пустой полосы.
  * Портрет декоративный: всё то же самое открывается в окне по нажатию.
  *
@@ -108,28 +109,29 @@ export function Teachers({ items: teachers = allTeachers, bare = false }: Props 
                 />
               ))}
 
-              {/* подпись лежит на снимке: имя принадлежит лицу */}
+              {/* подпись и всё о человеке лежат на снимке: так карточка
+                  остаётся карточкой и не растит блок вниз */}
               <div className={s.caption}>
                 <p className={s.previewName}>{shown?.name}</p>
                 <p className={s.previewRole}>{shown?.role}</p>
+
+                {shown?.notes?.map((n) => (
+                  <p className={s.previewNote} key={n}>
+                    {n}
+                  </p>
+                ))}
+
+                {shown?.achievements?.length ? (
+                  <ul className={s.previewList}>
+                    {shown.achievements.map((a) => (
+                      <li className={s.previewPoint} key={a}>
+                        {a}
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
               </div>
             </div>
-
-            {shown?.notes?.map((n) => (
-              <p className={s.previewNote} key={n}>
-                {n}
-              </p>
-            ))}
-
-            {shown?.achievements?.length ? (
-              <ul className={s.previewList}>
-                {shown.achievements.map((a) => (
-                  <li className={s.previewPoint} key={a}>
-                    {a}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
           </div>
           <ul className={s.list} ref={listRef}>
             {teachers.map((t, i) => (

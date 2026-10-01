@@ -246,14 +246,24 @@
 }
 
 /* подпись лежит на снимке: имя принадлежит лицу, а не строке под ним.
-   Тёмная растяжка снизу держит читаемость на любом кадре. */
+   Тёмная растяжка снизу держит читаемость на любом кадре. Здесь же
+   должность и достижения — иначе они уходили под снимок и растягивали
+   блок на полтора экрана. */
 .caption {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: clamp(2rem, 4vw, 3rem) clamp(1rem, 2vw, 1.5rem) clamp(0.9rem, 1.8vw, 1.25rem);
-  background: linear-gradient(to top, rgba(0, 12, 28, 0.94), rgba(0, 12, 28, 0.6) 45%, transparent);
+  max-height: 100%;
+  overflow: hidden;
+  padding: clamp(2.5rem, 5vw, 4rem) clamp(1rem, 2vw, 1.5rem) clamp(0.9rem, 1.8vw, 1.25rem);
+  background: linear-gradient(
+    to top,
+    rgba(0, 12, 28, 0.95) 0%,
+    rgba(0, 12, 28, 0.88) 42%,
+    rgba(0, 12, 28, 0.55) 72%,
+    transparent 100%
+  );
 }
 
 .previewName {
@@ -284,30 +294,30 @@
   }
 }
 
-/* подпись под портретом: звание, диагностика, достижения */
+/* звание, диагностика и достижения — на снимке, под должностью */
 .previewNote {
-  margin: var(--s-4) 0 0;
-  font-size: var(--fs-small);
-  line-height: 1.45;
-  color: var(--c-ink-600);
+  margin: 10px 0 0;
+  font-size: var(--fs-caption);
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .previewList {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  margin: var(--s-4) 0 0;
-  padding: var(--s-4) 0 0;
-  border-top: 1px solid var(--color-border);
+  gap: 6px;
+  margin: 10px 0 0;
+  padding: 10px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
   list-style: none;
 }
 
 .previewPoint {
   position: relative;
-  padding-left: 14px;
-  font-size: var(--fs-small);
-  line-height: 1.45;
-  color: var(--c-ink-700);
+  padding-left: 12px;
+  font-size: var(--fs-caption);
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.86);
 }
 
 .previewPoint::before {
@@ -318,7 +328,7 @@
   bottom: 0.35em;
   width: 2px;
   border-radius: 1px;
-  background: var(--c-wine-600);
+  background: var(--c-wine-500);
 }
 
 /* превью в админке: один педагог без заголовка раздела */
