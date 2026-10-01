@@ -19,6 +19,12 @@ export type Profile = {
   image: { src: string; width: number; height: number; alt: string };
   /** Остальные снимки направления: листаются в окне за афишей. */
   gallery?: readonly { src: string; width: number; height: number; alt: string }[];
+  /**
+   * Своя страница направления. Если она есть, карточка ведёт на неё;
+   * у остальных направлений карточка по-прежнему открывает окно
+   * с описанием — страниц для них пока нет.
+   */
+  page?: string;
 };
 
 /** Общая для всех профилей строка со страницы. */
@@ -30,6 +36,7 @@ export const profilesHref = '/10-11class';
 export const profiles: readonly Profile[] = [
   {
     name: 'Медиакласс',
+    page: '/mediaklass',
     subjects:
       'Обществознания; Литературы; Русского языка; Иностранного языка; Комплексная подготовка к ЕГЭ по данным профильным предметам.',
     college:
@@ -70,6 +77,7 @@ export const profiles: readonly Profile[] = [
   },
   {
     name: 'Инженерный класс',
+    page: '/inzhenernyi-klass',
     subjects:
       'Математики; Физики; Информатики; Комплексная подготовка к ЕГЭ по данным профильным предметам.',
     college:
