@@ -102,9 +102,14 @@ export const profileLinks: readonly { label: string; href: string }[] = [
  * школы, ради которого приходят на главную чаще всего. Ведёт на страницу
  * проекта, а не на блок главной: у корпуса своя страница.
  */
+/* В списке «Обучение» профильных классов нет: по указанию владельца они
+   вынесены отдельным пунктом шапки со ссылками на страницы направлений.
+   В подвале и в блоке ступеней на главной раздел остался. */
+const headerStages = stages.filter((stage) => !stage.title.startsWith('Профильные'));
+
 export const landingNav: readonly LandingItem[] = [
   { label: 'Кадетский корпус', anchor: '/kadetskii-korpus', accent: true },
-  { label: 'Обучение', stages },
+  { label: 'Обучение', stages: headerStages },
   { label: 'Профильные 10-11 классы', links: profileLinks },
   /* «Педагоги» и «Мероприятия» из шапки убраны по указанию владельца
      (QUESTIONS.md, D-24 и D-31). Сами блоки на главной и ссылки в подвале

@@ -1,7 +1,9 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 import { Icon } from '../ui/Icon';
+import logoWhite from '@/assets/brand/logo-white.png';
 import {
   reviewsLead,
   rutubeEmbed,
@@ -20,8 +22,9 @@ import s from './reviews.module.css';
  *
  * Ролики стоят гармошкой: тот, на который навели, раскрывается во всю
  * ширину, остальные сжимаются в узкие полосы. В закрытой полосе стоит
- * не кадр из ролика, а заставка со знаком школы: обрезанное лицо
- * в полосе шириной с палец не читается и выглядит случайным.
+ * не кадр из ролика, а заставка со знаком школы — настоящим, тем же,
+ * что в шапке: обрезанное лицо в полосе шириной с палец не читается
+ * и выглядит случайным.
  *
  * Проигрыватель подключается только к раскрытому ролику и с задержкой:
  * если вести курсором вдоль полосы, восемь плееров не грузятся пачкой.
@@ -141,25 +144,7 @@ export function Reviews({ videos: videoReviews = allVideos, bare = false }: Prop
                 ) : (
                   <span className={s.splash} aria-hidden="true">
                     <span className={s.sweep} />
-                    <svg className={s.mark} viewBox="0 0 64 64" focusable="false">
-                      <ellipse
-                        className={s.orbit}
-                        cx="32"
-                        cy="32"
-                        rx="26"
-                        ry="10"
-                        transform="rotate(-28 32 32)"
-                      />
-                      <ellipse
-                        className={s.orbit}
-                        cx="32"
-                        cy="32"
-                        rx="26"
-                        ry="10"
-                        transform="rotate(28 32 32)"
-                      />
-                      <circle className={s.core} cx="32" cy="32" r="4.4" />
-                    </svg>
+                    <Image className={s.mark} src={logoWhite} alt="" />
                     <span className={s.play} />
                   </span>
                 )}

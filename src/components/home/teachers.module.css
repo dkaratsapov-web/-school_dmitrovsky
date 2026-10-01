@@ -39,6 +39,9 @@
   color: var(--c-ink-600);
 }
 
+/* Портрет с описанием и список имён — один блок, а не две отдельные
+   колонки: раньше портрет уходил вниз мимо списка и читался сам по себе.
+   Общая белая плита держит их вместе. */
 .body {
   display: grid;
   gap: clamp(1.5rem, 3vw, 3rem);
@@ -50,6 +53,12 @@
   .body {
     /* три равные доли: портрет и две колонки списка одной ширины */
     grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    padding: clamp(1.25rem, 2vw, 2rem);
+    border-radius: var(--r-xl);
+    background: #fff;
+    box-shadow:
+      inset 0 0 0 1px var(--color-border),
+      0 18px 44px rgba(1, 31, 63, 0.08);
   }
 }
 
@@ -197,9 +206,14 @@
 
 @media (min-width: 1100px) {
   .preview {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    /* портрет с описанием держится в высоте списка: липкая привязка
+       внутри плиты, а не отдельная колонка под ней */
     position: sticky;
-    top: calc(var(--header-h, 150px) + var(--s-5));
+    top: calc(var(--header-h, 150px) + var(--s-4));
+    max-height: calc(100svh - var(--header-h, 150px) - 2 * var(--s-4));
+    overflow: hidden;
   }
 }
 
@@ -209,7 +223,11 @@
 
 .frame {
   position: relative;
+  flex: none;
   aspect-ratio: 4 / 5;
+  /* выше этого портрет не растёт: иначе он вылезал из плиты
+     и уходил ниже последнего имени в списке */
+  max-height: min(46svh, 28rem);
   overflow: hidden;
   border-radius: 3px;
   background: var(--c-navy-800);

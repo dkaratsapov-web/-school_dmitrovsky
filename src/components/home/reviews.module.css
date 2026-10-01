@@ -371,34 +371,12 @@
 .mark {
   position: absolute;
   inset: 0;
-  width: clamp(1.5rem, 4.5vw, 2.5rem);
+  width: clamp(1.75rem, 5vw, 2.75rem);
   height: auto;
   margin: auto;
-  fill: none;
-  stroke: rgba(157, 187, 215, 0.42);
-  stroke-width: 1.4;
-}
-
-.orbit {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: spin 26s linear infinite;
-}
-
-.orbit:nth-of-type(2) {
-  animation-duration: 38s;
-  animation-direction: reverse;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.core {
-  fill: var(--c-wine-600);
-  stroke: none;
+  object-fit: contain;
+  /* знак приглушён: полоса закрыта, и знак на ней — подложка, а не акцент */
+  opacity: 0.5;
 }
 
 /* знак того, что за плитой ролик, а не картинка */
@@ -428,8 +406,7 @@
     transform: none;
   }
 
-  .sweep,
-  .orbit {
+  .sweep {
     animation: none;
   }
 }

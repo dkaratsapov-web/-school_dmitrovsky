@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useEffect, useId, useRef } from 'react';
+import logoBlue from '@/assets/brand/logo.png';
 import { asset } from '@/lib/asset';
 import { prefersReducedMotion, useScrollProgressVar } from '@/lib/motion';
 import s from './partners-block.module.css';
@@ -23,10 +24,9 @@ export type Partners = {
  * Блок общий для страниц профильных классов: разбор один, меняется только
  * список вузов.
  *
- * Три карточки в ряд. Наверху карточки — место под знак вуза; пока школа
- * не прислала логотипы, в нём стоит знак школы: атом с орбитами, по одной
- * орбите на карточку, и спутник обходит её со своей скоростью. Подставить
- * настоящий знак — одно поле в content/media.ts, вёрстка уже рассчитана.
+ * Карточки встают в один ряд. Наверху карточки — место под знак вуза;
+ * пока школа не прислала логотипы, в нём стоит знак школы. Подставить
+ * настоящий знак — одно поле в наполнении, вёрстка уже рассчитана.
  *
  * Карточка раскрывается, когда доходит до окна: кольцо дочерчивается,
  * следом проявляется название. Без скрипта и при выключенной анимации
@@ -119,21 +119,7 @@ export function PartnersBlock({ partners }: { partners: Partners }) {
                     sizes="(min-width: 900px) 12rem, 60vw"
                   />
                 ) : (
-                  <svg className={s.ring} viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-                    <circle className={s.orbit} cx="32" cy="32" r="27" />
-                    <g className={s.spin}>
-                      <ellipse
-                        className={s.arc}
-                        cx="32"
-                        cy="32"
-                        rx="27"
-                        ry="10.5"
-                        transform="rotate(-26 32 32)"
-                      />
-                      <circle className={s.sat} cx="59" cy="32" r="2.8" />
-                    </g>
-                    <circle className={s.core} cx="32" cy="32" r="4.6" />
-                  </svg>
+                  <Image className={s.ring} src={logoBlue} alt="" />
                 )}
               </span>
 
