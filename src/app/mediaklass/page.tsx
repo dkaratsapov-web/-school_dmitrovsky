@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 import { MediaHero } from '@/components/media/MediaHero';
-import { MediaFilm } from '@/components/media/MediaFilm';
+import { FilmBlock } from '@/components/film/FilmBlock';
 import { MediaFaq } from '@/components/media/MediaFaq';
 import { MediaPartners } from '@/components/media/MediaPartners';
 import { MediaProject } from '@/components/media/MediaProject';
 import { MediaStudy } from '@/components/media/MediaStudy';
-import { mediaPageDescription, mediaPageTitle } from '@/content/media';
+import { mediaFilm, mediaPageDescription, mediaPageTitle } from '@/content/media';
 
 /**
  * Страница профиля «Медиакласс».
@@ -23,7 +23,7 @@ export default function MediaClassPage() {
   return (
     <>
       <MediaHero />
-      <MediaFilm />
+      <FilmBlock film={mediaFilm} />
       <MediaStudy />
       <MediaProject />
       <MediaPartners />

@@ -1,18 +1,33 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { OrbitField } from '../ui/OrbitField';
-import { mediaFilm } from '@/content/media';
 import { asset } from '@/lib/asset';
 import { useScrollProgressVar } from '@/lib/motion';
-import s from './media-film.module.css';
+import s from './film-block.module.css';
+
+/** Фильм страницы: у каждого профиля свой, разбор блока один. */
+export type Film = {
+  title: string;
+  action: string;
+  /** Версия для широкого экрана и версия полегче — браузер выбирает сам. */
+  large: string;
+  small: string;
+  poster: string;
+  width: number;
+  height: number;
+};
 
 /** Широкий экран берёт версию побольше: лишний файл не скачивается. */
 const LARGE_FROM = '(min-width: 900px)';
 
 /**
- * Фильм о медиаклассе.
+ * Фильм профиля.
+ *
+ * Блок общий для страниц профильных классов: разбор один, меняется только
+ * фильм. Авторскую подачу под отдельное направление, если она появится,
+ * делают здесь же — отдельной раскладкой, а не копией блока.
  *
  * Кадр закрыт двумя шторками, как окно проектора: по мере подхода блока
  * к экрану они расходятся вверх и вниз и открывают кадр. Движение
@@ -23,8 +38,9 @@ const LARGE_FROM = '(min-width: 900px)';
  * из окна, ролик останавливается: звук из-за края экрана — это то,
  * чего человек не просил.
  */
-export function MediaFilm() {
+export function FilmBlock({ film }: { film: Film }) {
   const ref = useScrollProgressVar<HTMLElement>('--p');
+  const titleId = useId();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
 
@@ -58,7 +74,7 @@ export function MediaFilm() {
   };
 
   return (
-    <section className={s.section} ref={ref} aria-labelledby="media-film-title">
+    <section className={s.section} ref={ref} aria-labelledby={titleId}>
       {/* фон: знаки школы в сетке точек, разметка киноплёнки и луч
           проектора — все слои декоративные и едут от прокрутки */}
       <OrbitField />
@@ -71,8 +87,8 @@ export function MediaFilm() {
 
       <div className={s.inner}>
         <div className={s.head}>
-          <h2 className={s.title} id="media-film-title">
-            {mediaFilm.title}
+          <h2 className={s.title} id={titleId}>
+            {film.title}
           </h2>
         </div>
 
@@ -88,25 +104,25 @@ export function MediaFilm() {
                 ref={videoRef}
                 playsInline
                 preload="none"
-                poster={asset(mediaFilm.poster)}
+                poster={asset(film.poster)}
               >
-                <source src={asset(mediaFilm.large)} type="video/mp4" media={LARGE_FROM} />
-                <source src={asset(mediaFilm.small)} type="video/mp4" />
+                <source src={asset(film.large)} type="video/mp4" media={LARGE_FROM} />
+                <source src={asset(film.small)} type="video/mp4" />
               </video>
             ) : (
               <>
                 <Image
                   className={s.poster}
-                  src={asset(mediaFilm.poster)}
+                  src={asset(film.poster)}
                   alt=""
-                  width={mediaFilm.width}
-                  height={mediaFilm.height}
+                  width={film.width}
+                  height={film.height}
                   sizes="(min-width: 1024px) 70vw, 92vw"
                 />
 
                 <button className={s.play} type="button" onClick={play}>
                   <span className={s.playMark} aria-hidden="true" />
-                  <span className={s.playWord}>{mediaFilm.action}</span>
+                  <span className={s.playWord}>{film.action}</span>
                 </button>
               </>
             )}
