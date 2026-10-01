@@ -51,8 +51,8 @@
 
 @media (min-width: 1100px) {
   .body {
-    /* три равные доли: портрет и две колонки списка одной ширины */
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    /* портрет крупный: он главное в блоке про людей */
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 2fr);
     padding: clamp(1.25rem, 2vw, 2rem);
     border-radius: var(--r-xl);
     background: #fff;
@@ -208,12 +208,10 @@
   .preview {
     display: flex;
     flex-direction: column;
-    /* портрет с описанием держится в высоте списка: липкая привязка
-       внутри плиты, а не отдельная колонка под ней */
+    /* портрет с описанием стоит в одной плите со списком и следует
+       за прокруткой, пока плита на экране */
     position: sticky;
     top: calc(var(--header-h, 150px) + var(--s-4));
-    max-height: calc(100svh - var(--header-h, 150px) - 2 * var(--s-4));
-    overflow: hidden;
   }
 }
 
@@ -225,9 +223,6 @@
   position: relative;
   flex: none;
   aspect-ratio: 4 / 5;
-  /* выше этого портрет не растёт: иначе он вылезал из плиты
-     и уходил ниже последнего имени в списке */
-  max-height: min(46svh, 28rem);
   overflow: hidden;
   border-radius: 3px;
   background: var(--c-navy-800);
