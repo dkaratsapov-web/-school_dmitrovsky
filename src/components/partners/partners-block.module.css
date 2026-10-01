@@ -79,8 +79,15 @@
 
 @media (min-width: 900px) {
   .list {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: var(--track-md, repeat(3, minmax(0, 1fr)));
     align-items: stretch;
+  }
+}
+
+/* на широком экране вузы встают в один ряд, сколько бы их ни было */
+@media (min-width: 1200px) {
+  .list {
+    grid-template-columns: var(--track, repeat(3, minmax(0, 1fr)));
   }
 }
 
@@ -116,7 +123,7 @@
   place-items: center;
   overflow: hidden;
   width: 100%;
-  height: clamp(5.5rem, 9vw, 7.5rem);
+  height: clamp(4.5rem, 7vw, 7rem);
   border-radius: var(--r-md);
   /* площадка светлая: фирменные цвета вузов рассчитаны на белый фон,
      на тёмной подложке синий знак Косыгинского потерялся бы */

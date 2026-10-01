@@ -37,6 +37,14 @@ export type Partners = {
 export function PartnersBlock({ partners }: { partners: Partners }) {
   const ref = useScrollProgressVar<HTMLElement>('--p');
   const titleId = useId();
+
+  /* Столбцов ровно столько, сколько вузов: у разных профилей их разное
+     число. На среднем экране больше трёх в ряд не ставим — названия вузов
+     длинные, в узком столбце они рассыпаются. Раскладка приходит целиком:
+     число внутри repeat() из переменной браузер не принимает. */
+  const n = partners.items.length;
+  const track = `repeat(${n}, minmax(0, 1fr))`;
+  const trackMid = `repeat(${Math.min(3, n)}, minmax(0, 1fr))`;
   const listRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
@@ -88,7 +96,11 @@ export function PartnersBlock({ partners }: { partners: Partners }) {
           {partners.title}
         </h2>
 
-        <ul className={s.list} ref={listRef}>
+        <ul
+          className={s.list}
+          ref={listRef}
+          style={{ '--track': track, '--track-md': trackMid } as React.CSSProperties}
+        >
           {partners.items.map((partner, i) => (
             <li
               className={s.card}
