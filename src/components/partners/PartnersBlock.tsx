@@ -1,14 +1,27 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useRef } from 'react';
-import { mediaPartners } from '@/content/media';
+import { useEffect, useId, useRef } from 'react';
 import { asset } from '@/lib/asset';
 import { prefersReducedMotion, useScrollProgressVar } from '@/lib/motion';
-import s from './media-partners.module.css';
+import s from './partners-block.module.css';
+
+/** Вуз-партнёр: знак появляется, когда школа его передаёт. */
+export type Partner = {
+  name: string;
+  logo?: { src: string; width: number; height: number; alt: string };
+};
+
+export type Partners = {
+  title: string;
+  items: readonly Partner[];
+};
 
 /**
  * Сотрудничество с партнерами.
+ *
+ * Блок общий для страниц профильных классов: разбор один, меняется только
+ * список вузов.
  *
  * Три карточки в ряд. Наверху карточки — место под знак вуза; пока школа
  * не прислала логотипы, в нём стоит знак школы: атом с орбитами, по одной
@@ -21,8 +34,9 @@ import s from './media-partners.module.css';
  *
  * Названия вузов перенесены дословно и не сокращаются.
  */
-export function MediaPartners() {
+export function PartnersBlock({ partners }: { partners: Partners }) {
   const ref = useScrollProgressVar<HTMLElement>('--p');
+  const titleId = useId();
   const listRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
@@ -58,7 +72,7 @@ export function MediaPartners() {
   }, []);
 
   return (
-    <section className={s.section} ref={ref} aria-labelledby="media-partners-title">
+    <section className={s.section} ref={ref} aria-labelledby={titleId}>
       {/* большая орбита по фону: декоративный слой, едет от прокрутки */}
       <span className={s.backdrop} aria-hidden="true">
         <svg className={s.sky} viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice">
@@ -70,12 +84,12 @@ export function MediaPartners() {
       </span>
 
       <div className={s.inner}>
-        <h2 className={s.title} id="media-partners-title">
-          {mediaPartners.title}
+        <h2 className={s.title} id={titleId}>
+          {partners.title}
         </h2>
 
         <ul className={s.list} ref={listRef}>
-          {mediaPartners.items.map((partner, i) => (
+          {partners.items.map((partner, i) => (
             <li
               className={s.card}
               key={partner.name}

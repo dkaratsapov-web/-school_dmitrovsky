@@ -461,7 +461,7 @@
 .badges {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: var(--track-sm, repeat(2, minmax(0, 1fr)));
   align-items: start;
   --badge-gap: clamp(0.875rem, 1.8vw, 1.75rem);
   column-gap: var(--badge-gap);
@@ -473,7 +473,7 @@
 
 @media (min-width: 640px) {
   .badges {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: var(--track, repeat(4, minmax(0, 1fr)));
   }
 }
 

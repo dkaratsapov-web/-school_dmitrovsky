@@ -1,21 +1,31 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { mediaStudy } from '@/content/media';
+import { useEffect, useId, useRef } from 'react';
 import { prefersReducedMotion, useScrollProgressVar } from '@/lib/motion';
-import s from './media-study.module.css';
+import s from './study-block.module.css';
+
+/** Что изучают на профиле: у каждого направления своё, разбор блока один. */
+export type Study = {
+  title: string;
+  lead: string;
+  subjects: readonly string[];
+  /** Итог под списком — не предмет, поэтому идёт отдельной строкой. */
+  summary: string | null;
+  collegeLead: string;
+  professions: readonly string[];
+};
 
 /**
- * Углублённое изучение — эфирная сетка на мониторе аппаратной.
+ * Углублённое изучение — показания на мониторе.
  *
- * Слева — приглашение школы, справа — монитор: предметы идут строками
- * сетки вещания, у каждой справа индикатор уровня. Пока строка проходит
- * середину экрана, её индикатор живой — «в эфире»; остальные лежат ровной
- * линией. Движение привязано к чтению, а не разложено одинаково по всем
- * карточкам.
+ * Блок общий для страниц профильных классов: разбор один, меняется только
+ * наполнение. Слева — приглашение школы, справа — монитор: предметы идут
+ * строками, у каждой справа индикатор уровня. Пока строка проходит
+ * середину экрана, её индикатор живой; остальные лежат ровной линией.
+ * Движение привязано к чтению, а не разложено одинаково по всем карточкам.
  *
- * Строка про комплексную подготовку к ЕГЭ идёт бегущей строкой под сеткой:
- * это не пятый предмет, а вывод по всем четырём. Слова перенесены как есть.
+ * Строка про комплексную подготовку к ЕГЭ идёт бегущей строкой под списком:
+ * это не ещё один предмет, а вывод по всем. Слова перенесены как есть.
  *
  * Ниже — программа колледжа: профессии висят аккредитационными бейджами
  * на рейке и качаются, каждый в своей фазе.
@@ -52,8 +62,23 @@ const CELLS: readonly [number, number, number][] = [
 /** Высоты полос в покое, доля от полной: ровная линия с лёгкой неровностью. */
 const REST = [0.16, 0.1, 0.2, 0.12, 0.24, 0.12, 0.18, 0.1, 0.14];
 
-export function MediaStudy() {
+export function StudyBlock({ study }: { study: Study }) {
   const ref = useScrollProgressVar<HTMLElement>('--p');
+  const titleId = useId();
+
+  /* Столбцов ровно столько, сколько бейджей: у разных профилей их разное
+     число, и пустой столбец оставлял рейку висеть в воздухе. Имя длиннее
+     сорока четырёх знаков на телефоне занимает весь ряд: в половине
+     экрана оно рассыпается по одному слову в строку. Имена покороче
+     по-прежнему идут парами. */
+  const cols = Math.min(4, study.professions.length);
+  const longest = study.professions.reduce((n, name) => Math.max(n, name.length), 0);
+  const colsSmall = longest > 44 ? 1 : Math.min(2, study.professions.length);
+  /* Переменная держит всю раскладку целиком: число столбцов внутри repeat()
+     из переменной браузер не принимает — вся запись становится негодной,
+     и сетка рассыпается в один столбец. */
+  const track = `repeat(${cols}, minmax(0, 1fr))`;
+  const trackSmall = `repeat(${colsSmall}, minmax(0, 1fr))`;
   const listRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
@@ -106,7 +131,7 @@ export function MediaStudy() {
   }, []);
 
   return (
-    <section className={s.section} ref={ref} aria-labelledby="media-study-title">
+    <section className={s.section} ref={ref} aria-labelledby={titleId}>
       {/* Фон — страница в клетку: сама клетка, поле на две клетки от края
           и перелив, который медленно ходит по бумаге. Несколько клеток
           подсвечиваются по очереди — бумага не стоит мёртвой. */}
@@ -131,10 +156,10 @@ export function MediaStudy() {
       <div className={s.inner}>
         <div className={s.top}>
           <div className={s.head}>
-            <h2 className={s.title} id="media-study-title">
-              {mediaStudy.title}
+            <h2 className={s.title} id={titleId}>
+              {study.title}
             </h2>
-            <p className={s.lead}>{mediaStudy.lead}</p>
+            <p className={s.lead}>{study.lead}</p>
           </div>
 
           {/* монитор аппаратной: сетка вещания */}
@@ -143,7 +168,7 @@ export function MediaStudy() {
             <span className={s.sheen} aria-hidden="true" />
 
             <ul className={s.list} ref={listRef}>
-              {mediaStudy.subjects.map((subject, i) => (
+              {study.subjects.map((subject, i) => (
                 <li
                   className={s.row}
                   key={subject}
@@ -172,20 +197,23 @@ export function MediaStudy() {
               ))}
             </ul>
 
-            {mediaStudy.summary ? (
+            {study.summary ? (
               <p className={s.ticker}>
                 <span className={s.tickerHatch} aria-hidden="true" />
-                <span className={s.tickerText}>{mediaStudy.summary}</span>
+                <span className={s.tickerText}>{study.summary}</span>
               </p>
             ) : null}
           </div>
         </div>
 
         <div className={s.college}>
-          <p className={s.collegeLead}>{mediaStudy.collegeLead}</p>
+          <p className={s.collegeLead}>{study.collegeLead}</p>
 
-          <ul className={s.badges}>
-            {mediaStudy.professions.map((name, i) => (
+          <ul
+            className={s.badges}
+            style={{ '--track': track, '--track-sm': trackSmall } as React.CSSProperties}
+          >
+            {study.professions.map((name, i) => (
               <li className={s.slot} key={name} style={{ '--i': i } as React.CSSProperties}>
                 <span className={s.hang}>
                   <span className={s.strap} aria-hidden="true" />

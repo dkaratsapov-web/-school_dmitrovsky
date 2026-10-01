@@ -1,13 +1,25 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
-import { mediaProject } from '@/content/media';
+import { useEffect, useId, useRef, useState } from 'react';
 import { asset } from '@/lib/asset';
-import s from './media-project.module.css';
+import s from './project-block.module.css';
+
+/** Что даёт проект: у каждого профиля своё, разбор блока один. */
+export type Project = {
+  title: string;
+  /** Пояснение под заголовком — есть не у всех профилей. */
+  lead?: string;
+  photos: readonly { src: string; width: number; height: number; alt: string }[];
+  points: readonly string[];
+  admission: string;
+};
 
 /**
  * Что даёт проект.
+ *
+ * Блок общий для страниц профильных классов: разбор один, меняется только
+ * наполнение.
  *
  * Блок стоит на месте, пока идёт прокрутка: меняются только номер, кадр
  * и подсветка пункта справа, к которому этот кадр относится. Всё собрано
@@ -24,11 +36,12 @@ import s from './media-project.module.css';
 /** Сколько экранов прокрутки уходит на один пункт после первого. */
 const STEP_VH = 0.55;
 
-export function MediaProject() {
+export function ProjectBlock({ project }: { project: Project }) {
   const sectionRef = useRef<HTMLElement>(null);
+  const titleId = useId();
   const [near, setNear] = useState(0);
 
-  const total = mediaProject.points.length;
+  const total = project.points.length;
 
   useEffect(() => {
     const sec = sectionRef.current;
@@ -62,22 +75,22 @@ export function MediaProject() {
       <section
         className={s.section}
         ref={sectionRef}
-        aria-labelledby="media-project-title"
+        aria-labelledby={titleId}
         style={{ '--screens': 1 + (total - 1) * STEP_VH } as React.CSSProperties}
       >
         <div className={s.sticky}>
           <div className={s.inner}>
             <div className={s.side}>
-              <h2 className={s.title} id="media-project-title">
-                {mediaProject.title}
+              <h2 className={s.title} id={titleId}>
+                {project.title}
               </h2>
-              <p className={s.lead}>{mediaProject.lead}</p>
+              {project.lead ? <p className={s.lead}>{project.lead}</p> : null}
 
               {/* Кадр к пункту, на котором сейчас глаз. Снимки лежат стопкой
                   и сменяют друг друга наплывом: место под них не прыгает,
                   меняются только прозрачность и масштаб. */}
               <div className={s.stage}>
-                {mediaProject.photos.map((photo, i) => (
+                {project.photos.map((photo, i) => (
                   <Image
                     className={s.shot}
                     key={photo.src}
@@ -102,7 +115,7 @@ export function MediaProject() {
             </div>
 
             <ol className={s.points}>
-              {mediaProject.points.map((point, i) => (
+              {project.points.map((point, i) => (
                 <li
                   className={s.point}
                   key={point}
@@ -121,7 +134,7 @@ export function MediaProject() {
       </section>
 
       <div className={s.tail}>
-        <p className={s.admission}>{mediaProject.admission}</p>
+        <p className={s.admission}>{project.admission}</p>
       </div>
     </>
   );

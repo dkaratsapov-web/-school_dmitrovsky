@@ -2,10 +2,17 @@ import type { Metadata } from 'next';
 import { MediaHero } from '@/components/media/MediaHero';
 import { FilmBlock } from '@/components/film/FilmBlock';
 import { MediaFaq } from '@/components/media/MediaFaq';
-import { MediaPartners } from '@/components/media/MediaPartners';
-import { MediaProject } from '@/components/media/MediaProject';
-import { MediaStudy } from '@/components/media/MediaStudy';
-import { mediaFilm, mediaPageDescription, mediaPageTitle } from '@/content/media';
+import { PartnersBlock } from '@/components/partners/PartnersBlock';
+import { ProjectBlock } from '@/components/project/ProjectBlock';
+import { StudyBlock } from '@/components/study/StudyBlock';
+import {
+  mediaFilm,
+  mediaPageDescription,
+  mediaPageTitle,
+  mediaPartners,
+  mediaProject,
+  mediaStudy,
+} from '@/content/media';
 
 /**
  * Страница профиля «Медиакласс».
@@ -24,9 +31,9 @@ export default function MediaClassPage() {
     <>
       <MediaHero />
       <FilmBlock film={mediaFilm} />
-      <MediaStudy />
-      <MediaProject />
-      <MediaPartners />
+      <StudyBlock study={mediaStudy} />
+      <ProjectBlock project={mediaProject} />
+      <PartnersBlock partners={mediaPartners} />
       <MediaFaq />
     </>
   );
