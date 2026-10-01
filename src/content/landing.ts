@@ -104,13 +104,14 @@ export const profileLinks: readonly { label: string; href: string }[] = [
  */
 export const landingNav: readonly LandingItem[] = [
   { label: 'Кадетский корпус', anchor: '/kadetskii-korpus', accent: true },
-  { label: 'О нас', info: aboutInfo },
   { label: 'Обучение', stages },
   { label: 'Профильные 10-11 классы', links: profileLinks },
   /* «Педагоги» и «Мероприятия» из шапки убраны по указанию владельца
      (QUESTIONS.md, D-24 и D-31). Сами блоки на главной и ссылки в подвале
      остались на месте. */
   { label: 'Кружки', anchor: '/#clubs' },
+  /* «О нас» стоит перед «Контактами» по указанию владельца. */
+  { label: 'О нас', info: aboutInfo },
   { label: 'Контакты', anchor: '/#contacts' },
 ];
 

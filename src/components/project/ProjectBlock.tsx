@@ -80,11 +80,14 @@ export function ProjectBlock({ project }: { project: Project }) {
       >
         <div className={s.sticky}>
           <div className={s.inner}>
-            <div className={s.side}>
+            <div className={s.head}>
               <h2 className={s.title} id={titleId}>
                 {project.title}
               </h2>
               {project.lead ? <p className={s.lead}>{project.lead}</p> : null}
+            </div>
+
+            <div className={s.side}>
 
               {/* Кадр к пункту, на котором сейчас глаз. Снимки лежат стопкой
                   и сменяют друг друга наплывом: место под них не прыгает,

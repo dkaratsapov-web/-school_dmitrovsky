@@ -15,8 +15,11 @@
   z-index: var(--z-header);
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 16px clamp(0.75rem, 2.2vw, 2rem) 12px;
+  gap: 8px;
+  padding-block: 12px 10px;
+  /* Поля от краёв: на обычном экране считаются от его ширины, на широком —
+     от полосы содержимого, чтобы шапка не растягивалась во всю стену. */
+  padding-inline: max(clamp(0.875rem, 2.4vw, 2.5rem), calc((100% - var(--container)) / 2));
   transition: gap var(--t-slow) var(--ease), padding var(--t-slow) var(--ease);
   pointer-events: none;
 }
@@ -24,7 +27,7 @@
 /* промежутки сокращаются при прокрутке — шапка «собирается» */
 .compact {
   gap: 0;
-  padding-block: 8px;
+  padding-block: 6px;
 }
 
 .header > * {
@@ -109,10 +112,10 @@
 .rowTop {
   display: none;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   transition: opacity var(--t-base) var(--ease), transform var(--t-slow) var(--ease),
     max-height var(--t-slow) var(--ease);
-  max-height: 44px;
+  max-height: 40px;
   overflow: visible;
 }
 
@@ -143,7 +146,7 @@
 }
 
 .chip {
-  height: 36px;
+  height: 32px;
   padding-inline: 16px;
   gap: 8px;
   font-size: 12.5px;
@@ -177,7 +180,7 @@
 
 /* --------------------------------------------------------------- соцсети */
 .socials {
-  height: 36px;
+  height: 32px;
   padding-inline: 6px;
   gap: 2px;
 }
@@ -186,8 +189,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: var(--r-pill);
   color: rgba(255, 255, 255, 0.78);
   text-decoration: none;
@@ -222,8 +225,8 @@
 
 /* --------------------------------------------------------------- логотип */
 .brand {
-  height: 56px;
-  padding: 0 16px 0 6px;
+  height: 50px;
+  padding: 0 14px 0 5px;
   gap: 10px;
   flex: none;
   min-width: 0;
@@ -231,14 +234,14 @@
 
 @media (min-width: 560px) {
   .brand {
-    height: 58px;
-    padding: 0 22px 0 8px;
+    height: 52px;
+    padding: 0 18px 0 7px;
     gap: 12px;
   }
 }
 
 .compact .brand {
-  height: 54px;
+  height: 48px;
 }
 
 .brand:hover {
@@ -251,8 +254,8 @@
 .markRing {
   display: grid;
   place-content: center;
-  width: 42px;
-  height: 42px;
+  width: 38px;
+  height: 38px;
   flex: none;
   border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: var(--r-pill);
@@ -262,14 +265,14 @@
 
 @media (min-width: 560px) {
   .markRing {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
   }
 }
 
 .compact .markRing {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
 }
 
 .brand:hover .markRing {
@@ -278,8 +281,8 @@
 }
 
 .mark {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   object-fit: contain;
   filter: brightness(0) invert(1);
   transition: transform 1100ms cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -322,7 +325,7 @@
 /* ------------------------------------------------------------- навигация */
 .nav {
   display: none;
-  height: 58px;
+  height: 52px;
   padding-inline: 8px;
   flex: 1;
   min-width: 0;
@@ -341,7 +344,7 @@
 }
 
 .compact .nav {
-  height: 54px;
+  height: 48px;
 }
 
 /* бегущая обводка вместо заливки */
@@ -349,8 +352,8 @@
   position: absolute;
   left: 0;
   top: 50%;
-  height: 40px;
-  margin-top: -20px;
+  height: 36px;
+  margin-top: -18px;
   border: 1px solid rgba(255, 255, 255, 0.42);
   border-radius: var(--r-pill);
   background: rgba(255, 255, 255, 0.07);
@@ -368,7 +371,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  height: 40px;
+  height: 36px;
   padding-inline: clamp(7px, 0.62vw, 15px);
   border: 0;
   border-radius: var(--r-pill);
@@ -488,7 +491,7 @@
 
 .phone {
   display: none;
-  height: 58px;
+  height: 52px;
   padding: 0 20px 0 8px;
   gap: 10px;
   font-family: var(--font-display);
@@ -504,7 +507,7 @@
 }
 
 .compact .phone {
-  height: 54px;
+  height: 48px;
 }
 
 .phone:hover {
@@ -518,8 +521,8 @@
 .phoneIcon {
   display: grid;
   place-content: center;
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   flex: none;
   border: 1px solid rgba(255, 255, 255, 0.24);
   border-radius: var(--r-pill);
@@ -529,8 +532,8 @@
 }
 
 .compact .phoneIcon {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
 }
 
 .phone:hover .phoneIcon {
@@ -554,7 +557,7 @@
   font-family: var(--font-display);
   cursor: pointer;
   display: none;
-  height: 58px;
+  height: 52px;
   padding: 0 12px 0 26px;
   gap: 14px;
   background: var(--c-wine-700);
@@ -573,7 +576,7 @@
 }
 
 .compact .cta {
-  height: 54px;
+  height: 48px;
   background: var(--c-wine-700);
   border-color: var(--c-wine-700);
 }
@@ -606,8 +609,8 @@
 .ctaDot {
   position: relative;
   z-index: 1;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   flex: none;
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: var(--r-pill);
@@ -615,8 +618,8 @@
 }
 
 .compact .ctaDot {
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
 }
 
 .ctaDot::after {
@@ -641,8 +644,8 @@
 .call,
 .burger {
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 46px;
+  height: 46px;
   padding: 0;
   flex: none;
   cursor: pointer;
@@ -651,15 +654,15 @@
 @media (min-width: 560px) {
   .call,
   .burger {
-    width: 52px;
-    height: 52px;
+    width: 48px;
+    height: 48px;
   }
 }
 
 .compact .call,
 .compact .burger {
-  width: 46px;
-  height: 46px;
+  width: 44px;
+  height: 44px;
 }
 
 /* Кнопка вызова в шапке живёт только на широком экране. На телефоне
@@ -783,7 +786,7 @@
    ниже, перебивают фон, высоту и зазор. */
 .letter {
   display: none;
-  height: 58px;
+  height: 52px;
   padding: 0 20px;
   gap: 10px;
   background: var(--c-navy-700);
